@@ -5,10 +5,6 @@ import {Button} from "@nextui-org/react";
 export default function Home() {
   return (
     <div> 
-      <div className="bg-white mx-60">
-        <NavbarComponent/>
-      </div>
-      <hr/>
       <div className="text-center  font-medium text-[65px] mt-12">
         <h1>The Open Source</h1>
         <h1 className="text-primary">Document Retrival Generation</h1>
