@@ -5,7 +5,7 @@ import React from 'react';
 export default function NavbarComponent() {
   return (
     <div>
-       <div className="navbar bg-base-100 font-semibold text-[#004B93]">
+       <div className="navbar bg-base-100 font-semibold text-primary">
         <div className="navbar-start">
             <div>
             <Image 
