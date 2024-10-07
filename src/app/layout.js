@@ -24,10 +24,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-      <div className="bg-white mx-40">
-        <NavbarComponent/>
-      </div>
       <hr/>
         {children}
       </body>
