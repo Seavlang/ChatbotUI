@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { IconUpload } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react"; // Importing the remove icon
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 
@@ -29,22 +29,34 @@ const secondaryVariant = {
 export const FileUpload = ({ onChange }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
+  const [error, setError] = useState(""); // Track error state for invalid files
 
   const handleFileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    onChange && onChange(newFiles);
+    onChange && onChange([...files, ...newFiles]);
+  };
+
+  const handleRemoveFile = (index, e) => {
+    e.stopPropagation(); // Prevents the event from triggering the upload action
+    const updatedFiles = files.filter((_, idx) => idx !== index);
+    setFiles(updatedFiles);
+    onChange && onChange(updatedFiles); // Notify parent component about file removal
   };
 
   const handleClick = () => {
     fileInputRef.current?.click();
   };
 
-  const { getRootProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      "application/pdf": [".pdf"],
+      "text/plain": [".txt"],
+    }, // Restrict to PDF and TXT files
     multiple: false,
-    noClick: true,
     onDrop: handleFileChange,
-    onDropRejected: (error) => {
-      console.log(error);
+    onDropRejected: (fileRejections) => {
+      setError("Invalid file type. Please upload a .pdf or .txt file.");
+      console.log(fileRejections);
     },
   });
 
@@ -61,32 +73,49 @@ export const FileUpload = ({ onChange }) => {
           type="file"
           onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
           className="hidden"
+          {...getInputProps()}
         />
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
           <GridPattern />
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="relative w-full mb-10 max-w-xl mx-auto">
+            {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error */}
             {files.length > 0 &&
               files.map((file, idx) => (
                 <motion.div
                   key={"file" + idx}
                   layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                   className={cn(
-                    "relative overflow-hidden z-40 border-2  flex items-center justify-start p-3 mt-4 w-full mx-auto rounded-lg",
+                    "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 w-full mx-auto rounded-lg",
                     "shadow-sm"
                   )}
-                  style={{ borderRadius: '12px' }} 
+                  style={{ borderRadius: "12px" }}
                 >
                   <div className="flex w-full items-center gap-4">
                     {/* Dynamic Icon based on file extension */}
                     <div className="p-2">
                       {file.name.endsWith(".pdf") ? (
-                        <Image src={'/asset/images/pdf.png'} alt="pdf file" width={50} height={50}/>
+                        <Image
+                          src={"/asset/images/pdf.png"}
+                          alt="pdf file"
+                          width={50}
+                          height={50}
+                        />
                       ) : file.name.endsWith(".txt") ? (
-                        <Image src={'/asset/images/txt.png'} alt="txt file" width={50} height={50}/>
+                        <Image
+                          src={"/asset/images/txt.png"}
+                          alt="txt file"
+                          width={50}
+                          height={50}
+                        />
                       ) : (
-                        <Image src={'/asset/images/txt.png'} alt="file" width={50} height={50}/>
+                        <Image
+                          src={"/asset/images/file.png"}
+                          alt="file"
+                          width={50}
+                          height={50}
+                        />
                       )}
                     </div>
 
@@ -99,6 +128,15 @@ export const FileUpload = ({ onChange }) => {
                     >
                       {file.name}
                     </motion.p>
+
+                    {/* Remove Icon */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
+                      className="p-2 text-red-600 hover:text-red-800"
+                    >
+                      <IconX size={20} />
+                    </button>
                   </div>
                 </motion.div>
               ))}
@@ -123,10 +161,14 @@ export const FileUpload = ({ onChange }) => {
                     className="text-neutral-600 flex flex-col items-center"
                   >
                     Drop it
-                    {/* <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-400" /> */}
                   </motion.p>
                 ) : (
-                  <Image src={'/asset/images/file.png'} width={80} height={80}/>
+                  <Image
+                    src={"/asset/images/file.png"} // Default file image
+                    width={80}
+                    height={80}
+                    alt="Default file icon"
+                  />
                 )}
               </motion.div>
             )}
