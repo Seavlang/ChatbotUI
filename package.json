@@ -13,6 +13,8 @@
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/system": "^2.2.6",
     "@nextui-org/theme": "^2.2.11",
+    "@seavlang/chatbottesting": "^0.1.0",
+    "@seavlang/chatbottesting1": "^0.1.2",
     "@tabler/icons-react": "^3.18.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

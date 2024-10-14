@@ -48,7 +48,7 @@ export default function NavbarComponent() {
           </ul>
         </div>
 
-        <div className="navbar-end text-2xl">
+        <div className="navbar-end text-xl">
           <Link href="/login" className={pathname === '/login' ? 'font-bold' : ''}>
             Login
           </Link>

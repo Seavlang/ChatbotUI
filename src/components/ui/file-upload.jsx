@@ -34,6 +34,7 @@ export const FileUpload = ({ onChange }) => {
   const handleFileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     onChange && onChange([...files, ...newFiles]);
+    setError(""); // Clear error when a valid file is added
   };
 
   const handleRemoveFile = (index, e) => {
@@ -47,6 +48,10 @@ export const FileUpload = ({ onChange }) => {
     fileInputRef.current?.click();
   };
 
+  const dismissError = () => {
+    setError(""); // Remove the error when clicking the dismiss button
+  };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       "application/pdf": [".pdf"],
@@ -56,7 +61,6 @@ export const FileUpload = ({ onChange }) => {
     onDrop: handleFileChange,
     onDropRejected: (fileRejections) => {
       setError("Invalid file type. Please upload a .pdf or .txt file.");
-      console.log(fileRejections);
     },
   });
 
@@ -80,17 +84,31 @@ export const FileUpload = ({ onChange }) => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="relative w-full mb-10 max-w-xl mx-auto">
-            {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error */}
+            {/* Display error as a dismissible alert */}
+            {error && (
+              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 w-full max-w-xl mx-auto">
+                <p className="text-sm">{error}</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();  // Stop event propagation to prevent triggering the upload action
+                    dismissError();
+                  }}
+                  className="ml-4 text-red-600"
+                >
+                  <IconX size={20} />
+                </button>
+              </div>
+            )}
             {files.length > 0 &&
               files.map((file, idx) => (
                 <motion.div
                   key={"file" + idx}
                   layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                   className={cn(
-                    "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 w-full mx-auto rounded-lg",
+                    "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
                     "shadow-sm"
                   )}
-                  style={{ borderRadius: "12px" }}
+                  style={{ borderRadius: "12px", padding: "2px", width: "80%" }}
                 >
                   <div className="flex w-full items-center gap-4">
                     {/* Dynamic Icon based on file extension */}
@@ -99,15 +117,15 @@ export const FileUpload = ({ onChange }) => {
                         <Image
                           src={"/asset/images/pdf.png"}
                           alt="pdf file"
-                          width={50}
-                          height={50}
+                          width={40}
+                          height={40}
                         />
                       ) : file.name.endsWith(".txt") ? (
                         <Image
                           src={"/asset/images/txt.png"}
                           alt="txt file"
-                          width={50}
-                          height={50}
+                          width={40}
+                          height={40}
                         />
                       ) : (
                         <Image
@@ -120,23 +138,25 @@ export const FileUpload = ({ onChange }) => {
                     </div>
 
                     {/* File Name */}
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      layout
-                      className="text-base font-medium text-gray-900 truncate max-w-xs"
-                    >
-                      {file.name}
-                    </motion.p>
+                    <div className="flex justify-between items-center w-full gap-4">
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        layout
+                        className="text-base font-medium text-gray-900 truncate max-w-xs"
+                      >
+                        {file.name}
+                      </motion.p>
 
-                    {/* Remove Icon */}
-                    <button
-                      type="button"
-                      onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
-                      className="p-2 text-red-600 hover:text-red-800"
-                    >
-                      <IconX size={20} />
-                    </button>
+                      {/* Remove Icon */}
+                      <button
+                        type="button"
+                        onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
+                        className="p-2 text-red-600 hover:text-red-800"
+                      >
+                        <IconX size={20} />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -172,7 +192,6 @@ export const FileUpload = ({ onChange }) => {
                 )}
               </motion.div>
             )}
-
             {!files.length && (
               <motion.div
                 variants={secondaryVariant}
