@@ -3,6 +3,7 @@ import NavbarComponent from "./components/NavbarComponent";
 import { Button } from "@nextui-org/react";
 import FooterComponent from "./components/FooterComponent";
 import Link from "next/link";
+import ChatbotComponent from "./components/ChatbotComponent";
 
 export default function Home() {
   return (
@@ -21,7 +22,7 @@ export default function Home() {
           </h1>
         </div>
         <div className="flex">
-          <div>
+          <div className="w-1/3">
             <div className=" text-lg mt-6">
               <p>
                 Simply enter your question or prompt, and our <br /> intelligent
@@ -35,8 +36,9 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="-mt-[200px]">
-            <Image src={"/asset/images/chatbot.png"} width={800} height={800} />
+          <div className="w-2/3 -mt-60 pr-14">
+            {/* <Image src={"/asset/images/chatbot.png"} width={800} height={800} /> */}
+            <ChatbotComponent/>
           </div>
         </div>
         <div className="text-center mt-[-40px]">

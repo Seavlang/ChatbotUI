@@ -35,7 +35,7 @@ export default function NavbarComponent() {
                 </Link>
               </li>
               <li>
-                <Link href="/docs" className={pathname === '/docs' ? 'font-bold' : ''}>
+                <Link href="/docs/allApps" className={pathname === '/docs' ? 'font-bold' : ''}>
                   Docs
                 </Link>
               </li>
