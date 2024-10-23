@@ -32,7 +32,8 @@ export default function Home() {
             </div>
             <div className=" mt-10">
               <button class="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
-                Get Started
+                <a href="/login">Get Started</a>
+                
               </button>
             </div>
           </div>

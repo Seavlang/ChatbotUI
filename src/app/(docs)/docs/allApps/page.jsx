@@ -1,6 +1,8 @@
+'use client'
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import CreateProjectModal from "../../components/CreateProjectModal";
 
 export default function page() {
   const tableData = [
@@ -31,7 +33,7 @@ export default function page() {
   ];
 
   return (
-    <div>
+    <div className="w-full h-screen overflow-hidden">
         <div className="breadcrumbs mx-10  mt-10 mb-5 text-sm">
           <ul>
             <li>
@@ -60,9 +62,7 @@ export default function page() {
           </label>
         </div>
         <div>
-          <button className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            New Project
-          </button>
+            <CreateProjectModal/>
         </div>
       </div>
       {/* table */}

@@ -69,7 +69,8 @@ export const FileUpload = ({ onChange }) => {
       <motion.div
         onClick={handleClick}
         whileHover="animate"
-        className="p-10 group/file block rounded-lg cursor-pointer w-full relative overflow-hidden"
+        className="p-10 group/file block rounded-lg border border-primary cursor-pointer w-full relative overflow-hidden"
+        style={{ height: '220px' }}
       >
         <input
           ref={fileInputRef}
@@ -83,10 +84,10 @@ export const FileUpload = ({ onChange }) => {
           <GridPattern />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="relative w-full mb-10 max-w-xl mx-auto">
+          <div className="relative w-full mb-5 max-w-xl mx-auto">
             {/* Display error as a dismissible alert */}
             {error && (
-              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 w-full max-w-xl mx-auto">
+              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4  max-w-xl mx-auto">
                 <p className="text-sm">{error}</p>
                 <button
                   onClick={(e) => {
@@ -170,8 +171,7 @@ export const FileUpload = ({ onChange }) => {
                   damping: 20,
                 }}
                 className={cn(
-                  "relative group-hover/file:shadow-2xl z-40 bg-white dark:bg-neutral-900 flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md",
-                  "shadow-[0px_10px_50px_rgba(0,0,0,0.1)]"
+                  "relative  z-40  dark:bg-neutral-900 flex items-center justify-center h-16  w-full max-w-[4rem] mx-auto rounded-md",
                 )}
               >
                 {isDragActive ? (
@@ -195,7 +195,7 @@ export const FileUpload = ({ onChange }) => {
             {!files.length && (
               <motion.div
                 variants={secondaryVariant}
-                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
+                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
               ></motion.div>
             )}
           </div>
