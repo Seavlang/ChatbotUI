@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import NavbarComponent from "./components/NavbarComponent";
 import { Button } from "@nextui-org/react";

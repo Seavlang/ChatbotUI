@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { IconX } from "@tabler/icons-react"; // Importing the remove icon
+import { IconX } from "@tabler/icons-react"; 
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 

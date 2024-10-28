@@ -47,17 +47,31 @@ export default function Page() {
         <div className="col-span-2 border-r-2 p-10">
           <div className="h-screen ">
             <div className="h-[58%]">
-              {/* Leave Icon */}
-              <Image src={"/asset/images/leave.png"} width={30} height={30} />
+              <div className="flex justify-between">
+                <div>
+                  {/* New Chat Button */}
+                  <button className="flex items-center mb-10 px-5 py-2 text-primary bg-blue-100 rounded-md">
+                    <Image
+                      src={"/asset/images/add.png"}
+                      width={24}
+                      height={24}
+                    />
 
-              {/* New Chat Button */}
-              <button className="flex items-center my-10 px-5 py-2 text-primary bg-blue-100 rounded-md">
-                <Image src={"/asset/images/add.png"} width={24} height={24} />
-
-                <span className="text-lg ms-3 opacity-70 font-semibold">
-                  New Chat
-                </span>
-              </button>
+                    <span className="text-lg ms-3 opacity-70 font-semibold">
+                      New Chat
+                    </span>
+                  </button>
+                </div>
+                <div>
+                  {/* Leave Icon */}
+                  <Image
+                    src={"/asset/images/leave.png"}
+                    width={45}
+                    height={45}
+                  />
+                </div>
+                
+              </div>
 
               {/* Chat Items (Active/Inactive) */}
               {chatItems.map((chat, index) => (
@@ -129,8 +143,8 @@ export default function Page() {
             <span className="font-bold text-primary mr-2">Default</span>
             <span className="text-black">Llama3.1-8b</span>
           </div>
-           {/* Display Uploaded Files */}
-           <div className="mt-10">
+          {/* Display Uploaded Files */}
+          <div className="mt-10">
             <h3 className="text-lg font-bold">Uploaded Files:</h3>
             {uploadedFiles.length === 0 ? (
               <p>No files uploaded yet.</p>
@@ -147,7 +161,8 @@ export default function Page() {
 
           {/* FileComponent */}
           <div className="mt-32">
-            <FileComponent onFileUpload={handleFileUpload} /> {/* Pass the callback */}
+            <FileComponent onFileUpload={handleFileUpload} />{" "}
+            {/* Pass the callback */}
           </div>
         </div>
       </div>

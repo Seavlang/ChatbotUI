@@ -39,7 +39,7 @@ export default function page() {
     
             {/* Back to Login */}
             <div className="mb-4">
-              <a href="/login" className="text-red-500 text-sm font-bold">
+              <a href="/login" className="text-primary text-sm font-bold">
                 Back to Login
               </a>
             </div>
