@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,6 +20,7 @@ import { FcGoogle } from "react-icons/fc"; // For Google icon
 import { FaGithub } from "react-icons/fa"; // For GitHub icon
 import { registerAction } from "@/actions/authAction";
 import { useRouter } from "next/navigation";
+
 
 // Define the validation schema
 const signUpSchema = z.object({
@@ -51,6 +52,7 @@ export default function SignUpForm() {
     },
   });
 
+
   async function onSubmit(values) {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -66,14 +68,14 @@ export default function SignUpForm() {
     } else {
       console.log("Registration response:", res);
       if (res.success === true) { 
-        toast.success("Registered successfully!", {
-        duration: 1500,
-      });
-        route.push("/login");
+        toast.success("Registered Successfully!");
+        route.push("/verify" + "?email=" +  values?.email);
         route.refresh();
+      } else {
+        toast.error("Registration failed. Please try again.");
       }
     }
-    
+  
   }
 
   return (
