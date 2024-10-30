@@ -14,9 +14,3 @@ export const verifyEmailAction = async (req) => {
     return res;
 }
 
-export const loginAction = async (req) => {
-    console.log("login action",req);
-    const res = await loginService(req);
-    console.log("login res",res);
-    return res;
-}
