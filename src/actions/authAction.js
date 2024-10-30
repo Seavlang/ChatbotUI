@@ -1,6 +1,6 @@
 "use server";
 
-import { registerService, verifyEmailService } from "@/services/auth/auth.service";
+import { loginService, registerService, verifyEmailService } from "@/services/auth/auth.service";
 
 export const registerAction = async (req) => {
     console.log("registerActionSeavlang",req);
@@ -15,8 +15,8 @@ export const verifyEmailAction = async (req) => {
 }
 
 export const loginAction = async (req) => {
-    console.log("registerActionSeavlang",req);
+    console.log("login action",req);
     const res = await loginService(req);
-    console.log("object",res);
+    console.log("login res",res);
     return res;
 }

@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { redirect } from "next/navigation";
 
 export const authOptions = {
   providers: [
@@ -10,52 +9,37 @@ export const authOptions = {
         email: {},
         password: {},
       },
-      async authorize(credentials, req) {
-        console.log(credentials);
-        // if (!credentials || !credentials?.email || !credentials?.password) {
-        //   return null;
-        // }
-        const response = await fetch(`${process.env.BASE_URL}/auths/login`, {
-          method: "POST",
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
-          headers: { "Content-Type": "application/json" },
+      async authorize(credentials) {
+        // Encode request body as application/x-www-form-urlencoded
+        const requestBody = new URLSearchParams({
+          grant_type: "password",
+          username: credentials.email,
+          password: credentials.password,
+          scope: "",
+          client_id: "string",
+          client_secret: "string",
         });
+
+        const response = await fetch(`http://110.74.194.123:9080/api/v1/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
+          },
+          body: requestBody.toString(),
+        });
+
         const data = await response.json();
-        console.log("userdata", data);
-        switch (data.detail) {
-          case "Your account is not verify yet":
-          throw new Error("Your account is not verify yet")
-          case "Invalid Password":
-            throw new Error("Invalid password")
-          case "Invalid email":
-              throw new Error("Email does not exist")
-        }
-        if(data.errors){
-          throw new Error(data.errors.password)
-        }
-        const detail = {
-          ...data,
-          email: credentials.email,
-          // password: credentials.password
-        };
+        console.log("Response data:", data);
 
-        if (!data.token) {
-          return;
-        } else {
-          return detail;
+        if (!response.ok) {
+          throw new Error(data.detail || data.message || "Login failed");
         }
-        // const login = async(body)=> {
-        //     const data = await fetch("http://110.74.194.123:8989/api/todo/v1/auth/login",{
-        //     method: "POST",
-        //     body: JSON.stringify(body),
-        //     headers: {"Content-Type": "application.json"}
-        //     })
-        // }
 
-        // return null;
+        if (data.access_token) {
+          return { ...data, email: credentials.email };
+        }
+        return null;
       },
     }),
   ],
@@ -64,23 +48,18 @@ export const authOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      console.log(session);
-      session.user = token.user;
       session.user.id = token.id;
+      session.access_token = token.access_token;
       return session;
     },
-    async jwt({ token, user }) {  
+    async jwt({ user, token }) {
+      
       if (user) {
-        token.user = user;
+        token.id = user.id;
       }
       return token;
-    },async session({ session, token }) {
-      session.user = token.user;
-      session.user.id = token.id;
-      return session;
     },
   },
-
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",

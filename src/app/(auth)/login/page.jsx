@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { loginAction } from "@/actions/authAction";
 
 // Define the validation schema
 const loginSchema = z.object({
@@ -35,26 +35,22 @@ export default function LoginForm() {
 
   async function onSubmit(values) {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Login successful", values);
-    setIsLoading(false);
-
-    // Assuming loginAction function for API call
-    const res = await loginAction({
+    console.log("value: " , values);
+    const res = await signIn("credentials", {
+      redirect: false,
       email: values.email,
       password: values.password,
+      callbackUrl: "/", // Redirect URL on successful login
     });
+    console.log("onSubmit",res)
+    setIsLoading(false);
 
-    if (res === null) {
-      console.error("Login failed due to a network or endpoint error.");
+    if (res?.error) {
+      // Display error message from NextAuth
+      toast.error(res.error);
     } else {
-      console.log("Login response:", res);
-      if (res.success) {
-        toast.success("Logged in successfully!");
-        router.push("/playground");
-      } else {
-        toast.error("Login failed. Please check your credentials.");
-      }
+      toast.success("Logged in successfully!");
+      router.push("/playground"); // Redirect after login
     }
   }
 
@@ -78,7 +74,7 @@ export default function LoginForm() {
                       className="h-12 text-base px-4 rounded-md border-gray-300"
                     />
                   </FormControl>
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -109,7 +105,7 @@ export default function LoginForm() {
                       </button>
                     </div>
                   </FormControl>
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -138,11 +134,17 @@ export default function LoginForm() {
           <hr className="flex-grow border-gray-300" />
         </div>
 
-        <div className="w-full"> 
-          <button className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300">
+        <div className="w-full">
+          <button
+            className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300"
+            onClick={() => signIn("google")}
+          >
             <FcGoogle className="mr-2" /> Google
           </button>
-          <button className="flex items-center w-full justify-center p-2 border rounded-md border-gray-300">
+          <button
+            className="flex items-center w-full justify-center p-2 border rounded-md border-gray-300"
+            onClick={() => signIn("github")}
+          >
             <FaGithub className="mr-2" /> Github
           </button>
         </div>
