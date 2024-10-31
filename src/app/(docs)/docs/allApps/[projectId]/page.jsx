@@ -85,17 +85,17 @@ export default function Page({ params }) {
         </label>
         {/* Display Uploaded Files */}
         <div>
-          {uploadedFiles.length === 0 ? (
+          {uploadedFiles?.length === 0 ? (
             <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-1 mb-5 text-md">
               <span className="font-bold text-primary mr-2">No document</span>
             </div>
           ) : (
             <ul>
-              {uploadedFiles.map((file, index) => (
+              {uploadedFiles?.map((file, index) => (
                 <div  className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md">
                   {" "}
                   <li key={index} className="font-bold text-primary mr-2">
-                    {file.name}
+                    {file?.name}
                   </li>
                 </div>
               ))}

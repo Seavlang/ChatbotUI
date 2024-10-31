@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,31 +11,33 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
-import { FcGoogle } from "react-icons/fc"; // For Google icon
-import { FaGithub } from "react-icons/fa"; // For GitHub icon
+import { FcGoogle } from "react-icons/fc"; 
+import { FaGithub } from "react-icons/fa"; 
 import { registerAction } from "@/actions/authAction";
 import { useRouter } from "next/navigation";
 
-
-// Define the validation schema
-const signUpSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
-  confirmPassword: z
-    .string()
-    .min(8, "Please confirm your password")
-    .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
-});
-
+// Updated validation schema with confirm password check
+const signUpSchema = z
+  .object({
+    username: z.string().min(1, "Username is required"),
+    email: z.string().email("Invalid email address"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
+    confirmPassword: z
+      .string()
+      .min(8, "Please confirm your password")
+      .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,30 +54,22 @@ export default function SignUpForm() {
     },
   });
 
-
   async function onSubmit(values) {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("SignUp successful", values);
-    setIsLoading(false);
     const res = await registerAction({
       username: values?.username,
       email: values?.email,
       password: values?.password,
     });
-    if (res === null) {
-      console.error("Registration failed due to a network or endpoint error.");
+    setIsLoading(false);
+
+    if (res?.success === true) {
+      toast.success("Registered Successfully!");
+      route.push("/verify" + "?email=" + values?.email);
+      route.refresh();
     } else {
-      console.log("Registration response:", res);
-      if (res.success === true) { 
-        toast.success("Registered Successfully!");
-        route.push("/verify" + "?email=" +  values?.email);
-        route.refresh();
-      } else {
-        toast.error("Registration failed. Please try again.");
-      }
+      toast.error("Registration failed. Please try again.");
     }
-  
   }
 
   return (
@@ -97,7 +91,7 @@ export default function SignUpForm() {
                       className="h-12 text-base px-4 rounded-md border-gray-300"
                     />
                   </FormControl>
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -115,8 +109,7 @@ export default function SignUpForm() {
                       className="h-12 text-base px-4 rounded-md border-gray-300"
                     />
                   </FormControl>
-                  
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -147,8 +140,7 @@ export default function SignUpForm() {
                       </button>
                     </div>
                   </FormControl>
-                  
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -179,8 +171,7 @@ export default function SignUpForm() {
                       </button>
                     </div>
                   </FormControl>
-                  
-                  <FormMessage className="text-red-500"/>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -205,7 +196,7 @@ export default function SignUpForm() {
           <hr className="flex-grow border-gray-300" />
         </div>
 
-        <div className="w-full"> 
+        <div className="w-full">
           <button className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300">
             <FcGoogle className="mr-2" /> Google
           </button>

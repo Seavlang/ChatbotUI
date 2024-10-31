@@ -37,3 +37,37 @@ export const verifyEmailService = async (code, email) => {
   }
 };
 
+
+export const resendService = async (email) => {
+    try {
+      const res = await fetch(
+        `http://110.74.194.123:9080/api/v1/auth/resend-code?email=${email}`,
+        {
+          method: "POST",
+        }
+      )
+        .then((r) => r?.json())
+        .catch((e) => console.log(e));
+      return res;
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+  export const resetPasswordService = async (email,password) => {
+    try {
+      const res = await fetch(
+        `http://110.74.194.123:9080/api/v1/auth/reset-password?password=${password}&email=${email}`,
+        {
+          method: "POST",
+        }
+      )
+        .then((r) => r?.json())
+        .catch((e) => console.log(e));
+      return res;
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+  

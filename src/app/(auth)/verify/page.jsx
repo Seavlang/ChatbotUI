@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { verifyEmailAction } from "@/actions/authAction";
+import { verifyEmailAction, resendVerificationCodeAction } from "@/actions/authAction"; // Import resend action
 
 // Define the validation schema for code
 const codeSchema = z.object({
@@ -19,10 +19,8 @@ const codeSchema = z.object({
 export default function CodeVerificationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams()
-
-  console.log("Params: " , searchParams?.get("email"));
-  
+  const searchParams = useSearchParams();
+  const email = searchParams?.get("email");
 
   const form = useForm({
     resolver: zodResolver(codeSchema),
@@ -33,21 +31,30 @@ export default function CodeVerificationForm() {
 
   async function onSubmit(values) {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-    setIsLoading(false);
-    console.log("verification", values);
-    // Simulate response
-    setIsLoading(false);
     const res = await verifyEmailAction({
-      email:  searchParams?.get("email"),
-      code: values?.code,
+      email,
+      code: values.code,
     });
-    console.log("verification response", res);
-    if (res.success === true) {
+    setIsLoading(false);
+
+    if (res.success) {
       toast.success("Code verified successfully!");
-      router.push("/login"); // Navigate to dashboard or next page
+      router.push("/login");
     } else {
       toast.error("Invalid verification code. Please try again.");
+    }
+  }
+
+  async function handleResend() {
+    try {
+      const res = await resendVerificationCodeAction({ email });
+      if (res.success) {
+        toast.success("Verification code resent successfully!");
+      } else {
+        toast.error("Failed to resend verification code. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
     }
   }
 
@@ -91,7 +98,10 @@ export default function CodeVerificationForm() {
         </Form>
 
         <div className="text-center text-sm text-gray-500">
-          Didn't receive a code? <a href="#" className="text-primary">Resend</a>
+          Didn't receive a code?{" "}
+          <button onClick={handleResend} className="text-primary underline">
+            Resend
+          </button>
         </div>
       </div>
     </div>
