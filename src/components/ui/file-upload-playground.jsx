@@ -37,7 +37,7 @@ export const FileUploadPlayground = ({ file, onChange }) => {
   }, [file])
 
   const handleFileChange = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    setFiles((prevFiles) => [prevFiles, ...newFiles]);
     onChange && onChange([...files, ...newFiles]);
     setError(""); // Clear error when a valid file is added
   };
@@ -173,14 +173,14 @@ export const FileUploadPlayground = ({ file, onChange }) => {
             <div className="flex w-full items-center gap-4">
               {/* Dynamic Icon based on file extension */}
               <div className="p-2">
-                {file.name.endsWith(".pdf") ? (
+                {file?.name?.endsWith(".pdf") ? (
                   <Image
                     src={"/asset/images/pdf.png"}
                     alt="pdf file"
                     width={40}
                     height={40}
                   />
-                ) : file.name.endsWith(".txt") ? (
+                ) : file?.name?.endsWith(".txt") ? (
                   <Image
                     src={"/asset/images/txt.png"}
                     alt="txt file"
@@ -205,7 +205,7 @@ export const FileUploadPlayground = ({ file, onChange }) => {
                   layout
                   className="text-base font-medium text-gray-900 truncate max-w-xs"
                 >
-                  {file.name}
+                  {file?.name}
                 </motion.p>
 
                 {/* Remove Icon */}
