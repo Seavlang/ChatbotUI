@@ -13,7 +13,7 @@ export default function ChatbotComponent() {
   const [loading, setLoading] = useState(false);
 
   // Function to get value from input
-  const handleInputChange = (e) => {
+  const  handleInputChange = (e) => {
     setUserInput(e.target.value);
   };
 

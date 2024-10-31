@@ -3,240 +3,176 @@ import React, { useState, useEffect, useRef } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import FileComponent from "@/app/components/FileComponent";
 import { PlaceHolderComponent } from "@/app/components/PlaceHolderComponent";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import {
+  IconArrowLeft,
+  IconBrandTabler,
+  IconSettings,
+  IconUserBolt,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export default function Page() {
+
   const [activeChat, setActiveChat] = useState(0); // Track active chat index
-  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
-  const [uploadedFiles, setUploadedFiles] = useState([]); // Store uploaded files
-  const modalRef = useRef(null); // Ref for modal
+  const [hasContent, setHasContent] = useState(false); // State to track if content is available
+  const [onFileUpload, setOnFileUpload] = useState(); // State to track
 
   const chatItems = [
-    { id: 0, title: "Tag Research" },
-    { id: 1, title: "SakanaAI" },
-    { id: 2, title: "Text2SQL" },
+    { id: 0, title: "Tag Reearch" },
+    { id: 1, title: "Tag Reearch" },
+    { id: 2, title: "Tag Reearch" },
   ];
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  // Automatically focus on modal when it opens
-  useEffect(() => {
-    if (isModalOpen && modalRef.current) {
-      modalRef.current.focus();
-    }
-  }, [isModalOpen]);
-
-  // Callback to handle uploaded files
-  const handleFileUpload = (files) => {
-    setUploadedFiles(files);
-  };
-
+  const [open, setOpen] = useState(false);
   return (
-    <div className="h-[100vh] overflow-hidden">
+    <>
       {/* Navbar Section */}
       <div className="bg-white mx-40">
         <NavbarComponent />
       </div>
       <hr />
+      <div
+        className={cn(
+          "flex flex-col md:flex-row w-full flex-1 overflow-hidden",
+          "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
+        )}
+      >
+        <Sidebar open={open} setOpen={setOpen}>
+          <SidebarBody className="justify-between gap-10">
 
-      {/* Main Section */}
-      <div className="grid grid-cols-10 min-h-screen">
-        {/* Sidebar Section */}
-        <div className="col-span-2 border-r-2 p-10">
-          <div className="h-screen ">
-            <div className="h-[58%]">
-              <div className="flex justify-between">
-                <div>
-                  {/* New Chat Button */}
-                  <button className="flex items-center mb-10 px-5 py-2 text-primary bg-blue-100 rounded-md">
-                    <Image
-                      src={"/asset/images/add.png"}
-                      width={24}
-                      height={24}
-                    />
-
-                    <span className="text-lg ms-3 opacity-70 font-semibold">
-                      New Chat
-                    </span>
-                  </button>
-                </div>
-                <div>
-                  {/* Leave Icon */}
-                  <Image
-                    src={"/asset/images/leave.png"}
-                    width={45}
-                    height={45}
-                  />
-                </div>
-                
-              </div>
-
-              {/* Chat Items (Active/Inactive) */}
-              {chatItems.map((chat, index) => (
-                <div
-                  key={chat.id}
-                  className={`flex justify-between items-center w-full px-3 py-2 rounded-md mb-2 cursor-pointer ${
-                    activeChat === index
-                      ? "bg-blue-100 text-primary"
-                      : "text-gray-500 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveChat(index)} // Set active chat when clicked
+            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+              <div className="flex flex-col gap-2">
+                {/* New Chat Button */}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="font-medium text-black dark:text-white whitespace-pre"
                 >
-                  <div className="flex items-center">
-                    {/* Use different icons based on active/inactive state */}
-                    <Image
-                      src={
-                        activeChat === index
-                          ? "/asset/images/tag.png"
-                          : "/asset/images/tagnotactive.png"
-                      }
-                      width={24}
-                      height={24}
-                      alt="Tag Icon"
-                    />
-                    <span
-                      className={`text-md ms-3 font-medium ${
-                        activeChat === index ? "text-primary" : ""
-                      }`}
-                    >
-                      {chat.title}
-                    </span>
-                  </div>
-                  {/* Only show dots for the active chat */}
-                  {activeChat === index && (
-                    <div className="text-primary">
-                      <Image
-                        src={"/asset/images/opt.png"}
-                        width={24}
-                        height={24}
-                      />
+                  <div className="flex justify-between my-10">
+
+                    <button className="flex items-center  px-5 py-2 text-primary bg-blue-100 rounded-md">
+                      <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 4.5L9 13.5" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                        <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                      </svg>
+
+                      <span className="text-lg ms-3 opacity-70 font-semibold">
+                        New Chat
+                      </span>
+                    </button>
+
+                    <div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
+                      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
+                        <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
+                        <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
+                      </svg>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            {/* Discover Block with Modal Trigger */}
-            <div className=" h-[25%]">
-              <div
-                className="px-10 py-5 border border-gray-300 rounded-lg mt-auto cursor-pointer"
-                onClick={toggleModal}
-              >
-                {/* Placeholder Image */}
-                <h2 className="text-lg font-bold text-primary">Discover</h2>
-                <Image
-                  src="/asset/images/discover.png"
-                  width={150}
-                  height={150}
-                  alt="Discover Placeholder"
-                />
+
+                  </div>
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="font-medium text-black dark:text-white whitespace-pre"
+                >
+
+                  {chatItems.map((chat, index) => (
+                    <div
+                      key={chat.id}
+                      className={`flex justify-between items-center w-full px-3 py-2 rounded-md mb-2 cursor-pointer ${activeChat === index
+                        ? "bg-blue-100 text-primary"
+                        : "text-gray-500 hover:bg-gray-100"
+                        }`}
+                      onClick={() => setActiveChat(index)} // Set active chat when clicked
+                    >
+                      <div className="flex items-center">
+                        {/* Use different icons based on active/inactive state */}
+                        <Image
+                          src={
+                            activeChat === index
+                              ? "/asset/images/tag.png"
+                              : "/asset/images/tagnotactive.png"
+                          }
+                          width={24}
+                          height={24}
+                          alt="Tag Icon"
+                        />
+                        <span
+                          className={`inline-block text-md ms-3 font-medium ${activeChat === index ? "text-primary" : ""
+                            }`}
+                        >
+
+                          {chat.title}
+                        </span>
+                      </div>
+                      {/* Only show dots for the active chat */}
+                      {activeChat === index && (
+                        <div className="text-primary">
+                          <Image
+                            src={"/asset/images/opt.png"}
+                            width={24}
+                            height={24}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </motion.span>
+                {/* Chat Items (Active/Inactive) */}
+
               </div>
             </div>
-          </div>
-        </div>
+          </SidebarBody>
+        </Sidebar>
 
-        {/* Main Content Section */}
-        <div className="col-span-8 m-5">
-          {/* Default Header */}
-          <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-1 text-sm">
-            <span className="font-bold text-primary mr-2">Default</span>
-            <span className="text-black">Llama3.1-8b</span>
-          </div>
-          {/* Display Uploaded Files */}
-          <div className="mt-10">
-            <h3 className="text-lg font-bold">Uploaded Files:</h3>
-            {uploadedFiles.length === 0 ? (
-              <p>No files uploaded yet.</p>
-            ) : (
-              <ul>
-                {uploadedFiles.map((file, index) => (
-                  <li key={index} className="text-blue-600">
-                    {file.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
 
-          {/* FileComponent */}
-          <div className="mt-32">
-            <FileComponent onFileUpload={handleFileUpload} />{" "}
-            {/* Pass the callback */}
+        <div className="flex flex-1">
+          <div className="p-2 md:p-10 bg-white flex flex-col gap-2 flex-1 w-full h-full">
+
+            <div className="flex">
+              {
+                open ? (
+                  ''
+                )
+                  :
+                  (<div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
+                      <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
+                      <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
+                    </svg>
+                  </div>)
+              }
+
+
+              <div className="ml-5 inline-flex items-center border border-gray-300 rounded-md px-3 py-2 text-lg">
+                <span className="font-bold text-primary mr-2">Default</span>
+                <span className="font-normal text-black">Llama3.1-8b</span>
+              </div>
+            </div>
+
+
+            {/* FileComponent */}
+            <div className="flex flex-col items-center justify-center h-screen">
+              <FileComponent onFileUpload={onFileUpload}/>
+            </div>
+            {/* Placeholder Component */}
+
+            <div className="flex flex-col items-center h-1/2">
+              <div className="mt-auto w-full max-w-4xl mx-auto mb-20 ">
+                <PlaceHolderComponent setOnFileUpload={setOnFileUpload}/>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
+    </>
 
-      {/* Placeholder Component */}
-      <div className="-mt-[550px] ms-[300px]">
-        <PlaceHolderComponent />
-      </div>
-
-      {/* Modal Popup */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
-          onClick={toggleModal} // Close modal on clicking outside the modal
-        >
-          <div
-            className="bg-white p-6 rounded-lg max-w-3xl w-full relative"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
-            ref={modalRef}
-            tabIndex="-1" // Make modal focusable
-          >
-            {/* Close Button (X) in the top-right corner */}
-            <button
-              onClick={toggleModal}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-            >
-              ✕
-            </button>
-
-            {/* Header with Discover Label */}
-            <div className="grid grid-cols-3">
-              <div className="col-span-1">
-                <h2 className="px-10 py-1 ms-5 text-center bg-primary inline text-white rounded-md text-md font-semibold">
-                  Discover
-                </h2>
-                <div className="mt-44">
-                  <Image
-                    src="/asset/images/discover.png"
-                    width={180}
-                    height={180}
-                    alt="Discover Placeholder"
-                    className="bg-primary bg-opacity-20  rounded-lg"
-                  />
-                </div>
-              </div>
-              <div className="mt-10 mb-5 col-span-2 font-medium">
-                <p>
-                  Our platform allows you to gain valuable insights from your
-                  documents with the help of advanced AI.
-                </p>
-                <p className="text-primary font-bold my-3 text-lg">
-                  How It Works
-                </p>
-                <p>
-                  1. Start by uploading your files in formats such as PDF or
-                  TXT. Our system supports a variety of document types to ensure
-                  that you can ask questions about any content you provide.
-                </p>
-                <p>
-                  2. You can create up to 3 chat sessions simultaneously. Each
-                  session is designed to give you a dedicated space for asking
-                  questions and receiving answers related to your documents.
-                </p>
-                <p>
-                  3. Ask Questions About Your Documents: Once your documents are
-                  uploaded, simply ask questions, and our AI-powered chatbot
-                  will retrieve and deliver accurate, relevant answers from the
-                  content of your files.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
   );
 }
