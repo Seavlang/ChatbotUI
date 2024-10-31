@@ -4,7 +4,6 @@ import NavbarComponent from "../components/NavbarComponent";
 import FileComponent from "@/app/components/FileComponent";
 import { PlaceHolderComponent } from "@/app/components/PlaceHolderComponent";
 import Image from "next/image";
-import { signOut } from "next-auth/react";
 
 export default function Page() {
   const [activeChat, setActiveChat] = useState(0); // Track active chat index
@@ -58,7 +57,7 @@ export default function Page() {
                       height={24}
                     />
 
-                    <span onClick={()=> signOut({callbackUrl : "/login"})} className="text-lg ms-3 opacity-70 font-semibold">
+                    <span className="text-lg ms-3 opacity-70 font-semibold">
                       New Chat
                     </span>
                   </button>

@@ -5,10 +5,10 @@ export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-      credentials: {
-        email: {},
-        password: {},
-      },
+    //   credentials: {
+    //     email: {},
+    //     password: {},
+    //   },
       async authorize(credentials) {
         // Encode request body as application/x-www-form-urlencoded
         const requestBody = new URLSearchParams({
@@ -20,7 +20,7 @@ export const authOptions = {
           client_secret: "string",
         });
 
-        const response = await fetch(`http://110.74.194.123:9080/api/v1/auth/login`, {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",

@@ -7,5 +7,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/playground", "/explore", "/docs/:path*"], // Add protected routes here
+  matcher: ["/playground", "/explore"], // Add protected routes here
 };
