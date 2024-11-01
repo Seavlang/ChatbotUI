@@ -60,6 +60,7 @@ export default function ResetPasswordForm() {
     setIsLoading(true);
     try {
       const res = await resetPasswordAction({ email, password: values.password });
+      console.log("resset res",res);
       if (res?.success) {
         toast.success("Password has been reset successfully!");
         router.push("/login");
