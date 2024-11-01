@@ -10,7 +10,10 @@
     -ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
   }
   
-  .no-scrollbar::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
     display: none; /* Hides scrollbar in Chrome, Safari, and Opera */
-  }
-  
+}
+
+textarea::-webkit-scrollbar{
+    width: 0px;
+}
