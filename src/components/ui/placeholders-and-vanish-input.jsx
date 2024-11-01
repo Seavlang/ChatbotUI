@@ -58,9 +58,9 @@ export function PlaceholdersAndVanishInput({
     const computedStyles = getComputedStyle(inputRef.current);
 
     const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
-    ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
+    ctx.font = `${fontSize}px ${computedStyles.fontFamily}`;
     ctx.fillStyle = "#FFF";
-    ctx.fillText(value, 16, 40);
+    ctx.fillText(value, 16, 30);
 
     const imageData = ctx.getImageData(0, 0, 800, 800);
     const pixelData = imageData.data;
@@ -167,105 +167,153 @@ export function PlaceholdersAndVanishInput({
     e.preventDefault();
     vanishAndSubmit();
     onSubmit && onSubmit(e);
+    e.preventDefault();
+
+    // Resize to original size
+    const textarea = inputRef.current;
+    textarea.style.height = 'auto'; // Reset height to the initial size
   };
+
+  const adjustHeight = () => {
+    const textarea = inputRef.current;
+    textarea.style.height = 'auto'; // Reset height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+  };
+  const handleInputChange = (e) => {
+    setValue(e.target.value);
+    if (!animating) {
+      setValue(e.target.value);
+      onChange && onChange(e);
+      adjustHeight(); // Adjust height on each change
+    }
+  };
+  const maxHeight = 150;
+  useEffect(() => {
+    const textarea = inputRef?.current;
+
+    const handleResize = (e) => {
+      textarea.style.height = 'auto'; // Reset height to auto to recalculate
+      if (textarea.scrollHeight > maxHeight) {
+        // If the content exceeds max height, set max height and enable overflow
+        textarea.style.height = `${maxHeight}px`;
+        textarea.style.overflowY = 'auto';
+      } else {
+        // Otherwise, grow the textarea as needed and hide the scrollbar
+        textarea.style.height = `${textarea.scrollHeight}px`;
+        textarea.style.overflowY = 'hidden';
+      }
+    };
+
+    // Add event listener to adjust height on keyup
+    textarea.addEventListener('keyup', handleResize);
+
+    // Clean up the event listener on unmount
+    return () => {
+      textarea.removeEventListener('keyup', handleResize);
+    };
+  }, []);
+
   return (
     (
-      <form
-        className={cn(
-          "w-full relative max-h-72 max-w-3xl mx-auto bg-white dark:bg-zinc-800 rounded-3xl overflow-hidden shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200",
-          value && "bg-gray-50"
-        )}
-        style={{height: "200px"}}
-        onSubmit={handleSubmit}>
-
-        <canvas
+      <div className="relative w-full max-w-3xl mx-auto bg-white dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200 border"> {/* Container with relative positioning */}
+        <form
           className={cn(
-            "absolute pointer-events-none text-lg font-medium transform scale-50 top-[20%] left-2 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
-            !animating ? "opacity-0" : "opacity-100"
+            "w-full "
           )}
-          ref={canvasRef} />
-
-        <textarea
-          onChange={(e) => {
-            if (!animating) {
-              setValue(e.target.value);
-              onChange && onChange(e);
-            }
-          }}
-          onKeyDown={handleKeyDown}
-          ref={inputRef}
-          value={value}
-          type="text"
-          rows={5}
-          className={cn(
-            "w-full h-auto absolute bottom-5 flex-nowrap text-lg font-normal z-50 border-none dark:text-white bg-transparent text-black  focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20 no-scrollbar",
-            animating && "text-transparent dark:text-transparent"
-          )} 
+          onSubmit={handleSubmit}
+        >
+          {/* Canvas with optional absolute positioning */}
+          <canvas
+            className={cn(
+              "pointer-events-none text-lg font-medium left-2 sm:left-8 filter invert dark:invert-0 overflow-hidden",
+              animating ? "opacity-100" : "opacity-0"
+            )}
+            style={{ position: 'absolute', top: '20%', zIndex: 1 }} // Ensuring it doesn't interfere with the textarea
+            ref={canvasRef}
           />
 
+          {/* Expanding Textarea */}
+          <textarea
+            ref={inputRef}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            value={value}
+            type="text"
+            className={
+              cn(
+                "w-full p-3 text-lg font-normal mt-2 px-4 rounded-lg resize-none z-50 border-none dark:text-white bg-transparent text-black top-4 focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20 ",
+                animating && "text-transparent dark:text-transparent"
+              )
+            }
+            rows={1} // Start with a single row
+            style={{ outline: "none" }} // Ensure textarea is on top
+          />
 
-        <button
-          disabled={!value}
-          type="submit"
-          className="absolute right-5 bottom-4 z-50  h-8 w-8 rounded-full disabled:bg-gray-300 bg-primary bg-opacity-70 dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center">
-          <motion.svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-primary h-4 w-4">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <motion.path
-              d="M5 12l14 0"
-              initial={{
-                strokeDasharray: "50%",
-                strokeDashoffset: "50%",
-              }}
-              animate={{
-                strokeDashoffset: value ? 0 : "50%",
-              }}
-              transition={{
-                duration: 0.3,
-                ease: "linear",
-              }} />
-            <path d="M13 18l6 -6" />
-            <path d="M13 6l6 6" />
-          </motion.svg>
-        </button>
-        <div
-          className="absolute inset-0 flex items-end bottom-5 rounded-full pointer-events-none">
-          <AnimatePresence mode="wait">
-            {!value && (
-              <motion.p
+          <button
+            disabled={!value}
+            type="submit"
+            className="absolute right-5 bottom-4 z-50  h-8 w-8 rounded-full dark:disabled:bg-zinc-800 bg-gray-400 bg-opacity-70 dark:bg-zinc-900  transition duration-200 flex items-center justify-center">
+
+            <motion.svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-primary h-4 w-4">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <motion.path
+                d="M5 12l14 0"
                 initial={{
-                  y: 5,
-                  opacity: 0,
+                  strokeDasharray: "50%",
+                  strokeDashoffset: "50%",
                 }}
-                key={`current-placeholder-${currentPlaceholder}`}
                 animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                exit={{
-                  y: -15,
-                  opacity: 0,
+                  strokeDashoffset: value ? 0 : "50%",
                 }}
                 transition={{
                   duration: 0.3,
                   ease: "linear",
-                }}
-                className="dark:text-zinc-500 text-lg font-[450] text-neutral-600 pl-7 sm:pl-10 text-left w-[calc(100%-2rem)] truncate">
-                {placeholders[currentPlaceholder]}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-      </form>
+                }} />
+              <path d="M13 18l6 -6" />
+              <path d="M13 6l6 6" />
+            </motion.svg>
+          </button>
+          <div
+            className="absolute inset-0 flex items-end bottom-5 rounded-full pointer-events-none">
+            <AnimatePresence mode="wait">
+              {!value && (
+                <motion.p
+                  initial={{
+                    y: 5,
+                    opacity: 0,
+                  }}
+                  key={`current-placeholder-${currentPlaceholder}`}
+                  animate={{
+                    y: 0,
+                    opacity: 1,
+                  }}
+                  exit={{
+                    y: -15,
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    ease: "linear",
+                  }}
+                  className="dark:text-zinc-500 text-lg font-[450] text-neutral-600 pl-7 sm:pl-10 text-left w-[calc(100%-2rem)] truncate">
+                  {placeholders[currentPlaceholder]}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+
+        </form>
+      </div>
     )
   );
 }
