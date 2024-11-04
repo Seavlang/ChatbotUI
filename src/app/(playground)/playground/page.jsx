@@ -1,33 +1,121 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import FileComponent from "@/app/components/FileComponent";
 import { PlaceHolderComponent } from "@/app/components/PlaceHolderComponent";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
-} from "@tabler/icons-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { MoreVertical, Trash2 } from "lucide-react";
+import Typewriter from "../components/Typewriter";
 
 export default function Page() {
 
   const [activeChat, setActiveChat] = useState(0); // Track active chat index
   const [hasContent, setHasContent] = useState(false); // State to track if content is available
   const [onFileUpload, setOnFileUpload] = useState(); // State to track
-
-  const chatItems = [
-    { id: 0, title: "Tag Reearch" },
-    { id: 1, title: "Tag Reearch" },
-    { id: 2, title: "Tag Reearch" },
-  ];
-
+  const [chatToDelete, setChatToDelete] = useState(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [chatHistory, setChatHistory] = useState([
+    { id: 1, title: "Previous Chat 1" },
+    { id: 2, title: "Previous Chat 2" },
+    { id: 3, title: "Previous Chat 3" },
+  ]);
+
+  const [messages, setMessages] = useState([]);
+
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
+
+  const generateAIResponse = async (userInput) => {
+    // Simulate AI processing time
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setIsLoading(false);
+
+    // Generate a simple response based on the user's input
+    const response = `Thank you for your input: "${userInput}". As an AI assistant, I'm here to help you with any questions or tasks related to data analysis and visualization. How can I assist you further?`;
+
+    return {
+      id: messages.length + 2,
+      role: "ai",
+      content: response,
+    };
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (newMessage.trim()) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: messages.length + 1,
+          role: "user",
+          content: newMessage.trim()
+        },
+      ]);
+      setNewMessage(""); // Clear input
+
+      // Generate and add AI response
+      const aiResponse = await generateAIResponse(newMessage.trim());
+      setMessages((prev) => [...prev, aiResponse]);
+
+      setTimeout(scrollToBottom, 100);
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const startNewChat = () => {
+    if (chatHistory.length >= 3) {
+      return;
+    }
+    const newChat = { id: Date.now(), title: "New Chat" };
+    setChatHistory([newChat, ...chatHistory]);
+    setActiveChat(newChat);
+
+  };
+
+
+  const handleDeleteChat = (chatId) => {
+    setChatToDelete(chatId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteChat = () => {
+    setChatHistory(chatHistory.filter((chat) => chat.id !== chatToDelete));
+    if (activeChat && activeChat.id === chatToDelete) {
+      setActiveChat(null);
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
+
   return (
     <>
       {/* Navbar Section */}
@@ -51,6 +139,7 @@ export default function Page() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="font-medium text-black dark:text-white whitespace-pre"
+                  onClick={startNewChat}
                 >
                   <div className="flex justify-between my-10">
 
@@ -60,7 +149,7 @@ export default function Page() {
                         <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
                       </svg>
 
-                      <span className="text-lg ms-3 opacity-70 font-semibold">
+                      <span className="text-primary text-lg ms-3 font-semibold ">
                         New Chat
                       </span>
                     </button>
@@ -81,7 +170,7 @@ export default function Page() {
                   className="font-medium text-black dark:text-white whitespace-pre"
                 >
 
-                  {chatItems.map((chat, index) => (
+                  {chatHistory.map((chat, index) => (
                     <div
                       key={chat.id}
                       className={`flex justify-between items-center w-full px-3 py-2 rounded-md mb-2 cursor-pointer ${activeChat === index
@@ -113,11 +202,32 @@ export default function Page() {
                       {/* Only show dots for the active chat */}
                       {activeChat === index && (
                         <div className="text-primary">
-                          <Image
+                          {/* <Image
                             src={"/asset/images/opt.png"}
                             width={24}
                             height={24}
-                          />
+                          /> */}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="ml-2 h-6 w-6 flex-shrink-0 "
+                              >
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only bg-white">More options</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-white">
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteChat(chat.id)}
+                                className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       )}
                     </div>
@@ -130,9 +240,8 @@ export default function Page() {
           </SidebarBody>
         </Sidebar>
 
-
         <div className="flex flex-1">
-          <div className="p-2 md:p-10 bg-white flex flex-col gap-2 flex-1 w-full h-full">
+          <div className="p-2 md:p-10 h-screen bg-white flex flex-col gap-2 flex-1 w-full">
 
             <div className="flex">
               {
@@ -158,19 +267,83 @@ export default function Page() {
 
 
             {/* FileComponent */}
-            <div className="flex flex-col items-center justify-center h-screen">
-              <FileComponent onFileUpload={onFileUpload}/>
-            </div>
-            {/* Placeholder Component */}
-
-            <div className="flex flex-col items-center h-1/2">
-              <div className="mt-auto w-full max-w-4xl mx-auto mb-20 ">
-                <PlaceHolderComponent setOnFileUpload={setOnFileUpload}/>
+            {
+              messages.length !== 0 ?
+                ('')
+                :
+                (
+                  <div className="flex flex-row items-center justify-center h-screen">
+                    <FileComponent onFileUpload={onFileUpload} />
+                  </div>
+                )
+            }
+            <div className="flex justify-center max-h-[75%]">
+              <div className="flex flex-col w-1/2 h-full">
+                {/* Chat messages */}
+                <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`py-3 rounded-2xl  break-words 
+                            ${message.role === "user"
+                            ? "bg-[#90A1FE] px-5 max-w-xl text-white"
+                            // : "bg-gray-100 text-black"
+                            : ""
+                          }
+                        `}
+                      >
+                      {
+                        message?.role == "ai" ?
+                        <Typewriter text1={message?.content}/>:message?.content
+                      }
+                        {/* {message?.content} */}
+                      </motion.div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
+            {/* Placeholder Component */}
+            <div className="relative bottom-5 h-screen">
+              <div className="flex flex-col items-center h-full">
+                <div className="mt-auto w-full max-w-4xl mx-auto mb-20 ">
+                  <PlaceHolderComponent setOnFileUpload={setOnFileUpload}
+                    handleSendMessage={handleSendMessage}
+                    setNewMessage={setNewMessage} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen} >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this chat session?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="cancel"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                CANCEL
+              </Button>
+              <Button variant="delete" onClick={confirmDeleteChat} >
+                DELETE
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
 

@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
-  onSubmit
+  onSubmit,
+  setNewMessage
 }) {
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
@@ -52,17 +53,17 @@ export function PlaceholdersAndVanishInput({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = 800;
-    canvas.height = 800;
-    ctx.clearRect(0, 0, 800, 800);
+    canvas.width = 500;
+    canvas.height = 500;
+    ctx.clearRect(0, 0, 500, 500);
     const computedStyles = getComputedStyle(inputRef.current);
 
     const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
-    ctx.font = `${fontSize}px ${computedStyles.fontFamily}`;
+    ctx.font = `${fontSize}px light Poppin`;
     ctx.fillStyle = "#FFF";
     ctx.fillText(value, 16, 30);
 
-    const imageData = ctx.getImageData(0, 0, 800, 800);
+    const imageData = ctx.getImageData(50, 50, 800, 800);
     const pixelData = imageData.data;
     const newData = [];
 
@@ -187,35 +188,41 @@ export function PlaceholdersAndVanishInput({
       adjustHeight(); // Adjust height on each change
     }
   };
-  const maxHeight = 150;
+  // const maxHeight = 150;
+  // useEffect(() => {
+  //   const textarea = inputRef?.current;
+
+  //   const handleResize = (e) => {
+  //     textarea.style.height = 'auto'; // Reset height to auto to recalculate
+  //     if (textarea.scrollHeight > maxHeight) {
+  //       // If the content exceeds max height, set max height and enable overflow
+  //       textarea.style.height = `${maxHeight}px`;
+  //       // textarea.style.overflowY = 'auto';
+  //     }
+  //     else {
+  //       // Otherwise, grow the textarea as needed and hide the scrollbar
+  //       textarea.style.height = `${textarea.scrollHeight}px`;
+  //       textarea.style.overflowY = 'hidden';
+  //     }
+  //   };
+
+  //   // Add event listener to adjust height on keyup
+  //   textarea.addEventListener('keyup', handleResize);
+
+  //   // Clean up the event listener on unmount
+  //   return () => {
+  //     textarea.removeEventListener('keyup', handleResize);
+  //   };
+  // }, []);
   useEffect(() => {
-    const textarea = inputRef?.current;
-
-    const handleResize = (e) => {
-      textarea.style.height = 'auto'; // Reset height to auto to recalculate
-      if (textarea.scrollHeight > maxHeight) {
-        // If the content exceeds max height, set max height and enable overflow
-        textarea.style.height = `${maxHeight}px`;
-        textarea.style.overflowY = 'auto';
-      } else {
-        // Otherwise, grow the textarea as needed and hide the scrollbar
-        textarea.style.height = `${textarea.scrollHeight}px`;
-        textarea.style.overflowY = 'hidden';
-      }
-    };
-
-    // Add event listener to adjust height on keyup
-    textarea.addEventListener('keyup', handleResize);
-
-    // Clean up the event listener on unmount
-    return () => {
-      textarea.removeEventListener('keyup', handleResize);
-    };
-  }, []);
+    adjustHeight();
+    setNewMessage(value)
+  }, [value]);
 
   return (
     (
-      <div className="relative w-full max-w-3xl mx-auto bg-white dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200 border"> {/* Container with relative positioning */}
+      <div className="relative w-full max-w-3xl mx-auto dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200"> {/* Container with relative positioning */}
+
         <form
           className={cn(
             "w-full "
@@ -241,18 +248,18 @@ export function PlaceholdersAndVanishInput({
             type="text"
             className={
               cn(
-                "w-full p-3 text-lg font-normal mt-2 px-4 rounded-lg resize-none z-50 border-none dark:text-white bg-transparent text-black top-4 focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20 ",
+                "w-full p-3 text-lg font-normal px-4 rounded-lg resize-none z-50 border-none bg-transparent text-black top-4 focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20 ",
                 animating && "text-transparent dark:text-transparent"
               )
             }
             rows={1} // Start with a single row
-            style={{ outline: "none" }} // Ensure textarea is on top
+            style={{ outline: "none", maxHeight: "200px", overflowY: "auto" }} // Ensure textarea is on top
           />
 
           <button
             disabled={!value}
             type="submit"
-            className="absolute right-5 bottom-4 z-50  h-8 w-8 rounded-full dark:disabled:bg-zinc-800 bg-gray-400 bg-opacity-70 dark:bg-zinc-900  transition duration-200 flex items-center justify-center">
+            className="absolute right-5 bottom-3 z-50  h-8 w-8 rounded-full bg-[#deedff] bg-opacity-70 dark:bg-[#004B93] transition duration-200 flex items-center justify-center">
 
             <motion.svg
               xmlns="http://www.w3.org/2000/svg"
@@ -284,7 +291,7 @@ export function PlaceholdersAndVanishInput({
             </motion.svg>
           </button>
           <div
-            className="absolute inset-0 flex items-end bottom-5 rounded-full pointer-events-none">
+            className="absolute inset-0 flex items-end bottom-4 rounded-full pointer-events-none">
             <AnimatePresence mode="wait">
               {!value && (
                 <motion.p
