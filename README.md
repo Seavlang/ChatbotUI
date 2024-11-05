@@ -19,11 +19,19 @@ bun dev
 import  Chatbot  from "@seavlang/chatbotwidget/src/index";
 
 export default function Chat() {
-  return <div>Hello,
-    <Chatbot SessionId="1" projectId="2"  apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZ2JvdCIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.IxAj9clfjkghE0o8cmIhn9LfGuzrASHfyQ1BQjXfVm0"/>
+  return 
+  <div>
+    <Chatbot 
+        SessionId="Your_session_id" 
+        projectId="Your_project_id"  
+        apiKey="Your_api_key"
+    />
   </div>;
 }
 
 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You can test the package with this: 
+  session id =  "12", 
+  project id =  "5", 
+  api key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
