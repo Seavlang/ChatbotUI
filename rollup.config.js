@@ -9,6 +9,11 @@ export default {
   },
   plugins: [
     image(),
+    postcss({
+        extract: true, // Extracts CSS to a separate file
+        minimize: true,
+        plugins: [require('tailwindcss'), require('autoprefixer')],
+      }),
     // other plugins
   ],
 };

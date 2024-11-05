@@ -16,11 +16,11 @@ bun dev
 ## How to Use
 
 ```javascript
-import  ChatbotAction  from "@seavlang/chatbotwidget/src/index";
+import  Chatbot  from "@seavlang/chatbotwidget/src/index";
 
 export default function Chat() {
   return <div>Hello,
-    <ChatbotAction apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZ2JvdCIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.IxAj9clfjkghE0o8cmIhn9LfGuzrASHfyQ1BQjXfVm0"/>
+    <Chatbot SessionId="1" projectId="2"  apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZ2JvdCIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.IxAj9clfjkghE0o8cmIhn9LfGuzrASHfyQ1BQjXfVm0"/>
   </div>;
 }
 

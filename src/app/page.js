@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import closeIcon from '../../public/cross.png';
 import catIcon from '../../public/cat.png';
 
-export default function Chat({ apiKey }) { // Accept apiKey as a prop
+export default function Chat({ apiKey,SessionId, projectId}) { // Accept apiKey as a prop
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
     { type: 'bot', text: "Hello! I'm here to lend a helping hand whenever you need it. What can I do for you?" },
@@ -30,7 +30,7 @@ export default function Chat({ apiKey }) { // Accept apiKey as a prop
     console.log("input: " + input);
     try {
       // Call the chatbot service and get the response with the provided API key
-      const response = await ChatbotAction(input, "1", "2", "apiKey");
+      const response = await ChatbotAction(input, SessionId, projectId, apiKey);
       console.log("response", response);
       setMessages((prevMessages) => [...prevMessages, { type: 'bot', text: response.output }]); // Adjust according to response format
     } catch (error) {
