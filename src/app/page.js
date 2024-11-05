@@ -3,6 +3,8 @@
 import { ChatbotAction } from '../action/chatbotAction';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import closeIcon from '../../public/cross.png';
+import catIcon from '../../public/cat.png';
 
 export default function Chat({ apiKey }) { // Accept apiKey as a prop
   const [isExpanded, setIsExpanded] = useState(false);
@@ -58,7 +60,7 @@ export default function Chat({ apiKey }) { // Accept apiKey as a prop
           <div className="flex justify-between items-center p-5 bg-white text-[#004B93] rounded-t-lg">
             <span className="font-bold">AI Assistant</span>
             <button onClick={() => setIsExpanded(false)} className="text-gray-600">
-              <Image src={"/cross.png"} width={30} height={30} alt='close'/>
+              <Image src={closeIcon} width={30} height={30} alt='close'/>
             </button>
           </div>
           <ul ref={chatRef} className="flex-1 overflow-y-auto p-5 space-y-4 bg-blue-50">
@@ -93,7 +95,7 @@ export default function Chat({ apiKey }) { // Accept apiKey as a prop
           </div>
         </div>
       ) : (
-        <Image src={"/cat.png"} width={100} height={100} alt='chatbot'/>
+        <Image src={catIcon} width={100} height={100} alt='chatbot'/>
       )}
     </div>
   );
