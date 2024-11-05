@@ -1,39 +1,44 @@
 {
-  "name": "chatbotwidget",
-  "version": "1.0.0",
+  "name": "@seavlang/hrdchatbotwidget",
+  "version": "1.0.5",
   "description": "A React-based chatbot widget for web applications built with Next.js",
-  "main": "src/index.js", 
+  "main": "src/index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepublishOnly": "npm run build" 
+    "prepublishOnly": "npm run build"
   },
-  "bin": {
-    "chat-api": "install.js"
-  },
-  "keywords": ["chatbot", "widget", "react", "nextjs", "chat-api"],
-  "author": "kshrd", 
+  "keywords": [
+    "chatbot",
+    "widget",
+    "react",
+    "nextjs",
+    "chat-api"
+  ],
+  "author": "kshrd",
   "license": "MIT",
   "dependencies": {
-    "react": "^18.2.0", 
+    "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "next": "^13.5.0" 
+    "next": "^15.0.2"
   },
   "devDependencies": {
-    "postcss": "^8.4.0",
-    "tailwindcss": "^3.4.1",
     "eslint": "^8.40.0",
-    "eslint-config-next": "^13.5.0"
+    "eslint-config-next": "^13.5.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.14"
   },
   "files": [
     "src",
-    "install.js",
-    "README.md"
+   "README.md",
+    "public",
+    "tailwind.config.js",
+    "postcss.config.js"  
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Seavlang/ChatbotUI.git" 
+    "url": "git+https://github.com/Seavlang/ChatbotUI.git"
   }
 }

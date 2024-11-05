@@ -1,10 +1,10 @@
 'use client';
 
-import { ChatbotAction } from '@/action/chatbotAction';
+import { ChatbotAction } from '../action/chatbotAction';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 
-export default function Chat() {
+export default function Chat({ apiKey }) { // Accept apiKey as a prop
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
     { type: 'bot', text: "Hello! I'm here to lend a helping hand whenever you need it. What can I do for you?" },
@@ -27,8 +27,8 @@ export default function Chat() {
     setMessages((prevMessages) => [...prevMessages, { type: 'user', text: input }]);
     console.log("input: " + input);
     try {
-      // Call the chatbot service and get the response
-      const response = await ChatbotAction(input, "1", "2");
+      // Call the chatbot service and get the response with the provided API key
+      const response = await ChatbotAction(input, "1", "2", "apiKey");
       console.log("response", response);
       setMessages((prevMessages) => [...prevMessages, { type: 'bot', text: response.output }]); // Adjust according to response format
     } catch (error) {

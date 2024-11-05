@@ -1,4 +1,4 @@
 // src/index.js
-import Chat from './components/Chat'; // Adjust the import path as needed
+import Chat from './app/page'; // Adjust the import path as needed
 
 export default Chat;
