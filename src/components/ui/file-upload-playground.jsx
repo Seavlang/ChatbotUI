@@ -31,16 +31,27 @@ export const FileUploadPlayground = ({ file, onChange }) => {
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
 
-  console.log("upload from icon: ",file)
-  useEffect(()=>{
+  console.log("upload from icon: ", file)
+  useEffect(() => {
     setFiles(file);
   }, [file])
-
   const handleFileChange = (newFiles) => {
-    setFiles((prevFiles) => [prevFiles, ...newFiles]);
-    onChange && onChange([...files, ...newFiles]);
+    // Filter out any undefined values in the new files
+    const validNewFiles = newFiles.filter((file) => file !== undefined);
+
+    setFiles((prevFiles = []) => {
+      // Filter out undefined in previous files (or use empty array) and combine with new files
+      const updatedFiles = [
+        ...prevFiles.filter((file) => file !== undefined),
+        ...validNewFiles,
+      ];
+      onChange && onChange(updatedFiles);
+      return updatedFiles;
+    });
+
     setError(""); // Clear error when a valid file is added
   };
+
 
   const handleRemoveFile = (index, e) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action
@@ -81,7 +92,7 @@ export const FileUploadPlayground = ({ file, onChange }) => {
           style={{ height: '220px' }}
         >
           <input
-            // ref={fileInputRef}
+            ref={fileInputRef}
             id="file-upload-handle"
             type="file"
             onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
@@ -158,68 +169,74 @@ export const FileUploadPlayground = ({ file, onChange }) => {
           </div>
         </motion.div>
       </div>
+      {
+        console.log("file length: ", files?.length)
+      }
       {files?.length > 0 &&
-        files?.map((file, idx) => (
-          <motion.div
-            key={"file" + idx}
-            layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
-            className={cn(
-              "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
-              "shadow-sm"
-            )}
-            style={{ borderRadius: "12px", padding: "2px", width: "80%" }}
-          >
+        files?.map((file, idx) =>
+            (
+            <motion.div
+              key={"file" + idx}
+              layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
+              className={cn(
+                "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
+                "shadow-sm"
+              )}
+              style={{ borderRadius: "12px", padding: "2px", width: "80%" }}
+            >
 
-            <div className="flex w-full items-center gap-4">
-              {/* Dynamic Icon based on file extension */}
-              <div className="p-2">
-                {file?.name?.endsWith(".pdf") ? (
-                  <Image
-                    src={"/asset/images/pdf.png"}
-                    alt="pdf file"
-                    width={40}
-                    height={40}
-                  />
-                ) : file?.name?.endsWith(".txt") ? (
-                  <Image
-                    src={"/asset/images/txt.png"}
-                    alt="txt file"
-                    width={40}
-                    height={40}
-                  />
-                ) : (
-                  <Image
-                    src={"/asset/images/file.png"}
-                    alt="file"
-                    width={50}
-                    height={50}
-                  />
-                )}
+              <div className="flex w-full items-center gap-4">
+                {/* Dynamic Icon based on file extension */}
+                <div className="p-2">
+                  {file?.name?.endsWith(".pdf") ? (
+                    <Image
+                      src={"/asset/images/pdf.png"}
+                      alt="pdf file"
+                      width={40}
+                      height={40}
+                    />
+                  ) : file?.name?.endsWith(".txt") ? (
+                    <Image
+                      src={"/asset/images/txt.png"}
+                      alt="txt file"
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
+                    <Image
+                      src={"/asset/images/file.png"}
+                      alt="file"
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                </div>
+
+                {/* File Name */}
+                <div className="flex justify-between items-center w-full gap-4">
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    layout
+                    className="text-base font-medium text-gray-900 truncate max-w-40"
+                  >
+                    {file?.name}
+                  </motion.p>
+
+                  {/* Remove Icon */}
+                  <button
+                    type="button"
+                    onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <IconX size={20} />
+                  </button>
+                </div>
               </div>
-
-              {/* File Name */}
-              <div className="flex justify-between items-center w-full gap-4">
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  layout
-                  className="text-base font-medium text-gray-900 truncate max-w-xs"
-                >
-                  {file?.name}
-                </motion.p>
-
-                {/* Remove Icon */}
-                <button
-                  type="button"
-                  onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
-                  className="p-2 text-red-600 hover:text-red-800"
-                >
-                  <IconX size={20} />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          )
+          // console.log("idx", idx, "files: ", file)
+        )}
 
     </div>
 

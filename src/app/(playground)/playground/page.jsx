@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import NavbarComponent from "../components/NavbarComponent";
-import FileComponent from "@/app/components/FileComponent";
 import { PlaceHolderComponent } from "@/app/components/PlaceHolderComponent";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { motion } from "framer-motion";
@@ -24,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Trash2 } from "lucide-react";
 import Typewriter from "../components/Typewriter";
+import FileComponentPlayground from "@/app/components/FileComponentPlayground";
 
 export default function Page() {
 
@@ -273,7 +273,7 @@ export default function Page() {
                 :
                 (
                   <div className="flex flex-row items-center justify-center h-screen">
-                    <FileComponent onFileUpload={onFileUpload} />
+                    <FileComponentPlayground onFileUpload={onFileUpload} />
                   </div>
                 )
             }
