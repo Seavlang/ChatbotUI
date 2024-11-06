@@ -1,6 +1,6 @@
 export const chatbotService = async (input, externalSessionId, projectId, apiKey) => {
   console.log("service", input, externalSessionId);
-  const response = await fetch('http://110.74.194.123:9080/external_chain/invoke', {
+  const response = await fetch('http://110.74.194.123:8085/external_chain/invoke', {
     method: 'POST',
     headers: {
       'accept': 'application/json',

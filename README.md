@@ -16,7 +16,7 @@ bun dev
 ## How to Use
 
 ```javascript
-import  Chatbot  from "@seavlang/chatbotwidget/src/index";
+import  Chatbot  from "@seavlang/hrdchatbotwidget/src/index";
 
 export default function Chat() {
   return 
@@ -32,6 +32,6 @@ export default function Chat() {
 
 
 You can test the package with this: 
-  session id =  "12", 
-  project id =  "5", 
+  session id =  "13", 
+  project id =  "8", 
   api key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
