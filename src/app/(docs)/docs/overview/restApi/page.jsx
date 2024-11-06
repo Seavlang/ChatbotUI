@@ -55,6 +55,7 @@ export default function Page() {
         className="ml-10 mt-10"
         width={1000}
         height={500}
+        alt="rag"
       />
 
       <p className="ml-10 mt-5 mr-20">

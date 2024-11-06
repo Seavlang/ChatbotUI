@@ -36,6 +36,7 @@ export default function FooterComponent() {
               width={20}
               height={20}
               className="me-2"
+              alt="locaton"
             />
             <p>
               {" "}
@@ -49,6 +50,7 @@ export default function FooterComponent() {
               width={20}
               height={20}
               className="me-2"
+              alt="mail"
             />
             <p>
               Email:{" "}
@@ -63,6 +65,7 @@ export default function FooterComponent() {
               width={20}
               height={20}
               className="me-2"
+              alt="phone"
             />
             <p>
             Phone:{" "}

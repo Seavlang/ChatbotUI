@@ -202,11 +202,6 @@ export default function Page() {
                       {/* Only show dots for the active chat */}
                       {activeChat === index && (
                         <div className="text-primary">
-                          {/* <Image
-                            src={"/asset/images/opt.png"}
-                            width={24}
-                            height={24}
-                          /> */}
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button

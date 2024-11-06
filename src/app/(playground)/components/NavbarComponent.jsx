@@ -11,16 +11,17 @@ export default function NavbarComponent() {
         <div className="navbar bg-base-100 font-semibold text-primary">
           <div className="navbar-start">
             <div>
-              <Link href="/">
-                <Image 
-                  src="/asset/images/logo.png" 
-                  alt="GPT_LOGO" 
-                  width={40} 
-                  height={40} 
-                />
-              </Link>
+            <Link href="/">
+              <Image 
+                src="/asset/images/logo2.png" 
+                alt="GPT_LOGO" 
+                width={50} 
+                height={50} 
+              />
+            </Link>
             </div>
           </div>
+
   
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal text-lg">

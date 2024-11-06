@@ -1,7 +1,8 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { CopyBlock, ocean } from "react-code-blocks";
+import React, { useState } from "react";
+import { CodeBlock, CopyBlock, ocean } from "react-code-blocks";
 
 export default function Page() {
   const codeString = `curl -X 'POST' 
@@ -9,6 +10,14 @@ export default function Page() {
     -H 'accept: application/json' 
     -H 'Authorization: Bearer REST_API_KEY’
     `;
+
+    const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeString);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
+  };
 
   return (
     <div className="grid grid-cols-12">
@@ -26,20 +35,20 @@ export default function Page() {
             language or environment.
           </p>
           <h1 className="ml-10 my-5 text-lg font-medium">Get Your API Key</h1>
-          <div class=" ml-10 mr-20 ">
-            <p class="text-gray-700 mb-4">
+          <div className=" ml-10 mr-20 ">
+            <p className="text-gray-700 mb-4">
               To authenticate and interact with the API, you will need an API key.
               Follow these steps to get started:
             </p>
 
-            <ol class="list-decimal pl-6 space-y-4 text-gray-700">
+            <ol className="list-decimal pl-6 space-y-4 text-gray-700">
               <li>
-                <h2 class="font-semibold mb-2">Generate Your API Key:</h2>
-                <ul class="list-disc pl-6 space-y-2">
+                <h2 className="font-semibold mb-2">Generate Your API Key:</h2>
+                <ul className="list-disc pl-6 space-y-2">
                   <li>You can create an API key at the user account level.</li>
                   <li>
                     Navigate to{" "}
-                    <span class="font-medium">
+                    <span className="font-medium">
                       Profile &gt; Settings &gt; API Keys
                     </span>{" "}
                     to create and manage your API keys.
@@ -52,8 +61,8 @@ export default function Page() {
               </li>
 
               <li>
-                <h2 class="font-semibold mb-2">Keep Your Key Secure:</h2>
-                <ul class="list-disc pl-6 space-y-2">
+                <h2 className="font-semibold mb-2">Keep Your Key Secure:</h2>
+                <ul className="list-disc pl-6 space-y-2">
                   <li>
                     Your API key is confidential. Do not share it with others or
                     expose it in public repositories.
@@ -74,29 +83,39 @@ export default function Page() {
             endpoints. Here is an example of how to use a GET request:
           </p>
           <div className="mt-5 ml-10 mr-10">
-            <div className="bg-[#004655] rounded-lg overflow-hidden">
-              {/* Title Section */}
-              <div className="bg-[#004655] text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
-                <span className="font-semibold">REQUEST</span>
-                {/* Copy Button (optional for style, not functional here) */}
-                <button className="text-gray-400 hover:text-white">📋</button>
-              </div>
+          <div className="bg-[#004655] rounded-lg overflow-hidden">
+      {/* Title Section */}
+      <div className="bg-[#004655] text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
+        <span className="font-semibold">REQUEST</span>
 
-              <div className="mx-4 pt-3">
-                {/* Code Block */}
-                <CopyBlock
-                  text={codeString}
-                  language="bash"
-                  showLineNumbers={false}
-                  theme={{
-                    ...ocean,
-                    backgroundColor: "#004655", // Adjusted background color
-                    color: "#d1e8ff",
-                  }}
-                />
-              </div>
+        {/* Custom Copy Button */}
+        <button
+          onClick={handleCopy}
+          className="text-gray-400 hover:text-white"
+        >
+          {copied ? "Copied!" : <Image
+              src={"/asset/images/copy1.png"}
+              width="24"
+              height="24"
+              alt="Chat Image"
+            />}
+        </button>
+      </div>
 
-            </div>
+      <div className="mx-4 pt-3 font-mono">
+        {/* Code Block */}
+        <CodeBlock
+          text={codeString}
+          language="bash"
+          showLineNumbers={false}
+          theme={{
+            ...ocean,
+            backgroundColor: "#004655",
+            color: "#d1e8ff",
+          }}
+        />
+      </div>
+    </div>
           </div>
           <p className="ml-10 mt-5 mr-20">
             This request will return a JSON response from the server. Make sure to
@@ -106,7 +125,7 @@ export default function Page() {
 
           <h1 className="ml-10 my-5 text-lg font-medium">API Documentation</h1>
           <div className="ml-10 my-5 mr-20">
-            <p class="text-gray-700 mb-4">
+            <p className="text-gray-700 mb-4">
               Refer to our{" "}
               <Link
                 href="/docs/overview/quickStart"
@@ -121,7 +140,7 @@ export default function Page() {
               sections for more detailed instructions on how to use various
               endpoints, including how to:
             </p>
-            <ul class="list-disc pl-6 text-gray-700">
+            <ul className="list-disc pl-6 text-gray-700">
               <li>Create a session</li>
               <li>Upload documents</li>
             </ul>

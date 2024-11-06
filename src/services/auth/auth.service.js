@@ -1,9 +1,8 @@
 import { authUrl } from "@/app/utils/constants";
 
 export const registerService = async (req) => {
-  console.log("authurl: " + authUrl);
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/auth/register`, {
+    const res = await fetch(`${authUrl}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +23,7 @@ export const registerService = async (req) => {
 export const resendService = async (email) => {
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/auth/resend-code?email=${email}`,
+        `${authUrl}/auth/resend-code?email=${email}`,
         {
           method: "POST",
         }
@@ -40,7 +39,7 @@ export const resendService = async (email) => {
   export const resetPasswordService = async (email,password) => {
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/auth/reset-password?password=${password}&email=${email}`,
+        `${authUrl}/auth/reset-password?password=${password}&email=${email}`,
         {
           method: "POST",
         }
@@ -56,7 +55,7 @@ export const resendService = async (email) => {
   export const verifyEmailService = async (code,email) => {
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/auth/account-verify?code=${code}&email=${email}`,
+        `${authUrl}/auth/account-verify?code=${code}&email=${email}`,
         {
           method: "POST",
         }
@@ -75,7 +74,7 @@ export const resetPasswordVerifyService = async (email, code) => {
     console.log("verify service",code,email);
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/auth/code-verify?code=${code}&email=${email}`,
+        `${authUrl}/auth/code-verify?code=${code}&email=${email}`,
         {
           method: "POST",
         }

@@ -37,7 +37,7 @@ export const authOptions = {
         }
 
         if (data.access_token) {
-          return { ...data, email: credentials.email };
+          return { ...data, email: credentials.email, access_token: data.access_token};
         }
         return null;
       },
@@ -50,6 +50,7 @@ export const authOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.access_token = token.access_token;
+      console.log("session:", session);
       return session;
     },
     async jwt({ user, token }) {
@@ -57,6 +58,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
       }
+      console.log("token:", token);
       return token;
     },
   },

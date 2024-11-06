@@ -33,14 +33,13 @@ export default function Home() {
               </p>
             </div>
             <div className=" mt-10">
-              <button class="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
+              <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
                 <a href="/login">Get Started</a>
                 
               </button>
             </div>
           </div>
           <div className="w-2/3 -mt-60 pr-14">
-            {/* <Image src={"/asset/images/chatbot.png"} width={800} height={800} /> */}
             <ChatbotComponent/>
           </div>
         </div>
@@ -75,7 +74,7 @@ export default function Home() {
                 </p>
               </div>
               <div className=" mt-10">
-                <button class="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
+                <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
                   Generate your widget
                 </button>
               </div>
@@ -83,13 +82,13 @@ export default function Home() {
           </div>
         </div>
         <div className="w-full -mt-48">
-          <Image src={"/asset/images/model.png"} width={1400} height={800} />
+          <Image src={"/asset/images/model.png"} alt="model" width={1400} height={800} />
         </div>
         <div className="mt-20 text-center p-10 border-2 mx-60 rounded-xl">
           <h1 className="font-bold text-3xl leading-relaxed">
             Instant answers. Greater <br /> productivity. Endless inspiration.
           </h1>
-          <button class="bg-primary mt-5 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl">
+          <button className="bg-primary mt-5 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl">
             <Link href="/playground">Let's Try</Link>
           </button>
         </div>

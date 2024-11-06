@@ -11,15 +11,16 @@ export default function NavbarComponent() {
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary">
         <div className="navbar-start">
-          <div>
+          <div className='flex'>
             <Link href="/">
               <Image 
-                src="/asset/images/logo.png" 
+                src="/asset/images/logo2.png" 
                 alt="GPT_LOGO" 
-                width={40} 
-                height={40} 
+                width={50} 
+                height={50} 
               />
             </Link>
+            {/* <p className='m-auto font-bold text-xl p-3'>TexBot</p> */}
           </div>
         </div>
 

@@ -1,17 +1,42 @@
-'use client'
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { createProjectAction } from "@/actions/docAction";
 
 const CreateProjectModal = () => {
+  const [projectName, setProjectName] = useState(""); // State to track the project name
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // Function to close the modal
   const closeModal = () => {
-    document.getElementById("my_modal_1").close(); // Close the dialog modal
+    document.getElementById("my_modal_1").close();
+    setProjectName(""); // Clear the input field
+    setError(null); // Clear any error message
+  };
+
+  // Handle form submission
+  const handleCreateProject = async () => {
+    setLoading(true);
+    setError(null);
+
+    console.log("Project Name:", projectName); // Log the project name to debug
+
+    try {
+      await createProjectAction(projectName); // Pass the project name to the action
+      closeModal(); // Close the modal on success
+    } catch (error) {
+      setError("Failed to create project. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       {/* Button to open the modal */}
       <button
-        className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
         onClick={() => document.getElementById("my_modal_1").showModal()}
       >
         New Project
@@ -27,19 +52,28 @@ const CreateProjectModal = () => {
           <input
             type="text"
             placeholder="Project Name"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)} // Update project name state
             className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
             <button
               className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-              onClick={closeModal} // Close the modal when clicked
+              onClick={closeModal}
             >
               Cancel
             </button>
-            <button className=" text-primary py-2 px-4 border border-primary rounded-lg">
-              Create
+            <button
+              className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              onClick={handleCreateProject}
+              disabled={loading || !projectName} // Disable button if loading or input is empty
+            >
+              {loading ? "Creating..." : "Create"}
             </button>
           </div>
         </div>
