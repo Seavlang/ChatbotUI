@@ -26,16 +26,26 @@ const secondaryVariant = {
   },
 };
 
-export const FileUpload = ({ onChange }) => {
+export const FileUpload = ({ uploadedFiles, onChange }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
 
   const handleFileChange = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    onChange && onChange([...files, ...newFiles]);
+    
+    const state_file = {
+      id: uploadedFiles.length + 1,
+      "project_id": 3,
+      "file_name": newFiles[0]?.name,
+      "created_at": newFiles[0]?.lastModifiedDate
+    }
+
+    setFiles((prevFiles) => [...prevFiles, state_file]);
+    onChange && onChange([...files, state_file]);
     setError(""); // Clear error when a valid file is added
   };
+
+  console.log("file in file-upload: ",files)
 
   const handleRemoveFile = (index, e) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action
@@ -114,14 +124,14 @@ export const FileUpload = ({ onChange }) => {
                   <div className="flex w-full items-center gap-4">
                     {/* Dynamic Icon based on file extension */}
                     <div className="p-2">
-                      {file.name.endsWith(".pdf") ? (
+                      {file.file_name?.endsWith(".pdf") ? (
                         <Image
                           src={"/asset/images/pdf.png"}
                           alt="pdf file"
                           width={40}
                           height={40}
                         />
-                      ) : file.name.endsWith(".txt") ? (
+                      ) : file.file_name?.endsWith(".txt") ? (
                         <Image
                           src={"/asset/images/txt.png"}
                           alt="txt file"
@@ -146,7 +156,7 @@ export const FileUpload = ({ onChange }) => {
                         layout
                         className="text-base font-medium text-gray-900 truncate max-w-xs"
                       >
-                        {file.name}
+                        {file?.file_name}
                       </motion.p>
 
                       {/* Remove Icon */}

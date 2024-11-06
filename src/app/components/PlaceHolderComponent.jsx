@@ -4,7 +4,7 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function PlaceHolderComponent({ setOnFileUpload }) {
+export function PlaceHolderComponent({ setOnFileUpload, handleSendMessage, setNewMessage }) {
   const placeholders = [
     "What's the first rule of Fight Club?",
     "Who is Tyler Durden?",
@@ -22,10 +22,10 @@ export function PlaceHolderComponent({ setOnFileUpload }) {
   const handleChange = (e) => {
     console.log(e.target.value);
   };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
-  };
+  // const onSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("submitted");
+  // };
 
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -33,7 +33,6 @@ export function PlaceHolderComponent({ setOnFileUpload }) {
 
   const handleFileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    console.log(" files changed", files);
     handleFileUpload && handleFileUpload([...files, ...newFiles]);
     setError(""); // Clear error when a valid file is added
   };
@@ -49,33 +48,20 @@ export function PlaceHolderComponent({ setOnFileUpload }) {
     fileInputRef?.current?.click();
   };
 
-  const dismissError = () => {
-    setError(""); // Remove the error when clicking the dismiss button
-  };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      "application/pdf": [".pdf"],
-      "text/plain": [".txt"],
-    }, // Restrict to PDF and TXT files
-    multiple: false,
-    onDrop: handleFileChange,
-    onDropRejected: (fileRejections) => {
-      setError("Invalid file type. Please upload a .pdf or .txt file.");
-    },
-  });
 
   return (
-    (<div className="flex flex-row justify-center">
+    (<div className="flex flex-nowrap">
       <div className="flex items-end">
         <input
           ref={fileInputRef}
           id="file-upload-handle"
           type="file"
+          accept=".txt,.pdf" // Accepts only .txt and .pdf files
           onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
           className="hidden"
         />
-        <div className=" bg-white flex justify-center items-center w-16 dark:bg-zinc-800 h-16 rounded-2xl overflow-hidden shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200 mx-10 cursor-pointer" onClick={handleClick}>
+        <div className=" bg-white flex justify-center items-center w-16 dark:bg-zinc-800 h-14 rounded-2xl overflow-hidden shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200 cursor-pointer" onClick={handleClick}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
             <path d="M11 7V15C11 16.1046 11.8954 17 13 17V17C14.1046 17 15 16.1046 15 15V7C15 4.79086 13.2091 3 11 3V3C8.79086 3 7 4.79086 7 7V15C7 18.3137 9.68629 21 13 21V21C16.3137 21 19 18.3137 19 15V10" stroke="#004B93" strokeWidth="2" strokeLinecap="round" />
 
@@ -83,7 +69,7 @@ export function PlaceHolderComponent({ setOnFileUpload }) {
         </div>
       </div>
 
-      <PlaceholdersAndVanishInput placeholders={placeholders} onChange={handleChange} onSubmit={onSubmit} />
+      <PlaceholdersAndVanishInput placeholders={placeholders} onChange={handleChange} onSubmit={handleSendMessage} setNewMessage={setNewMessage} />
     </div>)
   );
 }
