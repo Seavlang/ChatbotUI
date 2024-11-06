@@ -38,7 +38,7 @@ export default function CodeVerificationForm() {
     setIsLoading(false);
 
     if (res.success) {
-      toast.success("Code verified successfully!");
+      toast.success(res.message);
       router.push("/login");
     } else {
       toast.error("Invalid verification code. Please try again.");

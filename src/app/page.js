@@ -14,7 +14,7 @@ export default function Home() {
         <NavbarComponent/>
       </div>
       <hr/>
-      <div className="mx-40 font-poppin">
+      <div className="mx-60 font-poppin">
         <div className="  mt-12">
           <h1 className="text-4xl font-semibold leading-normal">
             The Open Source
@@ -93,10 +93,10 @@ export default function Home() {
             <Link href="/playground">Let's Try</Link>
           </button>
         </div>
-        <div>
+      </div>
+      <div className="mx-40">
           <FooterComponent />
         </div>
-      </div>
     </div>
   );
 }

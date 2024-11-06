@@ -20,7 +20,7 @@ import { FaGithub } from "react-icons/fa";
 import { registerAction } from "@/actions/authAction";
 import { useRouter } from "next/navigation";
 
-// Updated validation schema with confirm password check
+// Updated validation schema with enhanced password checks
 const signUpSchema = z
   .object({
     username: z.string().min(1, "Username is required"),
@@ -28,6 +28,10 @@ const signUpSchema = z
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
+      .refine((value) => /[a-z]/.test(value), "Password must contain at least one lowercase letter")
+      .refine((value) => /[A-Z]/.test(value), "Password must contain at least one uppercase ")
+      .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), "Password must contain at least one special character")
+      .refine((value) => /\d/.test(value), "Password must contain at least one digit")
       .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
     confirmPassword: z
       .string()

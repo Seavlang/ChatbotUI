@@ -14,8 +14,23 @@ export default function Page({ params }) {
 
   const [apiKey] = useState("sdfghjklasdfasdfsdafasdfasdfasdfasdfwerwet");
   const [copySuccess, setCopySuccess] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]); // Store uploaded files
+  const [uploadedFiles, setUploadedFiles] = useState([
+    {
+      id: 1,
+      name: "file1.png",
+      type: "image/png",
+      preview: "/asset/images/file.png",
+    },
+    {
+      id: 2,
+      name: "file2.jpg",
+      type: "image/jpeg",
+      preview: "/asset/images/file.png",
+    },
+  ]);
 
+
+  console.log("files: " , uploadedFiles);
   // Callback to handle uploaded files
   const handleFileUpload = (files) => {
     setUploadedFiles(files);

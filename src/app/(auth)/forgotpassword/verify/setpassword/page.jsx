@@ -24,6 +24,10 @@ const passwordSchema = z
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
+      .refine((value) => /[a-z]/.test(value), "Password must contain at least one lowercase letter")
+      .refine((value) => /[A-Z]/.test(value), "Password must contain at least one uppercase ")
+      .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), "Password must contain at least one special character")
+      .refine((value) => /\d/.test(value), "Password must contain at least one digit")
       .refine((value) => !/\s/.test(value), "Password cannot contain spaces"),
     confirmPassword: z
       .string()

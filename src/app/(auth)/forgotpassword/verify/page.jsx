@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { verifyEmailAction, resendVerificationCodeAction } from "@/actions/authAction";
+import { resendVerificationCodeAction, resetPasswordVerifyAction } from "@/actions/authAction";
 
 // Define the validation schema for code
 const codeSchema = z.object({
@@ -37,7 +37,7 @@ export default function CodeVerificationForm() {
     }
     setIsLoading(true);
     try {
-      const res = await verifyEmailAction({
+      const res = await resetPasswordVerifyAction({
         email,
         code: values.code,
       });
@@ -45,7 +45,7 @@ export default function CodeVerificationForm() {
 
       if (res.success) {
         toast.success("Code verified successfully!");
-        router.push("/login");
+        router.push(`/forgotpassword/verify/setpassword?email=${encodeURIComponent(email)}`);
       } else {
         toast.error("Invalid verification code. Please try again.");
       }

@@ -3,7 +3,7 @@ import { authUrl } from "@/app/utils/constants";
 export const registerService = async (req) => {
   console.log("authurl: " + authUrl);
   try {
-    const res = await fetch(`http://110.74.194.123:9080/api/v1/auth/register`, {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,28 +20,11 @@ export const registerService = async (req) => {
   }
 };
 
-export const verifyEmailService = async (code, email) => {
-  // console.log("verify service",code);
-  try {
-    const res = await fetch(
-      `http://110.74.194.123:9080/api/v1/auth/code-verify?code=${code}&email=${email}`,
-      {
-        method: "POST",
-      }
-    )
-      .then((r) => r?.json())
-      .catch((e) => console.log(e));
-    return res;
-  } catch (e) {
-    console.log("Error: ", e);
-  }
-};
-
 
 export const resendService = async (email) => {
     try {
       const res = await fetch(
-        `http://110.74.194.123:9080/api/v1/auth/resend-code?email=${email}`,
+        `${process.env.NEXTAUTH_URL}/auth/resend-code?email=${email}`,
         {
           method: "POST",
         }
@@ -57,7 +40,7 @@ export const resendService = async (email) => {
   export const resetPasswordService = async (email,password) => {
     try {
       const res = await fetch(
-        `http://110.74.194.123:9080/api/v1/auth/reset-password?password=${password}&email=${email}`,
+        `${process.env.NEXTAUTH_URL}/auth/reset-password?password=${password}&email=${email}`,
         {
           method: "POST",
         }
@@ -70,4 +53,37 @@ export const resendService = async (email) => {
     }
   };
 
-  
+  export const verifyEmailService = async (code,email) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/auth/account-verify?code=${code}&email=${email}`,
+        {
+          method: "POST",
+        }
+      )
+        .then((r) => r?.json())
+        .catch((e) => console.log(e));
+      return res;
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+
+
+export const resetPasswordVerifyService = async (email, code) => {
+    console.log("verify service",code,email);
+    try {
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/auth/code-verify?code=${code}&email=${email}`,
+        {
+          method: "POST",
+        }
+      )
+        .then((r) => r?.json())
+        .catch((e) => console.log(e));
+      return res;
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
