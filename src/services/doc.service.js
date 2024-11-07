@@ -3,6 +3,7 @@ import { authUrl } from "@/app/utils/constants";
 import { reqHeader } from "@/config/header.config";
 import { revalidateTag } from "next/cache";
 
+//  get All Project
 export const getAllProjectService = async () => {
     const headers = await reqHeader();
     try {
@@ -26,7 +27,31 @@ export const getAllProjectService = async () => {
       return null;
     }
   };
+//  get Project By Id 
+  export const getProjectByIdService = async (projectId) => {
+    const headers = await reqHeader();
+    try {
+        const res = await fetch(`${authUrl}/api_generation/project/get_project/${projectId}`, {
+        method: "GET",
+        headers,
+        next: {
+            tag: ["project-data"],
+          },
+      });
   
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      
+      return data;
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      return null;
+    }
+  };
+// create Project 
   export const createProjectService = async (projectName) => {
     const headers = await reqHeader();
     try {
@@ -47,7 +72,7 @@ export const getAllProjectService = async () => {
       return null;
     }
   };
-
+//  delete Project 
   export const deleteProjectService = async (projectId) => {
     const headers = await reqHeader();
     console.log("Attempting to delete project with ID:", projectId);
@@ -75,4 +100,31 @@ export const getAllProjectService = async () => {
       return { success: false, message: "Failed to delete project" };
     }
   };
+//  update Descriptin 
+  export const updateDescriptionService = async (projectId, description) => {
+    const headers = await reqHeader();
+    
+    try {
+      const response = await fetch(
+        `${authUrl}/api_generation/project/description/${projectId}`,
+        {
+          method: "PATCH",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ description }),
+        }
+      );
   
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error updating project description:", error);
+      return null;
+    }
+  };

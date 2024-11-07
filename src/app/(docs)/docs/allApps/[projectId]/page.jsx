@@ -12,9 +12,9 @@ import {
 
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
+import { getProjectByIdAction, updateDescriptionAction } from "@/actions/docAction";
 
 export default function Page({ params }) {
-
 
   const apiEndpoint = [
     {
@@ -57,25 +57,10 @@ export default function Page({ params }) {
   ]
 
   const [resolvedParams, setResolvedParams] = useState(null);
-
-  useEffect(() => {
-    // Resolve the params Promise
-    const fetchParams = async () => {
-      const result = await params;
-      setResolvedParams(result);
-    };
-
-    fetchParams();
-  }, [params]);
-
-
-  // Example of accessing a specific property
-  const project = resolvedParams?.projectId ? resolvedParams.projectId : "No Project Name";
-
-  const [apiKey] = useState("sdfghjklasdfasdfsdafasdfasdfasdfasdfwerwet");
   const [copySuccess, setCopySuccess] = useState(false);
+  const [projectData, setProjectData] = useState(null);
+  const [description, setDescription] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([
-
     {
       "id": 1,
       "project_id": 3,
@@ -91,6 +76,49 @@ export default function Page({ params }) {
 
   ])
 
+  useEffect(() => {
+    // Resolve the params Promise
+    const fetchParams = async () => {
+      const result = await params;
+      setResolvedParams(result);
+    };
+
+    fetchParams();
+  }, [params]);
+
+  useEffect(() => {
+    // Fetch the project by ID when resolvedParams is available
+    const fetchProjectById = async () => {
+      if (resolvedParams?.projectId) {
+        try {
+          const data = await getProjectByIdAction(resolvedParams.projectId);
+          setProjectData(data);
+        } catch (error) {
+          console.error("Error fetching project data:", error);
+        }
+      }
+    };
+
+    fetchProjectById();
+  }, [resolvedParams]);
+
+  const project = resolvedParams?.projectId ? resolvedParams.projectId : "No Project Name";
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleDescriptionSave = async () => {
+    if (resolvedParams?.projectId) {
+      try {
+        const res = await updateDescriptionAction(resolvedParams.projectId, description);
+      } catch (error) {
+        console.error("Error updating description:", error);
+      }
+    }
+  };
+
+
   // Callback to handle uploaded files
   const handleFileUpload = (files) => {
     setUploadedFiles((prev) => [...prev, ...files]);
@@ -102,7 +130,7 @@ export default function Page({ params }) {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(apiKey);
+    navigator.clipboard.writeText(projectData?.project_id?.api_key);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000); // Reset the success message after 2 seconds
   };
@@ -199,21 +227,29 @@ export default function Page({ params }) {
               <Link href="/docs/allApps">App</Link>
             </li>
             <li>
-              <Link href={`/docs/allApps/${project}`}>{project}</Link>
+              <Link href={`/docs/allApps/${project}`}>{projectData?.project_id?.project_name}</Link>
             </li>
           </ul>
         </div>
       </div>
-      <h1 className="mx-10 text-4xl mb-10 font-medium text-primary">{project}</h1>
+      <h1 className="mx-10 text-4xl font-medium text-primary">{projectData?.project_id?.project_name}</h1>
       {/* textarea */}
       <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary rounded-lg">
         <div className="mb-4">
           <h2 className="ml-5 text-primary text-xl font-bold">Description
             <Image src={"/asset/images/pen.png"} width={16} height={16} className="inline ml-3 mb-2" alt="pen img" />
           </h2>
-          <textarea
+          {/* <textarea
             className="ml-5 mt-2 w-[95%] h-24 font-normal  placeholder-medium placeholder-black  focus:outline-none "
-            placeholder="Notification Service Provider"
+            placeholder={`${projectData?.project_id?.description ? projectData?.project_id.description : "No description"}`}
+          /> */}
+          <textarea
+            className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium placeholder-black focus:outline-none resize-none overflow-hidden"
+            value={description}
+            onChange={handleDescriptionChange}
+            onBlur={handleDescriptionSave} // Trigger save on blur
+            rows={4} 
+            placeholder={`${projectData?.project_id?.description ? projectData?.project_id.description : "No description"}`}
           />
         </div>
       </div>
@@ -230,9 +266,9 @@ export default function Page({ params }) {
         <div className="relative w-full">
           <input
             type="text"
-            value={apiKey}
+            value={projectData?.project_id?.api_key}
             readOnly
-            className="w-full px-8 py-3 pr-12 border font-normal border-primary rounded-lg text-sm text-gray-800"
+            className="w-full px-8 py-3 pr-12 border font-medium border-primary rounded-lg text-sm text-gray-800"
           />
           <button
             onClick={copyToClipboard}
@@ -268,7 +304,7 @@ export default function Page({ params }) {
               {uploadedFiles?.map((file, index) => (
                 <div className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md">
                   {" "}
-                  <li key={index} className="font-medium text-primary mr-2">
+                  <li key={file.id} className="font-medium text-primary mr-2">
                     {file?.file_name}
                   </li>
                 </div>

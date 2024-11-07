@@ -1,7 +1,12 @@
-import { createProjectService, deleteProjectService, getAllProjectService } from "@/services/doc.service";
+import { createProjectService, deleteProjectService, getAllProjectService, getProjectByIdService, updateDescriptionService } from "@/services/doc.service";
 
 export const getAllProjectAction = async () => {
     const res = await getAllProjectService();
+    return res;
+}
+
+export const getProjectByIdAction = async (projectId) => {
+    const res = await getProjectByIdService(projectId);
     return res;
 }
 
@@ -14,5 +19,10 @@ export const deleteProjectAction = async (projectId) => {
     console.log("project Id: " , projectId);
     const res = await deleteProjectService(projectId);
     console.log("res delete action",res);
+    return res;
+}
+
+export const updateDescriptionAction = async (projectid,description) => {
+    const res = await updateDescriptionService(projectid,description);
     return res;
 }

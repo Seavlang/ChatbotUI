@@ -63,8 +63,11 @@ const CreateProjectModal = () => {
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
             <button
-              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              className={`border text-primary py-2 px-4 rounded-lg ${
+                loading ? "bg-gray-400 text-white cursor-not-allowed" : "border-primary"
+              }`}
               onClick={closeModal}
+              disabled={loading}
             >
               Cancel
             </button>

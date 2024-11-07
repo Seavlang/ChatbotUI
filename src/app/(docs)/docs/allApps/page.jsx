@@ -1,10 +1,10 @@
-'use server'
+"use server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CreateProjectModal from "../../components/CreateProjectModal";
 import { getAllProjectAction } from "@/actions/docAction";
-import  Chatbot  from "@seavlang/hrdchatbotwidget/src/index";
+import Chatbot from "@seavlang/hrdchatbotwidget/src/index";
 import DeleteProjectModal from "../../components/DeleteProjectModal";
 
 export default async function Page({ searchParams }) {
@@ -29,15 +29,19 @@ export default async function Page({ searchParams }) {
         </ul>
       </div>
       <h1 className="mx-10 mb-10 text-4xl font-medium text-primary">My Apps</h1>
-      <Chatbot 
-        SessionId="14" 
-        projectId="8"  
+      <Chatbot
+        SessionId="14"
+        projectId="8"
         apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
-    />
+      />
       <div className="flex justify-between mr-20">
         <div className="w-1/5 ml-10">
           {/* Search form for server-side filtering */}
-          <form method="get" action="/docs/allApps" className="input input-bordered flex items-center gap-2">
+          <form
+            method="get"
+            action="/docs/allApps"
+            className="input input-bordered flex items-center gap-2"
+          >
             <input
               type="text"
               name="search"
@@ -72,7 +76,9 @@ export default async function Page({ searchParams }) {
             <tr className="bg-primary text-white rounded-lg">
               <th className="py-3 px-6 text-left font-semibold">ID</th>
               <th className="py-3 px-6 text-left font-semibold">Project</th>
-              <th className="py-3 px-6 text-left font-semibold">Description</th>
+              <th className="py-3 px-6 text-left w-1/2 font-semibold">
+                Description
+              </th>
               <th className="py-3 px-6 text-left font-semibold">Created_at</th>
               <th className="py-3 px-6"></th>
             </tr>
@@ -83,7 +89,7 @@ export default async function Page({ searchParams }) {
                 <td className="py-3 px-6">{item?.id}</td>
                 <td className="py-3 px-6">
                   <Link
-                    href={`/docs/allApps/${item?.project_name}`}
+                    href={`/docs/allApps/${item?.id}`}
                     className="text-blue-600 hover:underline"
                   >
                     {item?.project_name}
@@ -92,9 +98,18 @@ export default async function Page({ searchParams }) {
                 <td className="py-3 px-6">
                   {item?.description ? item?.description : "No description"}
                 </td>
-                <td className="py-3 px-6">{item?.created_at}</td>
+                <td className="py-3 px-6">
+                  {new Date(item?.created_at).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </td>
                 <td className="py-3 px-6 text-right">
-                  <DeleteProjectModal projectId={item?.id}/>
+                  <DeleteProjectModal projectId={item?.id} />
                 </td>
               </tr>
             ))}

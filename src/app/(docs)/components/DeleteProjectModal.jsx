@@ -67,9 +67,12 @@ const DeleteProjectModal = ({ projectId }) => {
 
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
-            <button
-              className="border border-primary text-primary py-2 px-4 rounded-lg"
+          <button
+              className={`border text-primary py-2 px-4 rounded-lg ${
+                loading ? "bg-gray-400 text-white cursor-not-allowed" : "border-primary"
+              }`}
               onClick={closeModal}
+              disabled={loading}
             >
               Cancel
             </button>
