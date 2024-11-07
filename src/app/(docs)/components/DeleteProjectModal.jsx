@@ -3,14 +3,15 @@
 import React, { useState } from "react";
 import { deleteProjectAction } from "@/actions/docAction"; // Assuming this function exists
 import Image from "next/image";
+import toast from "react-hot-toast";
 
-const DeleteProjectModal = ({ projectId, onProjectDeleted }) => {
+const DeleteProjectModal = ({ projectId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Function to close the modal
   const closeModal = () => {
-    document.getElementById("delete_modal").close();
+    document.getElementById(`delete_modal_${projectId}`).close();
     setError(null); // Clear any error message
   };
 
@@ -18,12 +19,15 @@ const DeleteProjectModal = ({ projectId, onProjectDeleted }) => {
   const handleDeleteProject = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      await deleteProjectAction(projectId); // Pass the project ID to the action
-      onProjectDeleted(projectId); // Call callback to update project list if needed
+      const res = await deleteProjectAction(projectId); // Directly use projectId
+      console.log("delete res",res);
+      if(res?.success == true) {
+        toast.success(res.message);
       closeModal(); // Close the modal on success
+      }
     } catch (error) {
+        console.log("delete error",error);
       setError("Failed to delete project. Please try again.");
     } finally {
       setLoading(false);
@@ -34,19 +38,21 @@ const DeleteProjectModal = ({ projectId, onProjectDeleted }) => {
     <>
       {/* Button to open the modal */}
       <button
-        className=" cursor-pointer  font-bold py-2 px-4"
-        onClick={() => document.getElementById("delete_modal").showModal()}
+        className="cursor-pointer font-bold py-2 px-4"
+        onClick={() => {
+          document.getElementById(`delete_modal_${projectId}`).showModal();
+        }}
       >
         <Image
-                    src={"/asset/images/option.png"}
-                    width={3}
-                    height={3}
-                    alt="options"
-                  />
+          src={"/asset/images/option.png"}
+          width={3}
+          height={3}
+          alt="options"
+        />
       </button>
 
       {/* Modal component */}
-      <dialog id="delete_modal" className="modal">
+      <dialog id={`delete_modal_${projectId}`} className="modal">
         <div className="modal-box">
           {/* Modal Header */}
           <h2 className="text-lg text-left font-bold text-red-600 mb-4">Delete Project</h2>
@@ -62,7 +68,7 @@ const DeleteProjectModal = ({ projectId, onProjectDeleted }) => {
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
             <button
-              className="border border-primary text-primary py-2 px-4 rounded-lg "
+              className="border border-primary text-primary py-2 px-4 rounded-lg"
               onClick={closeModal}
             >
               Cancel

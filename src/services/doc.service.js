@@ -50,24 +50,29 @@ export const getAllProjectService = async () => {
 
   export const deleteProjectService = async (projectId) => {
     const headers = await reqHeader();
-    console.log("delete id ",projectId);
+    console.log("Attempting to delete project with ID:", projectId);
+    console.log("Headers:", headers);
+  
     try {
-        const response = await fetch(
-          `${authUrl}/api_generation/project/delete/${projectId}`,
-          {
-            method: "DELETE",
-            headers,
-          }
-        );
-    
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+      const response = await fetch(
+        `${authUrl}/api_generation/project/delete/${projectId}`,
+        {
+          method: "DELETE",
+          headers,
         }
-    
-        // Return a success message or status if needed
-        revalidateTag("project-data");
-        return { success: true, message: "Project deleted successfully" };
-      } catch (error) {
-        console.error("Error deleting project:", error);
+      );
+  
+      console.log("Response status:", response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+  
+      // Return a success message or status if needed
+      revalidateTag("project-data"); // Comment out for testing if needed
+      return { success: true, message: "Project deleted successfully" };
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      return { success: false, message: "Failed to delete project" };
+    }
   };
+  

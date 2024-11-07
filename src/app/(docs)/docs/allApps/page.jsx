@@ -30,7 +30,7 @@ export default async function Page({ searchParams }) {
       </div>
       <h1 className="mx-10 mb-10 text-4xl font-medium text-primary">My Apps</h1>
       <Chatbot 
-        SessionId="13" 
+        SessionId="14" 
         projectId="8"  
         apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
     />
