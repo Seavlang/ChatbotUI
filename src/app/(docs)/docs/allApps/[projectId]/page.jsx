@@ -2,7 +2,7 @@
 import FileComponent from "@/app/components/FileComponent";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Collapsible,
@@ -11,8 +11,11 @@ import {
 } from "@/components/ui/collapsible";
 
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
 
 export default function Page({ params }) {
+
+
   const apiEndpoint = [
     {
       "id": 1,
@@ -52,12 +55,22 @@ export default function Page({ params }) {
       ]
     },
   ]
-  // Ensure params is an object
-  params = params || {};
-  console.log("params", params); // Debugging to inspect the params object
+
+  const [resolvedParams, setResolvedParams] = useState(null);
+
+  useEffect(() => {
+    // Resolve the params Promise
+    const fetchParams = async () => {
+      const result = await params;
+      setResolvedParams(result);
+    };
+
+    fetchParams();
+  }, [params]);
+
 
   // Example of accessing a specific property
-  const project = params.projectId ? params.projectId : "No Project Name";
+  const project = resolvedParams?.projectId ? resolvedParams.projectId : "No Project Name";
 
   const [apiKey] = useState("sdfghjklasdfasdfsdafasdfasdfasdfasdfwerwet");
   const [copySuccess, setCopySuccess] = useState(false);
@@ -82,6 +95,11 @@ export default function Page({ params }) {
   const handleFileUpload = (files) => {
     setUploadedFiles((prev) => [...prev, ...files]);
   };
+
+  const openModal = (id) => {
+    console.log("id: ", id)
+    document.getElementById("my_modal_1").showModal()
+  }
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(apiKey);
@@ -117,8 +135,8 @@ export default function Page({ params }) {
     const isActive = isTable && activeTable === name;
 
     return (
-      <div className={cn(" h-auto",level === 0 ? "ml-0" : "ml-6")}>
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className=" h-auto">
+      <div className={cn(" w-full h-auto", level === 0 ? "ml-0" : "ml-6")} >
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="">
           <CollapsibleTrigger
             className={cn(
               "flex items-center w-full text-left transition-colors",
@@ -129,7 +147,7 @@ export default function Page({ params }) {
             )}
             onClick={handleClick}
           >
-            <div className=" w-full flex justify-between">
+            <div className=" w-1/2 flex justify-between">
               <span className="ml-2 ">{name}</span>
               {hasChildren && (
                 <ChevronDown
@@ -149,10 +167,10 @@ export default function Page({ params }) {
 
           </CollapsibleTrigger>
           {hasChildren && (
-            <CollapsibleContent>
+            <CollapsibleContent className="w-full pl-6 py-2">
               <div>
-                <span className="">
-                  <span className="flex h-10">
+                <span className="w-full border-l border-gray-200 pl-4">
+                  <span className="w-full flex flex-col space-y-2">
                     {children}
                   </span>
                 </span>
@@ -191,7 +209,7 @@ export default function Page({ params }) {
       <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary rounded-lg">
         <div className="mb-4">
           <h2 className="ml-5 text-primary text-xl font-bold">Description
-            <Image src={"/asset/images/pen.png"} width={16} height={16} className="inline ml-3 mb-2" />
+            <Image src={"/asset/images/pen.png"} width={16} height={16} className="inline ml-3 mb-2" alt="pen img" />
           </h2>
           <textarea
             className="ml-5 mt-2 w-[95%] h-24 font-normal  placeholder-medium placeholder-black  focus:outline-none "
@@ -223,7 +241,7 @@ export default function Page({ params }) {
             {copySuccess ? (
               "✔️"
             ) : (
-              <Image src={"/asset/images/copy.png"} width={24} height={24} />
+              <Image src={"/asset/images/copy.png"} width={24} height={24} alt="copy img" />
             )}
           </button>
         </div>
@@ -276,38 +294,38 @@ export default function Page({ params }) {
                 apiEndpoint?.map((endpoint, idx) => (
                   <SchemaItem
                     key={idx}
-                    className="p-1 pl-2 text-2xl border-b-[0.8px] h-12 border-primary font-bold text-primary hover:bg-none"
+                    className="mb-5 p-1 pl-2 text-2xl border-b-[0.8px] h-12 border-primary font-bold text-primary hover:bg-none"
                     name={endpoint.Controller}
                     onTableSelect={handleTableSelect}
                     activeTable={activeTable}
                   >
-                    <div className="flex flex-col w-full">
+                    <div className="flex flex-col w-full ">
                       {
                         endpoint?.Endpoints.map((endpoint, idx) => (
-                          <SchemaItem
-                            key={idx}
-                            name={endpoint.path}
-                            extraInfo={endpoint.description}
-                            status={endpoint.method}
-                            className="pl-2 w-1/2 py-2 text-xl font-semibold"
-                          />
-                          
+                          <div key={idx} >
+                            <SchemaItem
+                              key={idx}
+                              name={endpoint.path}
+                              extraInfo={endpoint.description}
+                              status={endpoint.method}
+                              className="pl-2 w-full py-2 text-xl font-semibold "
+
+                            />
+
+                            <button onClick={() => document.getElementById("my_modal_1").showModal()}>ffffffff</button>
+                          </div>
+
                         ))
                       }
-                      
                     </div>
-
                   </SchemaItem>
                 ))
               }
-                    <p>dfghjk</p>
-                      <p>dfghjk</p>
-                      <p>dfghjk</p>
             </div>)
             :
             (<div></div>)
         }
-
+        <APIEndpointModal />
       </div>
     </div>
   );
