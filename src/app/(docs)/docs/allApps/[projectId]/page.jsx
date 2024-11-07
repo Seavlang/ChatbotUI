@@ -12,6 +12,7 @@ import {
 
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
+import WidgetComponent from "@/app/(docs)/components/WidgetComponent";
 
 export default function Page({ params }) {
 
@@ -326,6 +327,25 @@ export default function Page({ params }) {
             (<div></div>)
         }
         <APIEndpointModal />
+
+        {/* widget */}
+        <div className="flex items-center mb-6 gap-2">
+          <svg width="28" height="28" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3.3335" y="4.23584" width="5" height="5.83333" rx="1" stroke="#004B93" stroke-linejoin="round" />
+            <rect x="3.3335" y="13.4023" width="5" height="4.16667" rx="1" stroke="#004B93" stroke-linejoin="round" />
+            <rect x="11.6665" y="4.23584" width="5" height="4.16667" rx="1" stroke="#004B93" stroke-linejoin="round" />
+            <rect x="11.6665" y="11.7358" width="5" height="5.83333" rx="1" stroke="#004B93" stroke-linejoin="round" />
+          </svg>
+
+          <span className="text-primary text-xl font-bold">
+            Widget
+          </span>
+
+        </div>
+        <div className="">
+          <WidgetComponent />
+        </div>
+
       </div>
     </div>
   );
