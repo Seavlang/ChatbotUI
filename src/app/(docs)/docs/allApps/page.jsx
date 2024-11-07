@@ -96,7 +96,9 @@ export default async function Page({ searchParams }) {
                   </Link>
                 </td>
                 <td className="py-3 px-6">
-                  {item?.description ? item?.description : "No description"}
+                  <span className="w-full block whitespace-nowrap overflow-hidden text-ellipsis">
+                    {item?.description ? item?.description : "No description"}
+                  </span>
                 </td>
                 <td className="py-3 px-6">
                   {new Date(item?.created_at).toLocaleString("en-US", {

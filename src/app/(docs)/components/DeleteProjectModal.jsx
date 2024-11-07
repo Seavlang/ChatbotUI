@@ -79,7 +79,7 @@ const DeleteProjectModal = ({ projectId }) => {
             <button
               className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
               onClick={handleDeleteProject}
-              disabled={loading} // Disable button if loading
+              disabled={loading} 
             >
               {loading ? "Deleting..." : "Delete"}
             </button>

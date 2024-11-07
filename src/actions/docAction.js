@@ -1,4 +1,4 @@
-import { createProjectService, deleteProjectService, getAllProjectService, getProjectByIdService, updateDescriptionService } from "@/services/doc.service";
+import { createProjectService, deleteProjectService, getAllProjectService, getProjectByIdService, updateDescriptionService, uploadExternalFileService } from "@/services/doc.service";
 
 export const getAllProjectAction = async () => {
     const res = await getAllProjectService();
@@ -24,5 +24,10 @@ export const deleteProjectAction = async (projectId) => {
 
 export const updateDescriptionAction = async (projectid,description) => {
     const res = await updateDescriptionService(projectid,description);
+    return res;
+}
+
+export const uploadExternalFileAction = async (project, file) => {
+    const res = await uploadExternalFileService(project, file);
     return res;
 }

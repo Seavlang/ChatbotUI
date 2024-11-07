@@ -26,19 +26,19 @@ export default function Page() {
         accuracy and relevance of generated responses.
       </p>
       <h1 className="ml-10 my-5 text-lg font-medium">What is RAG?</h1>
-      <div class=" ml-10 mr-20 ">
+      <div className=" ml-10 mr-20 ">
         <p className="mb-5">
           Retrieval-Augmented Generation (RAG) is a state-of-the-art technique
           in AI. It works by:
         </p>
-        <ol class="list-decimal pl-6 space-y-4 text-gray-700">
+        <ol className="list-decimal pl-6 space-y-4 text-gray-700">
           <li>
-            <h2 class="font-medium mb-2">
+            <h2 className="font-medium mb-2">
               Retrieving relevant information from databases or other sources.
             </h2>
           </li>
           <li>
-            <h2 class="font-medium mb-2">
+            <h2 className="font-medium mb-2">
               Generating human-like responses using Large Language Models (LLMs)
               based on the retrieved data.
             </h2>

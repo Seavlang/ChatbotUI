@@ -5,12 +5,7 @@ export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-    //   credentials: {
-    //     email: {},
-    //     password: {},
-    //   },
       async authorize(credentials) {
-        // Encode request body as application/x-www-form-urlencoded
         const requestBody = new URLSearchParams({
           grant_type: "password",
           username: credentials.email,
@@ -36,8 +31,16 @@ export const authOptions = {
           throw new Error(data.detail || data.message || "Login failed");
         }
 
+        // Capture additional fields as needed
         if (data.access_token) {
-          return { ...data, email: credentials.email, access_token: data.access_token};
+          return {
+            ...data,
+            email: credentials.email,
+            access_token: data.access_token,
+            id: data.user_id, // assuming the API returns a user_id field
+            name: data.name, // assuming the API returns a name field
+            image: data.image // assuming the API returns an image URL
+          };
         }
         return null;
       },
@@ -47,19 +50,24 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.id;
-      session.access_token = token.access_token;
-      console.log("session:", session);
-      return session;
-    },
-    async jwt({ user, token }) {
-      
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.access_token = user.access_token;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
       }
-      console.log("token:", token);
       return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id;
+      session.user.name = token.name;
+      session.user.email = token.email;
+      session.user.image = token.image;
+      session.access_token = token.access_token;
+      console.log("sessionauth",session);
+      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

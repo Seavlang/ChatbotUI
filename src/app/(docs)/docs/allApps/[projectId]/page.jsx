@@ -59,7 +59,7 @@ export default function Page({ params }) {
   const [resolvedParams, setResolvedParams] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [projectData, setProjectData] = useState(null);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(projectData?.project_id?.description || "");
   const [uploadedFiles, setUploadedFiles] = useState([
     {
       "id": 1,
@@ -302,7 +302,7 @@ export default function Page({ params }) {
           ) : (
             <ul>
               {uploadedFiles?.map((file, index) => (
-                <div className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md">
+                <div key={file.id} className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md">
                   {" "}
                   <li key={file.id} className="font-medium text-primary mr-2">
                     {file?.file_name}

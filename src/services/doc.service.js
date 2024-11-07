@@ -128,3 +128,38 @@ export const getAllProjectService = async () => {
       return null;
     }
   };
+//   upload external file 
+export const uploadExternalFileService = async (file, projectId) => {
+    const headers = await reqHeader();
+    
+    // We need to remove the Content-Type header as fetch will set it automatically when sending FormData
+    delete headers["Content-Type"];
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await fetch(
+        `${authUrl}/files/api_generation/upload?project_id=${projectId}`,
+        {
+          method: "POST",
+          headers: {
+            ...headers,
+            "Authorization": `Bearer ${headers.Authorization}`,  // Authorization header
+            "Accept": "application/json",
+          },
+          body: formData,
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error; // Re-throw the error for handling outside this function
+    }
+  };
