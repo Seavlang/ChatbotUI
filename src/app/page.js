@@ -5,7 +5,6 @@ import { Button } from "@nextui-org/react";
 import FooterComponent from "./components/FooterComponent";
 import Link from "next/link";
 import ChatbotComponent from "./components/ChatbotComponent";
-// import { ChatUI } from "@seavlang/chatbottesting1/dist/index";
 
 export default function Home() {
   return (
