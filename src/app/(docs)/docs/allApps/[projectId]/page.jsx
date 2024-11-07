@@ -4,17 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+// import {
+//   Collapsible,
+//   CollapsibleContent,
+//   CollapsibleTrigger,
+// } from "@/components/ui/collapsible";
 
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
 import WidgetComponent from "@/app/(docs)/components/WidgetComponent";
 
+import * as Collapsible from "@radix-ui/react-collapsible";
+import { RowSpacingIcon, Cross2Icon } from "@radix-ui/react-icons";
+
 export default function Page({ params }) {
+  const [activeCollapse, setActiveCollapse] = useState(null);
+  const handleClick = (e, idx) => {
+    e.stopPropagation();
+
+    setActiveCollapse((prev) => (prev === idx ? null : idx)); // Toggle the specific collapsible by index
+  };
 
 
   const apiEndpoint = [
@@ -23,16 +32,19 @@ export default function Page({ params }) {
       "Controller": "Sessions",
       "Endpoints": [
         {
+          "id":1,
           "method": "POST",
           "path": "/api/v1/sessions",
           "description": "Create a new session"
         },
         {
+          "id":2,
           "method": "GET",
           "path": "/api/v1/sessions",
           "description": "Get all sessions"
         },
         {
+          "id":3,
           "method": "DELETE",
           "path": "/api/v1/sessions",
           "description": "Delete a session"
@@ -44,11 +56,13 @@ export default function Page({ params }) {
       "Controller": "Chat",
       "Endpoints": [
         {
+          "id":4,
           "method": "POST",
           "path": "/api/v1/chat",
           "description": "Chat API endpoint"
         },
         {
+          "id":5,
           "method": "GET",
           "path": "/api/v1/chat",
           "description": "Get chat history by session id"
@@ -106,89 +120,6 @@ export default function Page({ params }) {
     navigator.clipboard.writeText(apiKey);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000); // Reset the success message after 2 seconds
-  };
-
-  const SchemaItem = ({
-    name,
-    extraInfo,
-    status,   // Another prop for extra information
-    children,
-    level = 0,
-    isTable = false,
-    onTableSelect,
-    activeTable,
-    className,
-  }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const hasChildren = React.Children.count(children) > 0;
-
-    const handleClick = (e) => {
-      e.stopPropagation();
-      if (hasChildren) {
-        setIsOpen(!isOpen);
-      }
-
-      if (isTable && onTableSelect) {
-        onTableSelect(name);
-      }
-    };
-
-    const isActive = isTable && activeTable === name;
-
-    return (
-      <div className={cn(" w-full h-auto", level === 0 ? "ml-0" : "ml-6")} >
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="">
-          <CollapsibleTrigger
-            className={cn(
-              "flex items-center w-full text-left transition-colors",
-              isActive
-                ? "bg-primary1 text-primary-foreground"
-                : "hover:bg-gray-200 ",
-              className
-            )}
-            onClick={handleClick}
-          >
-            <div className=" w-1/2 flex justify-between">
-              <span className="ml-2 ">{name}</span>
-              {hasChildren && (
-                <ChevronDown
-                  className={`my-auto h-6 w-6 transition-transform ${isOpen ? "transform rotate-180" : ""
-                    }`}
-                />
-              )}
-              {extraInfo && (
-                <div className="w-auto text-base font-normal my-auto text-[#878787] ml-10">{extraInfo}</div>
-              )}
-              {status && (
-                <div className={`text-xs my-auto rounded-md font-semibold w-14 h-5  text-white ml-10 flex justify-center items-center 
-                  ${status == 'POST' ? 'bg-[#49CC90]' : status == 'GET' ? 'bg-[#61AFFE]' : 'bg-[#C9002B]'}
-                  `}>{status}</div>
-              )}
-            </div>
-
-          </CollapsibleTrigger>
-          {hasChildren && (
-            <CollapsibleContent className="w-full pl-6 py-2">
-              <div>
-                <span className="w-full border-l border-gray-200 pl-4">
-                  <span className="w-full flex flex-col space-y-2">
-                    {children}
-                  </span>
-                </span>
-
-              </div>
-
-            </CollapsibleContent>
-          )}
-        </Collapsible>
-      </div>
-    );
-  };
-
-  const [activeTable, setActiveTable] = useState(null);
-
-  const handleTableSelect = (tableName) => {
-    setActiveTable(tableName);
   };
 
   return (
@@ -291,42 +222,59 @@ export default function Page({ params }) {
         {
           uploadedFiles ?
             (<div>
-              {
-                apiEndpoint?.map((endpoint, idx) => (
-                  <SchemaItem
-                    key={idx}
-                    className="mb-5 p-1 pl-2 text-2xl border-b-[0.8px] h-12 border-primary font-bold text-primary hover:bg-none"
-                    name={endpoint.Controller}
-                    onTableSelect={handleTableSelect}
-                    activeTable={activeTable}
-                  >
-                    <div className="flex flex-col w-full ">
-                      {
-                        endpoint?.Endpoints.map((endpoint, idx) => (
-                          <div key={idx} >
-                            <SchemaItem
-                              key={idx}
-                              name={endpoint.path}
-                              extraInfo={endpoint.description}
-                              status={endpoint.method}
-                              className="pl-2 w-full py-2 text-xl font-semibold "
-
-                            />
-
-                            <button onClick={() => document.getElementById("my_modal_1").showModal()}>ffffffff</button>
-                          </div>
-
-                        ))
-                      }
+              {apiEndpoint?.map((endpoint, idx) => (
+                <div key={idx}>
+                  <Collapsible.Root className="w-full cursor-pointer">
+                    <div className="rounded p-2.5">
+                      <Collapsible.Trigger asChild onClick={(e) => handleClick(e, idx)}>
+                        <span
+                          className={cn(
+                            " flex items-center text-left transition-colors text-primary pl-2 text-2xl border-b-[0.8px] border-primary font-bold"
+                          )}
+                        >
+                          {endpoint.Controller}
+                          <ChevronDown
+                            className={`my-auto h-6 w-6 transition-transform ${activeCollapse === idx ? "transform rotate-180" : ""
+                              }`}
+                          />
+                        </span>
+                      </Collapsible.Trigger>
                     </div>
-                  </SchemaItem>
-                ))
-              }
+
+                    {/* Conditionally render Collapsible.Content based on activeCollapse */}
+                    {endpoint?.Endpoints.map((endpoint, id) => (
+                      <Collapsible.Content key={id} open={activeCollapse === idx} className="w-4/5">
+                        <div className="my-2.5 rounded grid grid-cols-7 p-2.5 cursor-pointer" onClick={() => document.getElementById(`my_modal_${endpoint?.id}`).showModal()}>
+                          <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold">
+                            {endpoint.path}
+                          </span>
+                          <div className="col-span-5">
+                            <div className="flex justify-start items-center h-full">
+                              <span className={`text-xs rounded-md font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${endpoint.method == 'POST' ? 'bg-[#49CC90]' : endpoint.method == 'GET' ? 'bg-[#61AFFE]' : 'bg-[#C9002B]'}
+                  `}>
+                                {endpoint.method}
+                              </span>
+                              <span className="w-auto text-base font-normal text-[#878787] ml-10">
+                                {endpoint.description}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Modal for each endpoint */}
+                        <APIEndpointModal idx={endpoint?.id} />
+                      </Collapsible.Content>
+                    ))}
+                  </Collapsible.Root>
+
+
+                </div>
+              ))}
+
             </div>)
             :
             (<div></div>)
         }
-        <APIEndpointModal />
+
 
         {/* widget */}
         <div className="flex items-center mb-6 gap-2">
@@ -346,7 +294,7 @@ export default function Page({ params }) {
           <WidgetComponent />
         </div>
 
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
