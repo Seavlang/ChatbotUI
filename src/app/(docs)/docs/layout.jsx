@@ -14,7 +14,7 @@ export default function layout({ children }) {
         <div className="col-span-2 border-r-2">
           <SidebarComponent />
         </div>
-        <div className="col-span-8 ">
+        <div className="col-span-7 flex justify-center ">
           {children}
         </div>
       </div>
