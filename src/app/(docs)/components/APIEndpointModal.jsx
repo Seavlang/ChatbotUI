@@ -3,14 +3,13 @@ import { api_document } from '@/app/data/api_endpoint';
 import React, { useRef } from 'react'
 import { CopyBlock, ocean } from "react-code-blocks";
 
-function APIEndpointModal({ idx }) {
+function APIEndpointModal({ idx}) {
     const content = api_document
     const dialogRef = useRef(null);
 
     const closeModal = () => {
         dialogRef.current.close();
     };
-    const codeString = "curl -X 'POST' \\ \n  'http://localhost:8001/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’"
 
     const json201Response = {
         message: "File uploaded successfully",
@@ -24,7 +23,6 @@ function APIEndpointModal({ idx }) {
         detail: "400: Wrong file format."
     }
 
-    const useCase = "This endpoint is essential for initializing a chat session within your system. By generating a session ID, you can manage your document interactions and chatbot conversations in an organized manner."
     return (
 
         content?.map((data) => (

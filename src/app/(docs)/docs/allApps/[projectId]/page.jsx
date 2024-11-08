@@ -15,7 +15,7 @@ import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
 import WidgetComponent from "@/app/(docs)/components/WidgetComponent";
 
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { RowSpacingIcon, Cross2Icon } from "@radix-ui/react-icons";
+
 
 export default function Page({ params }) {
   const [activeCollapse, setActiveCollapse] = useState(null);
@@ -32,19 +32,19 @@ export default function Page({ params }) {
       "Controller": "Sessions",
       "Endpoints": [
         {
-          "id":1,
+          "id": 1,
           "method": "POST",
           "path": "/api/v1/sessions",
           "description": "Create a new session"
         },
         {
-          "id":2,
+          "id": 2,
           "method": "GET",
           "path": "/api/v1/sessions",
           "description": "Get all sessions"
         },
         {
-          "id":3,
+          "id": 3,
           "method": "DELETE",
           "path": "/api/v1/sessions",
           "description": "Delete a session"
@@ -56,13 +56,13 @@ export default function Page({ params }) {
       "Controller": "Chat",
       "Endpoints": [
         {
-          "id":4,
+          "id": 4,
           "method": "POST",
           "path": "/api/v1/chat",
           "description": "Chat API endpoint"
         },
         {
-          "id":5,
+          "id": 5,
           "method": "GET",
           "path": "/api/v1/chat",
           "description": "Get chat history by session id"
@@ -196,7 +196,7 @@ export default function Page({ params }) {
               <span className="font-medium text-primary mr-2">No document</span>
             </div>
           ) : (
-            <ul>
+            <ul >
               {uploadedFiles?.map((file, index) => (
                 <div className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md">
                   {" "}
@@ -225,11 +225,11 @@ export default function Page({ params }) {
               {apiEndpoint?.map((endpoint, idx) => (
                 <div key={idx}>
                   <Collapsible.Root className="w-full cursor-pointer">
-                    <div className="rounded p-2.5">
+                    <div className="rounded">
                       <Collapsible.Trigger asChild onClick={(e) => handleClick(e, idx)}>
                         <span
                           className={cn(
-                            " flex items-center text-left transition-colors text-primary pl-2 text-2xl border-b-[0.8px] border-primary font-bold"
+                            " flex mb-5 items-center justify-between h-11 text-left transition-colors text-primary pl-2 text-2xl border-b-[0.8px] border-primary font-bold"
                           )}
                         >
                           {endpoint.Controller}
@@ -243,41 +243,41 @@ export default function Page({ params }) {
 
                     {/* Conditionally render Collapsible.Content based on activeCollapse */}
                     {endpoint?.Endpoints.map((endpoint, id) => (
-                      <Collapsible.Content key={id} open={activeCollapse === idx} className="w-4/5">
-                        <div className="my-2.5 rounded grid grid-cols-7 p-2.5 cursor-pointer" onClick={() => document.getElementById(`my_modal_${endpoint?.id}`).showModal()}>
-                          <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold">
-                            {endpoint.path}
-                          </span>
-                          <div className="col-span-5">
-                            <div className="flex justify-start items-center h-full">
-                              <span className={`text-xs rounded-md font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${endpoint.method == 'POST' ? 'bg-[#49CC90]' : endpoint.method == 'GET' ? 'bg-[#61AFFE]' : 'bg-[#C9002B]'}
+                      <div  key={id} className="transition-colors hover:bg-gray-200">
+                        <Collapsible.Content open={activeCollapse === idx} className="w-4/5">
+                          <div className="my-2.5 rounded grid grid-cols-7 cursor-pointer " onClick={() => document.getElementById(`my_modal_${endpoint?.id}`).showModal()}>
+                            <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold">
+                              {endpoint.path}
+                            </span>
+                            <div className="col-span-5">
+                              <div className="flex justify-start items-center h-full">
+                                <span className={`text-xs rounded-md font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${endpoint.method == 'POST' ? 'bg-[#49CC90]' : endpoint.method == 'GET' ? 'bg-[#61AFFE]' : 'bg-[#C9002B]'}
                   `}>
-                                {endpoint.method}
-                              </span>
-                              <span className="w-auto text-base font-normal text-[#878787] ml-10">
-                                {endpoint.description}
-                              </span>
+                                  {endpoint.method}
+                                </span>
+                                <span className="w-auto text-base font-normal text-[#878787] ml-10">
+                                  {endpoint.description}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {/* Modal for each endpoint */}
-                        <APIEndpointModal idx={endpoint?.id} />
-                      </Collapsible.Content>
+                          {/* Modal for each endpoint */}
+                          <APIEndpointModal idx={endpoint?.id} />
+                        </Collapsible.Content>
+                      </div>
+
                     ))}
                   </Collapsible.Root>
-
-
                 </div>
               ))}
 
             </div>)
             :
-            (<div></div>)
+            ('')
         }
 
-
         {/* widget */}
-        <div className="flex items-center mb-6 gap-2">
+        <div className="flex items-center mb-6 gap-2 mt-4">
           <svg width="28" height="28" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="3.3335" y="4.23584" width="5" height="5.83333" rx="1" stroke="#004B93" stroke-linejoin="round" />
             <rect x="3.3335" y="13.4023" width="5" height="4.16667" rx="1" stroke="#004B93" stroke-linejoin="round" />
