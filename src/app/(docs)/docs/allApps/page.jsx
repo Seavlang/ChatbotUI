@@ -84,9 +84,9 @@ export default async function Page({ searchParams }) {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
+            {filteredData.map((item,index) => (
               <tr key={item?.id} className="border-b border-gray-200">
-                <td className="py-3 px-6">{item?.id}</td>
+                <td className="py-3 px-6">{index+1}</td>
                 <td className="py-3 px-6">
                   <Link
                     href={`/docs/allApps/${item?.id}`}
