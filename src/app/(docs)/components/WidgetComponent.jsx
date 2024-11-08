@@ -10,7 +10,7 @@ function WidgetComponent() {
             title: "Preview",
             value: "preview",
             content: (
-                <div className="w-full overflow-hidden relative h-full p-10 text-xl md:text-4xl font-bold  bg-gradient-to-br flex justify-center items-center">
+                <div className="w-full overflow-hidden relative h-full p-10 text-xl md:text-4xl font-bold  bg-gradient-to-br bg-blue-100 flex justify-center items-center">
                     <ChatWidget/>
                 </div>
             ),
@@ -19,7 +19,7 @@ function WidgetComponent() {
             title: "Code",
             value: "code",
             content: (
-                <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-sm font-normal  bg-gradient-to-br bg-white text-black ">
+                <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-sm font-normal  bg-gradient-to-br bg-gray-50 text-black ">
                     <CodeComponent/>
                 </div>
             ),
