@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPasswordAction } from "@/actions/authAction"; // Import reset password action
+import { useSession } from "next-auth/react";
 
 // Define the validation schema for password and confirmPassword
 const passwordSchema = z
@@ -40,12 +41,12 @@ const passwordSchema = z
   });
 
 export default function ResetPasswordForm() {
+  const { data: session } = useSession();
+  const email = session?.user?.email;
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConPassword, setShowConPassword] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams?.get("email");
 
   const form = useForm({
     resolver: zodResolver(passwordSchema),

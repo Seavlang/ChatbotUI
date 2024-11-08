@@ -8,8 +8,9 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { verifyEmailAction, resendVerificationCodeAction } from "@/actions/authAction"; // Import resend action
+import { useSession } from "next-auth/react";
 
 // Define the validation schema for code
 const codeSchema = z.object({
@@ -17,10 +18,11 @@ const codeSchema = z.object({
 });
 
 export default function CodeVerificationForm() {
+
+  const { data: session } = useSession();
+  const email = session?.user?.email;
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams?.get("email");
 
   const form = useForm({
     resolver: zodResolver(codeSchema),
@@ -98,7 +100,7 @@ export default function CodeVerificationForm() {
         </Form>
 
         <div className="text-center text-sm text-gray-500">
-          Didn't receive a code?{" "}
+        <p>Didn&apos;t receive a code?</p>
           <button onClick={handleResend} className="text-primary underline">
             Resend
           </button>

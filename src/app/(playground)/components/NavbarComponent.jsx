@@ -15,14 +15,6 @@ export default function NavbarComponent() {
   const handleDropdownToggle = () => setShowDropdown(!showDropdown);
   const handleLogout = () => signOut({ redirect: true, callbackUrl: "/" });
 
-  // Extract initials from the user's name if there’s no profile picture
-  const initials = session?.user?.name
-    ? session.user.name
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .toUpperCase()
-    : "U";
 
   return (
     <div>

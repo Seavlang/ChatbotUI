@@ -21,6 +21,8 @@ function APIEndpointModal({ idx }) {
     },
   };
   const [copied, setCopied] = useState(false);
+  const [copiedResponse, setCopiedResponse] = useState(false);
+  const [copiedErrorResponse, setCopiedErrorResponse] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(codeString);
@@ -29,8 +31,8 @@ function APIEndpointModal({ idx }) {
   };
   const handleCopyResponse = () => {
     navigator.clipboard.writeText(json201Response);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
+    setCopiedResponse(true);
+    setTimeout(() => setCopiedResponse(false), 2000); // Reset copied status after 2 seconds
   };
 
   const errorResponse = {
@@ -38,15 +40,15 @@ function APIEndpointModal({ idx }) {
   };
   const handleCopyErrorResponse = () => {
     navigator.clipboard.writeText(errorResponse);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
+    setCopiedErrorResponse(true);
+    setTimeout(() => setCopiedErrorResponse(false), 2000); // Reset copied status after 2 seconds
   };
 
   const useCase =
     "This endpoint is essential for initializing a chat session within your system. By generating a session ID, you can manage your document interactions and chatbot conversations in an organized manner.";
   return content?.map((data) =>
     data.id == idx ? (
-      <dialog id={`my_modal_${idx}`} ref={dialogRef} className="modal">
+      <dialog key={idx} id={`my_modal_${idx}`} ref={dialogRef} className="modal">
         <div className="modal-box max-w-[770px] max-h-[700px] rounded-lg overflow-y-auto  outline-none ">
           <button className="absolute right-10 " onClick={closeModal}>
             <svg
@@ -79,7 +81,7 @@ function APIEndpointModal({ idx }) {
           {/* Modal Header */}
           <div className=" mx-10 mt-5 border-b-[0.3px] border-black border-opacity-30  h-[100px]">
             <div className="text-3xl text-left font-medium text-primary mb-4">
-              {data.title}
+              {data?.title}
             </div>
             <div className="text-md font-normal">{data?.description}</div>
           </div>
@@ -166,9 +168,9 @@ function APIEndpointModal({ idx }) {
                     {/* Copy Button (optional for style, not functional here) */}
                     <button
                       onClick={handleCopyResponse}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-primary"
                     >
-                      {copied ? (
+                      {copiedResponse ? (
                         "Copied!"
                       ) : (
                         <Image
@@ -202,9 +204,9 @@ function APIEndpointModal({ idx }) {
                     {/* Copy Button (optional for style, not functional here) */}
                     <button
                       onClick={handleCopyErrorResponse}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-primary"
                     >
-                      {copied ? (
+                      {copiedErrorResponse ? (
                         "Copied!"
                       ) : (
                         <Image

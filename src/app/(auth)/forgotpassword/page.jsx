@@ -28,7 +28,7 @@ export default function Page() {
         
         if (res?.success) {
           // toast.success("Verification code sent successfully!");
-          router.push(`/forgotpassword/verify?email=${encodeURIComponent(email)}`);
+          router.push(`/forgotpassword/verify`);
         } else {
           toast.error("Invalid Email. Please try again.");
         }

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Image from "next/image";
 import NavbarComponent from "./components/NavbarComponent";
 import { Button } from "@nextui-org/react";
@@ -10,9 +10,9 @@ export default function Home() {
   return (
     <div>
       <div className="bg-white mx-40">
-        <NavbarComponent/>
+        <NavbarComponent />
       </div>
-      <hr/>
+      <hr />
       <div className="mx-60 font-poppin">
         <div className="  mt-12">
           <h1 className="text-4xl font-semibold leading-normal">
@@ -34,12 +34,11 @@ export default function Home() {
             <div className=" mt-10">
               <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
                 <a href="/login">Get Started</a>
-                
               </button>
             </div>
           </div>
           <div className="w-2/3 -mt-60 pr-14">
-            <ChatbotComponent/>
+            <ChatbotComponent />
           </div>
         </div>
         <div className="text-center mt-[-40px]">
@@ -81,20 +80,25 @@ export default function Home() {
           </div>
         </div>
         <div className="w-full -mt-48">
-          <Image src={"/asset/images/model.png"} alt="model" width={1400} height={800} />
+          <Image
+            src={"/asset/images/model.png"}
+            alt="model"
+            width={1400}
+            height={800}
+          />
         </div>
         <div className="mt-20 text-center p-10 border-2 mx-60 rounded-xl">
           <h1 className="font-bold text-3xl leading-relaxed">
             Instant answers. Greater <br /> productivity. Endless inspiration.
           </h1>
           <button className="bg-primary mt-5 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl">
-            <Link href="/playground">Let's Try</Link>
+          <Link href="/playground">Let&apos;s Try</Link>
           </button>
         </div>
       </div>
       <div className="mx-40">
-          <FooterComponent />
-        </div>
+        <FooterComponent />
+      </div>
     </div>
   );
 }

@@ -54,12 +54,12 @@ export default function Page() {
         Example
       </h1>
       <p className="ml-10 mr-20">
-        First up, let's learn how to use a language model by itself. LangChain
-        supports many different language models that you can use interchangeably
-        - select the one you want to use below!
+        First up, let&apos;s learn how to use a language model by itself.
+        LangChain supports many different language models that you can use
+        interchangeably - select the one you want to use below!
       </p>
-      <div 
-        className="mt-5  ml-10 mr-10 border-2 rounded-md">
+
+      <div className="mt-5  ml-10 mr-10 border-2 rounded-md">
         <CopyBlock
           text={codeString}
           language="html" // Use 'html' for HTML code
@@ -74,4 +74,4 @@ export default function Page() {
       </div>
     </div>
   );
-};
+}
