@@ -11,6 +11,10 @@ export default function NavbarComponent() {
   const isLoggedIn = !!session;
   const accessToken = session?.access_token;
   console.log("access token: " , accessToken);
+  const handleLogout = () => {
+    signOut({redirect: false});
+    router.push("/");
+  }
 
   return (
     <div>
@@ -103,7 +107,7 @@ export default function NavbarComponent() {
                   </a>
                 </li>
                 <li>
-                  <a onClick={() => signOut({ callbackUrl: "/" })}>
+                  <a onClick={ onClick={handleLogout}}>
                     <Image src={"/asset/images/logout.png"} alt="logout" width={18} height={18} />
                     <span className="text-red-500">Log Out</span>
                   </a>
