@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 export default function NavbarComponent() {
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -11,9 +12,14 @@ export default function NavbarComponent() {
   const accessToken = session?.access_token;
   console.log("access token: ", session);
   const [showDropdown, setShowDropdown] = useState(false);
+  const router = useRouter()
 
   const handleDropdownToggle = () => setShowDropdown(!showDropdown);
-  const handleLogout = () => signOut({ redirect: true, callbackUrl: "/" });
+  
+  const handleLogout = () => {
+    signOut({redirect: false});
+    router.push("/");
+  }
 
 
   return (
@@ -108,10 +114,10 @@ export default function NavbarComponent() {
                   </a>
                 </li>
                 <li>
-                  <a onClick={() => signOut({ callbackUrl: "/" })}>
+                  <button onClick={handleLogout}>
                     <Image src={"/asset/images/logout.png"} alt="logout" width={18} height={18} />
                     <span className="text-red-500">Log Out</span>
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>

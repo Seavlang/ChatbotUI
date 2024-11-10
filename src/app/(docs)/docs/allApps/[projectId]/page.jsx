@@ -245,7 +245,7 @@ export default function Page({ params }) {
         <div className="relative w-full">
           <input
             type="text"
-            value={projectData?.project_id?.api_key}
+            value={projectData?.project_id?.api_key ?? ""}
             readOnly
             className="w-full pl-8 pr-20 py-3 border font-medium border-primary rounded-lg text-sm text-gray-800"
           />
