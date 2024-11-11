@@ -55,7 +55,6 @@ export const getAllProjectService = async () => {
   export const createProjectService = async (projectName) => {
     const headers = await reqHeader();
     try {
-        console.log("authenticated1",authUrl);
         const res = await fetch(`http://110.74.194.123:8085/api/v1/api_generation/project/create_project?project_name=${projectName}`, {
         method: "POST",
         headers,
@@ -75,9 +74,6 @@ export const getAllProjectService = async () => {
 //  delete Project 
   export const deleteProjectService = async (projectId) => {
     const headers = await reqHeader();
-    console.log("Attempting to delete project with ID:", projectId);
-    console.log("Headers:", headers);
-  
     try {
       const response = await fetch(
         `${authUrl}/api_generation/project/delete/${projectId}`,
@@ -86,8 +82,6 @@ export const getAllProjectService = async () => {
           headers,
         }
       );
-  
-      console.log("Response status:", response.status);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -129,37 +123,67 @@ export const getAllProjectService = async () => {
     }
   };
 //   upload external file 
-export const uploadExternalFileService = async (file, projectId) => {
-    const headers = await reqHeader();
-    
-    // We need to remove the Content-Type header as fetch will set it automatically when sending FormData
-    delete headers["Content-Type"];
+export const uploadExternalFileService = async (projectId, file) => {
+  console.log("file upload service", file, projectId);
+  const headers = await reqHeader();
   
-    const formData = new FormData();
-    formData.append("file", file);
+  // Remove Content-Type as FormData will automatically set it
+  delete headers["Content-Type"];
   
-    try {
-      const response = await fetch(
-        `${authUrl}/files/api_generation/upload?project_id=${projectId}`,
-        {
-          method: "POST",
-          headers: {
-            ...headers,
-            "Authorization": `Bearer ${headers.Authorization}`,  // Authorization header
-            "Accept": "application/json",
-          },
-          body: formData,
-        }
-      );
+  const formData = new FormData();
+  formData.append("file", file?.file); // Ensure `file` is an actual File object
   
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  // Log FormData content for debugging
+  console.log("FormData file:", formData);
+
+  try {
+    const response = await fetch(
+      `${authUrl}/files/api_generation/upload?project_id=${projectId}`,
+      {
+        method: "POST",
+        headers: {
+          ...headers,
+          "Authorization": `${headers.Authorization}`,  // Authorization header
+          "Accept": "application/json",
+        },
+        body: formData,
       }
-  
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw error; // Re-throw the error for handling outside this function
+    );
+    console.log("upload response:", response);
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Error details from server:", errorDetails);
+      throw new Error(`HTTP error! Status: ${response.status}, Details: ${JSON.stringify(errorDetails)}`);
     }
-  };
+    
+
+    const data = await response.json();
+    revalidateTag("files");
+    return data;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error; // Re-throw the error for handling outside this function
+  }
+};
+//   get all file by project ID 
+export const getAllFilesService = async (projectId) => {
+  const headers = await reqHeader();
+  try {
+    const response = await fetch(`${authUrl}/files/api_generation/get_all_files/${projectId}`, {
+      method: "GET",
+      headers,next: {
+        tag: ["files"],
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching files:", error);
+    throw error;
+  }
+};

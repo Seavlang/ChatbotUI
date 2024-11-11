@@ -22,7 +22,6 @@ function ChatWidget() {
 
         // Add the user's message to the conversation
         setMessages((prevMessages) => [...prevMessages, { type: 'user', text: input }]);
-        console.log("input: " + input);
         // try {
         //     // Call the chatbot service and get the response
         //     const response = await ChatbotAction(input, "1", "2");

@@ -20,8 +20,6 @@ const CreateProjectModal = () => {
     setLoading(true);
     setError(null);
 
-    console.log("Project Name:", projectName); // Log the project name to debug
-
     try {
       await createProjectAction(projectName); // Pass the project name to the action
       closeModal(); // Close the modal on success

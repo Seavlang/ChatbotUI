@@ -54,7 +54,6 @@ export default function CodeVerificationForm() {
         email,
         code: values.code,
       });
-      console.log("ress", res);
 
       if (res.success) {
         toast.success("Code verified successfully!");

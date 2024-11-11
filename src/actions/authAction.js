@@ -3,9 +3,7 @@
 import { resetPasswordService, registerService, verifyEmailService,resendService, resetPasswordVerifyService } from "@/services/auth/auth.service";
 
 export const registerAction = async (req) => {
-    console.log("registerActionSeavlang",req);
     const res = await registerService(req);
-    console.log("object",res);
     return res;
 }
 
@@ -25,7 +23,6 @@ export const resetPasswordAction = async (req) => {
 }
 
 export const resetPasswordVerifyAction = async (req) => {
-    console.log("resetPasswordActionSeavlang",req);
     const res = await resetPasswordVerifyService(req.email,req.code);
     return res;
 }

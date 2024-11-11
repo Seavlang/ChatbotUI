@@ -2,24 +2,19 @@
 import FileComponent from "@/app/components/FileComponent";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-// import {
-//   Collapsible,
-//   CollapsibleContent,
-//   CollapsibleTrigger,
-// } from "@/components/ui/collapsible";
 
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import APIEndpointModal from "@/app/(docs)/components/APIEndpointModal";
 import WidgetComponent from "@/app/(docs)/components/WidgetComponent";
-
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { RowSpacingIcon, Cross2Icon } from "@radix-ui/react-icons";
 import {
   getProjectByIdAction,
   updateDescriptionAction,
+  uploadExternalFileAction,
 } from "@/actions/docAction";
+import { getAllFilesService } from "@/services/doc.service";
 
 export default function Page({ params }) {
   const [activeCollapse, setActiveCollapse] = useState(null);
@@ -73,27 +68,13 @@ export default function Page({ params }) {
       ],
     },
   ];
-
   const [resolvedParams, setResolvedParams] = useState(null);
-  const [copySuccess, setCopySuccess] = useState(false);
   const [projectData, setProjectData] = useState(null);
   const [description, setDescription] = useState(
     projectData?.project_id?.description || ""
   );
-  const [uploadedFiles, setUploadedFiles] = useState([
-    {
-      id: 1,
-      project_id: 3,
-      file_name: "Gen11th-advanced-course-preface.pdf",
-      created_at: "2024-11-04T15:14:07.897565",
-    },
-    {
-      id: 2,
-      project_id: 3,
-      file_name: "TAG-Research.pdf",
-      created_at: "2024-11-04T15:14:07.897565",
-    },
-  ]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  console.log("uploaded files fetch", uploadedFiles);
 
   useEffect(() => {
     // Resolve the params Promise
@@ -118,12 +99,27 @@ export default function Page({ params }) {
       }
     };
 
+    const fetchAllFiles = async () => {
+      if (!resolvedParams?.projectId) return;
+      try {
+        const files = await getAllFilesService(resolvedParams.projectId);
+        console.log("id  files",files);
+        setUploadedFiles(files?.payload); // Ensure files is an array
+  
+        console.log("uploaded files fetch", files);
+      } catch (error) {
+        console.error("Error fetching files:", error);
+        setUploadedFiles([]); // Set an empty array if there's an error
+      }
+    };
+
     fetchProjectById();
+    fetchAllFiles();
   }, [resolvedParams]);
 
   const project = resolvedParams?.projectId
     ? resolvedParams.projectId
-    : "No Project Name";
+    : "No Project";
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -143,20 +139,22 @@ export default function Page({ params }) {
   };
 
   // Callback to handle uploaded files
-  const handleFileUpload = (files) => {
-    setUploadedFiles((prev) => [...prev, ...files]);
-  };
+  const handleFileUpload = async (event) => {
+    const file = event[0];
+    console.log("file in file handle", file);
+    if (!file || !resolvedParams?.projectId) return;
 
-  const openModal = (id) => {
-    console.log("id: ", id);
-    document.getElementById("my_modal_1").showModal();
+    try {
+      const response = await uploadExternalFileAction(file, project);
+      console.log("response uploaded:", response);
+      // Assuming response includes the file metadata, like `file_name`
+      setUploadedFiles((prevFiles) => [...prevFiles, response]);
+      clearFiles();
+    } catch (error) {
+      console.error("File upload failed:", error);
+    }
   };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(projectData?.project_id?.api_key);
-    setCopySuccess(true);
-    setTimeout(() => setCopySuccess(false), 2000); // Reset the success message after 2 seconds
-  };
+  const clearFiles = () => setUploadedFiles([]);
 
   const [copied, setCopied] = useState(false);
 
@@ -329,6 +327,7 @@ export default function Page({ params }) {
         <FileComponent
           uploadedFiles={uploadedFiles}
           onFileUpload={handleFileUpload}
+          projectId={project}
         />
         <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
           <svg

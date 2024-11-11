@@ -26,7 +26,6 @@ export const authOptions = {
         });
 
         const data = await response.json();
-        console.log("Response data:", data);
 
         if (!response.ok) {
           throw new Error(data.detail || data.message || "Login failed");
@@ -67,7 +66,6 @@ export const authOptions = {
       session.user.email = token.email;
       session.user.image = token.image;
       session.access_token = token.access_token;
-      console.log("sessionauth",session);
       return session;
     },
   },

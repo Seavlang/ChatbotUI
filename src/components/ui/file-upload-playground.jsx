@@ -235,7 +235,6 @@ export const FileUploadPlayground = ({ file, onChange }) => {
               </div>
             </motion.div>
           )
-          // console.log("idx", idx, "files: ", file)
         )}
 
     </div>

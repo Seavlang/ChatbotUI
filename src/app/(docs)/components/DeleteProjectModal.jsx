@@ -21,13 +21,11 @@ const DeleteProjectModal = ({ projectId }) => {
     setError(null);
     try {
       const res = await deleteProjectAction(projectId); // Directly use projectId
-      console.log("delete res",res);
       if(res?.success == true) {
         toast.success(res.message);
       closeModal(); // Close the modal on success
       }
     } catch (error) {
-        console.log("delete error",error);
       setError("Failed to delete project. Please try again.");
     } finally {
       setLoading(false);

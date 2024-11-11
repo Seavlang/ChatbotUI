@@ -4,13 +4,14 @@ import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function NavbarComponent() {
   const pathname = usePathname();
+  const router = useRouter()
   const { data: session } = useSession();
   const isLoggedIn = !!session;
   const accessToken = session?.access_token;
-  console.log("access token: " , accessToken);
   const handleLogout = () => {
     signOut({redirect: false});
     router.push("/");
@@ -33,30 +34,39 @@ export default function NavbarComponent() {
           </div>
         </div>
 
+        
+
+        {isLoggedIn ? (
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal text-lg">
-            <li>
-              <Link href="/" className={pathname === '/' ? 'font-bold' : ''}>
-                Overview
-              </Link>
-            </li>
-            <li>
-              <Link href="/docs/allApps" className={pathname === '/docs' ? 'font-bold' : ''}>
-                Docs
-              </Link>
-            </li>
-            {/* <li>
-              <Link href="/examples" className={pathname === '/examples' ? 'font-bold' : ''}>
-                Examples
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className={pathname === '/about' ? 'font-bold' : ''}>
-                About
-              </Link>
-            </li> */}
-          </ul>
-        </div>
+        <ul className="menu menu-horizontal text-lg">
+          <li>
+            <Link href="/" className={pathname === "/" ? "font-bold" : ""}>
+              Overview
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/playground"
+              className={pathname === "/playground" ? "font-bold" : ""}
+            >
+              Playground
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/docs/allApps"
+              className={pathname === "/docs" ? "font-bold" : ""}
+            >
+              Docs
+            </Link>
+          </li>
+     
+        </ul>
+      </div>
+          
+          ) : (
+           ""
+          )}
 
         <div className="navbar-end text-xl">
           {isLoggedIn ? (
@@ -107,7 +117,7 @@ export default function NavbarComponent() {
                   </a>
                 </li>
                 <li>
-                  <a onClick={ onClick={handleLogout}}>
+                  <a onClick={handleLogout}>
                     <Image src={"/asset/images/logout.png"} alt="logout" width={18} height={18} />
                     <span className="text-red-500">Log Out</span>
                   </a>

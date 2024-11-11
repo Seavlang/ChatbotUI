@@ -34,7 +34,7 @@ export default async function Page({ searchParams }) {
         projectId="8"
         apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
       />
-      <div className="flex justify-between mr-20">
+      <div className="flex justify-between ">
         <div className="w-1/5 ml-10">
           {/* Search form for server-side filtering */}
           <form
@@ -70,7 +70,7 @@ export default async function Page({ searchParams }) {
         </div>
       </div>
       {/* table */}
-      <div className="overflow-x-auto ml-10 mr-20  mt-10">
+      <div className="overflow-x-auto ml-10  mt-10">
         <table className="min-w-full bg-white border border-gray-200 rounded-xl">
           <thead>
             <tr className="bg-primary text-white rounded-lg">

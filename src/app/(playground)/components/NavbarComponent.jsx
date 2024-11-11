@@ -10,7 +10,6 @@ export default function NavbarComponent() {
   const { data: session } = useSession();
   const isLoggedIn = !!session;
   const accessToken = session?.access_token;
-  console.log("access token: ", session);
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter()
 

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconX } from "@tabler/icons-react"; 
 import { useDropzone } from "react-dropzone";
@@ -26,26 +26,27 @@ const secondaryVariant = {
   },
 };
 
-export const FileUpload = ({ uploadedFiles, onChange }) => {
+export const FileUpload = ({ uploadedFiles = [], onChange , projectId }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
 
   const handleFileChange = (newFiles) => {
-    
-    const state_file = {
+    const actualFile = newFiles[0];
+    const fileMetadata = {
       id: uploadedFiles.length + 1,
-      "project_id": 3,
-      "file_name": newFiles[0]?.name,
-      "created_at": newFiles[0]?.lastModifiedDate
-    }
+      project_id: projectId,
+      file_name: actualFile.name,
+      created_at: actualFile.lastModifiedDate,
+      file: actualFile, // Storing the actual file for uploading
+    };
 
-    setFiles((prevFiles) => [...prevFiles, state_file]);
-    onChange && onChange([...files, state_file]);
-    setError(""); // Clear error when a valid file is added
+    setFiles((prevFiles) => [...prevFiles, fileMetadata]);
+    onChange && onChange([...files, fileMetadata]); // Notify parent with updated files
+    setError(""); // Clear error on successful file selection
   };
 
-  console.log("file in file-upload: ",files)
+  console.log("file in file-upload:", files);
 
   const handleRemoveFile = (index, e) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action
@@ -69,7 +70,7 @@ export const FileUpload = ({ uploadedFiles, onChange }) => {
     }, // Restrict to PDF and TXT files
     multiple: false,
     onDrop: handleFileChange,
-    onDropRejected: (fileRejections) => {
+    onDropRejected: () => {
       setError("Invalid file type. Please upload a .pdf or .txt file.");
     },
   });
@@ -97,7 +98,7 @@ export const FileUpload = ({ uploadedFiles, onChange }) => {
           <div className="relative w-full mb-5 max-w-xl mx-auto">
             {/* Display error as a dismissible alert */}
             {error && (
-              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4  max-w-xl mx-auto">
+              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 max-w-xl mx-auto">
                 <p className="text-sm">{error}</p>
                 <button
                   onClick={(e) => {
@@ -156,7 +157,7 @@ export const FileUpload = ({ uploadedFiles, onChange }) => {
                         layout
                         className="text-base font-medium text-gray-900 truncate max-w-xs"
                       >
-                        {file?.file_name}
+                        {file.file_name}
                       </motion.p>
 
                       {/* Remove Icon */}
@@ -181,7 +182,7 @@ export const FileUpload = ({ uploadedFiles, onChange }) => {
                   damping: 20,
                 }}
                 className={cn(
-                  "relative  z-40  dark:bg-neutral-900 flex items-center justify-center h-16  w-full max-w-[4rem] mx-auto rounded-md",
+                  "relative z-40 dark:bg-neutral-900 flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md",
                 )}
               >
                 {isDragActive ? (
@@ -225,7 +226,7 @@ export function GridPattern() {
   const columns = 41;
   const rows = 11;
   return (
-    <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
+    <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px scale-105">
       {Array.from({ length: rows }).map((_, row) =>
         Array.from({ length: columns }).map((_, col) => {
           const index = row * columns + col;

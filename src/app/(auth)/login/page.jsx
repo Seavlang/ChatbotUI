@@ -35,14 +35,12 @@ export default function LoginForm() {
 
   async function onSubmit(values) {
     setIsLoading(true);
-    console.log("value: " , values);
     const res = await signIn("credentials", {
       redirect: false,
       email: values.email,
       password: values.password,
       callbackUrl: "/", // Redirect URL on successful login
     });
-    console.log("onSubmit",res)
     setIsLoading(false);
 
     if (res?.error) {
