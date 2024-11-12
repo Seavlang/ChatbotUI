@@ -27,7 +27,9 @@ export const api_document = [
         overview: 'This endpoint allows you to retrieve all the session IDs associated with a specific project. Each session ID represents an individual chat session that has been created. You can use this information to view past interactions or manage ongoing sessions.',
         method: 'GET',
         path: 'https://chatbot.kshrd.com.kh/api/v1/chatbot/create_new_session',
-        request: "curl -X 'POST' \\ \n  'http://localhost:8001/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’",
+        request: "curl -X 'GET' \
+  'http://110.74.194.123:8085/api/v1/api_generation/session/get_all_sessions' \
+  -H 'accept: application/json'",
         code200: {
             message: "File uploaded successfully",
             success: true,
@@ -48,7 +50,9 @@ export const api_document = [
         overview: 'This endpoint allows you to retrieve all the session IDs associated with a specific project. Each session ID represents an individual chat session that has been created. You can use this information to view past interactions or manage ongoing sessions.',
         method: 'DELETE',
         path: 'https://chatbot.kshrd.com.kh/api/v1/chatbot/create_new_session',
-        request: "curl -X 'POST' \\ \n  'http://localhost:8001/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’",
+        request: "curl -X 'DELETE' \
+  'http://110.74.194.123:8085/api/v1/api_generation/session/delete/222' \
+  -H 'accept: application/json'",
         code200: {
             message: "File uploaded successfully",
             success: true,

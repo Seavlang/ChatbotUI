@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CodeComponent() {
+function CodeComponent({projectId}) {
     const code = `
 import  Chatbot  from "@seavlang/hrdchatbotwidget/src/index";
 
@@ -10,7 +10,7 @@ export default function Chat() {
         <div>
             <Chatbot 
                 SessionId="SESSION_ID" 
-                projectId="PROJECT_ID"  
+                projectId=${projectId}
                 apiKey="API_KEY"
             />
      </div>;

@@ -16,6 +16,9 @@ import {
 } from "@/actions/docAction";
 import { getAllFilesService } from "@/services/doc.service";
 import toast from "react-hot-toast";
+import { dotWave } from "ldrs";
+
+dotWave.register();
 
 export default function Page({ params }) {
   const [activeCollapse, setActiveCollapse] = useState(null);
@@ -91,27 +94,33 @@ export default function Page({ params }) {
   useEffect(() => {
     // Fetch the project by ID when resolvedParams is available
     const fetchProjectById = async () => {
+      setIsLoading(true);
       if (resolvedParams?.projectId) {
         try {
           const data = await getProjectByIdAction(resolvedParams.projectId);
           setProjectData(data);
         } catch (error) {
           console.error("Error fetching project data:", error);
+        } finally {
+          setIsLoading(false); // Stop loading
         }
       }
     };
 
     const fetchAllFiles = async () => {
       if (!resolvedParams?.projectId) return;
+      setIsLoading(true);
       try {
         const files = await getAllFilesService(resolvedParams.projectId);
-        console.log("id  files",files);
+        console.log("id  files", files);
         setUploadedFiles(files?.payload); // Ensure files is an array
-  
+
         console.log("uploaded files fetch", files);
       } catch (error) {
         console.error("Error fetching files:", error);
         setUploadedFiles([]); // Set an empty array if there's an error
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     };
 
@@ -153,11 +162,11 @@ export default function Page({ params }) {
       console.log("response uploaded:", response);
       // Assuming response includes the file metadata, like `file_name`
       setUploadedFiles((prevFiles) => [...prevFiles, response]);
-       // Clear files in FileUpload component after successful upload
+      // Clear files in FileUpload component after successful upload
       clearFiles();
     } catch (error) {
       console.error("File upload failed:", error);
-    }finally {
+    } finally {
       setIsLoading(false); // Stop loading
     }
   };
@@ -180,16 +189,26 @@ export default function Page({ params }) {
               <Link href="/docs/allApps">App</Link>
             </li>
             <li>
-              <Link href={`/docs/allApps/${project}`}>
-                {projectData?.project_id?.project_name}
-              </Link>
+              {isLoading ? (
+                <l-dot-wave size="20" speed="1" color="#090854"></l-dot-wave>
+              ) : (
+                <Link href={`/docs/allApps/${project}`}>
+                  {projectData?.project_id?.project_name}
+                </Link>
+              )}
             </li>
           </ul>
         </div>
       </div>
-      <h1 className="mx-10 text-4xl font-medium text-primary">
-        {projectData?.project_id?.project_name}
-      </h1>
+      {isLoading ? (
+        <h1 className="ml-20 text-4xl font-medium text-primary">
+          <l-dot-wave size="30" speed="1" color="#090854"></l-dot-wave>
+        </h1>
+      ) : (
+        <h1 className="mx-10 text-4xl font-medium text-primary">
+          {projectData?.project_id?.project_name}
+        </h1>
+      )}
       {/* textarea */}
       <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary rounded-lg">
         <div className="mb-4">
@@ -207,18 +226,24 @@ export default function Page({ params }) {
             className="ml-5 mt-2 w-[95%] h-24 font-normal  placeholder-medium placeholder-black  focus:outline-none "
             placeholder={`${projectData?.project_id?.description ? projectData?.project_id.description : "No description"}`}
           /> */}
-          <textarea
-            className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium placeholder-black focus:outline-none resize-none overflow-hidden"
-            value={description}
-            onChange={handleDescriptionChange}
-            onBlur={handleDescriptionSave} // Trigger save on blur
-            rows={4}
-            placeholder={`${
-              projectData?.project_id?.description
-                ? projectData?.project_id.description
-                : "No description"
-            }`}
-          />
+          {isLoading ? (
+            <h1 className="ml-10 text-4xl mt-2 h-24 font-medium text-primary">
+              <l-dot-wave size="20" speed="1" color="#090854"></l-dot-wave>
+            </h1>
+          ) : (
+            <textarea
+              className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium placeholder-black focus:outline-none resize-none overflow-hidden"
+              value={description}
+              onChange={handleDescriptionChange}
+              onBlur={handleDescriptionSave} // Trigger save on blur
+              rows={4}
+              placeholder={`${
+                projectData?.project_id?.description
+                  ? projectData?.project_id.description
+                  : "No description"
+              }`}
+            />
+          )}
         </div>
       </div>
       {/* api key */}
@@ -247,23 +272,22 @@ export default function Page({ params }) {
 
           <span className="text-primary text-xl font-bold">API Key</span>
         </label>
+
         <div className="relative w-full">
+          {isLoading && (
+            <div className="absolute inset-0 flex  bg-white bg-opacity-80 z-10">
+              <h1 className="ml-10 text-4xl font-medium text-primary">
+                <l-dot-wave size="20" speed="1" color="#090854"></l-dot-wave>
+              </h1>
+            </div>
+          )}
+
           <input
             type="text"
-            value={projectData?.project_id?.api_key ?? ""}
+            value={!isLoading ? projectData?.project_id?.api_key ?? "" : ""}
             readOnly
             className="w-full pl-8 pr-20 py-3 border font-medium border-primary rounded-lg text-sm text-gray-800"
           />
-          {/* <button
-            onClick={copyToClipboard}
-            className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-          >
-            {copySuccess ? (
-              "✔️"
-            ) : (
-              <Image src={"/asset/images/copy.png"} width={24} height={24} alt="copy img" />
-            )}
-          </button> */}
           <button
             onClick={handleCopy}
             className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
@@ -312,8 +336,19 @@ export default function Page({ params }) {
         {/* Display Uploaded Files */}
         <div>
           {uploadedFiles?.length == 0 ? (
-            <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-1 mb-5 text-md">
-              <span className="font-medium text-primary mr-2">No document</span>
+            <div>
+              {" "}
+              {isLoading ? (
+                <div className="inline-flex items-center px-3 py-1 mb-5 text-md">
+                  <l-dot-wave size="20" speed="1" color="#090854"></l-dot-wave>
+                </div>
+              ) : (
+                <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-1 mb-5 text-md">
+                  <span className="font-medium text-primary mr-2">
+                    No document
+                  </span>
+                </div>
+              )}
             </div>
           ) : (
             <div>
@@ -359,7 +394,7 @@ export default function Page({ params }) {
           <div>
             {apiEndpoint?.map((endpoint, idx) => (
               <div key={idx}>
-                <Collapsible.Root className="w-full cursor-pointer">
+                <Collapsible.Root className="w-full cursor-pointer ml-5">
                   <div className="rounded p-2.5">
                     <Collapsible.Trigger
                       asChild
@@ -373,7 +408,9 @@ export default function Page({ params }) {
                         <span>{endpoint.Controller}</span>
                         <ChevronDown
                           className={`my-auto h-6 w-6 transition-transform ${
-                            activeCollapse === idx ? "transform rotate-180" : ""
+                            activeCollapse === idx
+                              ? "transform rotate-180"
+                              : "rotate-0"
                           }`}
                         />
                       </div>
@@ -385,7 +422,7 @@ export default function Page({ params }) {
                     <Collapsible.Content
                       key={id}
                       open={activeCollapse === idx}
-                      className="w-4/5"
+                      className="w-4/5 "
                     >
                       <div
                         className="my-2.5 rounded grid grid-cols-7 p-2.5 cursor-pointer"
@@ -401,7 +438,7 @@ export default function Page({ params }) {
                         <div className="col-span-5">
                           <div className="flex justify-start items-center h-full">
                             <span
-                              className={`text-xs rounded-md font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${
+                              className={`text-xs rounded-md px-8 font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${
                                 endpoint.method == "POST"
                                   ? "bg-[#49CC90]"
                                   : endpoint.method == "GET"
@@ -480,7 +517,7 @@ export default function Page({ params }) {
           <span className="text-primary text-xl font-bold">Widget</span>
         </div>
         <div className="">
-          <WidgetComponent />
+          <WidgetComponent projectId={project} />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import CreateProjectModal from "../../components/CreateProjectModal";
 import { getAllProjectAction } from "@/actions/docAction";
-import Chatbot from "@seavlang/hrdchatbotwidget/src/index";
+import Chatbot from "@kshrd/chatbotwidget/src/index";
 import DeleteProjectModal from "../../components/DeleteProjectModal";
 
 export default async function Page({ searchParams }) {

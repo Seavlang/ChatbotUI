@@ -4,28 +4,39 @@ import React, { useRef, useState } from "react";
 import { CodeBlock, ocean } from "react-code-blocks";
 
 function APIEndpointModal({ idx }) {
+  console.log("API", idx);
   const content = api_document;
   const dialogRef = useRef(null);
 
   const closeModal = () => {
     dialogRef.current.close();
   };
-  const codeString =
-    "curl -X 'POST' \\ \n  'http://localhost:8001/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’";
+  const postCurl =
+    "curl -X 'POST' \\ \n  'http://110.74.194.123:8085/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’";
 
-  const json201Response = {
-    message: "File uploaded successfully",
-    success: true,
-    payload: {
-      session_id: "18b47375-d290-4cb9-948f-4eedd8a89631",
-    },
-  };
+  const getCurl =
+    "curl -X 'GET' \\ \n 'http://110.74.194.123:8085/api/v1/api_generation/session/get_all_sessions' \\ \n -H 'accept: application/json'";
+
+  const deleteCurl =
+    "curl -X 'DELETE' \\ \n 'http://110.74.194.123:8085/api/v1/api_generation/session/delete/your_session_id' \\ \n -H 'accept: application/json'";
+
+  const json201Response = `{  
+  "message": "File uploaded successfully",
+  "success": true,
+  "payload": {
+     "session_id": "18b47375-d290-4cb9-948f-4eedd8a89631"
+   }
+}`;
+
   const [copied, setCopied] = useState(false);
   const [copiedResponse, setCopiedResponse] = useState(false);
   const [copiedErrorResponse, setCopiedErrorResponse] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(codeString);
+    idx === 1 ? 
+    navigator.clipboard.writeText(postCurl) : idx === 2 ? 
+    navigator.clipboard.writeText(getCurl) : 
+    navigator.clipboard.writeText(deleteCurl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
   };
@@ -35,9 +46,9 @@ function APIEndpointModal({ idx }) {
     setTimeout(() => setCopiedResponse(false), 2000); // Reset copied status after 2 seconds
   };
 
-  const errorResponse = {
+  const errorResponse = `{
     detail: "400: Wrong file format.",
-  };
+}`;
   const handleCopyErrorResponse = () => {
     navigator.clipboard.writeText(errorResponse);
     setCopiedErrorResponse(true);
@@ -48,7 +59,12 @@ function APIEndpointModal({ idx }) {
     "This endpoint is essential for initializing a chat session within your system. By generating a session ID, you can manage your document interactions and chatbot conversations in an organized manner.";
   return content?.map((data) =>
     data.id == idx ? (
-      <dialog key={idx} id={`my_modal_${idx}`} ref={dialogRef} className="modal">
+      <dialog
+        key={idx}
+        id={`my_modal_${idx}`}
+        ref={dialogRef}
+        className="modal"
+      >
         <div className="modal-box max-w-[770px] max-h-[700px] rounded-lg overflow-y-auto  outline-none ">
           <button className="absolute right-10 " onClick={closeModal}>
             <svg
@@ -100,7 +116,7 @@ function APIEndpointModal({ idx }) {
               {/* endpoint */}
               <div className="my-5 flex">
                 <div
-                  className={`text-white w-16 h-6 font-medium rounded-md flex justify-center items-center ${
+                  className={`text-white w-16 h-6 px-10 font-medium rounded-md flex justify-center items-center ${
                     data?.method == "POST"
                       ? "bg-[#49CC90]"
                       : data?.method == "GET"
@@ -138,7 +154,9 @@ function APIEndpointModal({ idx }) {
                 <div className="mx-4 pt-3 font-mono">
                   {/* Code Block */}
                   <CodeBlock
-                    text={codeString}
+                    text={
+                      idx === 1 ? postCurl : idx === 2 ? getCurl : deleteCurl
+                    }
                     language="bash"
                     showLineNumbers={false}
                     theme={{
@@ -183,9 +201,7 @@ function APIEndpointModal({ idx }) {
                     </button>
                   </div>
                   <pre className="mx-5 my-4">
-                    <code className="text-primary">
-                      {JSON.stringify({ json201Response }, null, 2)}
-                    </code>
+                    <code className="text-primary">{json201Response}</code>
                   </pre>
                 </div>
               </div>
@@ -219,9 +235,7 @@ function APIEndpointModal({ idx }) {
                     </button>
                   </div>
                   <pre className="mx-5 my-4">
-                    <code className="text-primary">
-                      {JSON.stringify(errorResponse, null, 2)}
-                    </code>
+                    <code className="text-primary">{errorResponse}</code>
                   </pre>
                 </div>
               </div>

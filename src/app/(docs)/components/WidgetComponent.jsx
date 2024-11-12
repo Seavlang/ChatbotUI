@@ -4,7 +4,7 @@ import ChatWidget from './ChatWidget';
 import TestComponent from './TestComponent';
 import CodeComponent from './CodeComponent';
 
-function WidgetComponent() {
+function WidgetComponent({projectId}) {
     const tabs = [
         {
             title: "Preview",
@@ -20,7 +20,7 @@ function WidgetComponent() {
             value: "code",
             content: (
                 <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-sm font-normal  bg-gradient-to-br bg-gray-50 text-black ">
-                    <CodeComponent/>
+                    <CodeComponent    projectId={projectId}/>
                 </div>
             ),
         },
