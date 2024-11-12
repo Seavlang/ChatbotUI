@@ -36,6 +36,7 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
 
     const data = await response?.json();
     console.log('File uploaded successfully:', data);
+    revalidateTag("fileService");
     return data;
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -52,6 +53,9 @@ export const getAllFilesService = async (sessionId) => {
       {
         method: 'GET',
         headers: { ...headers },
+        next: {
+          tag: ["fileService"],
+        },
       }
     );
 
