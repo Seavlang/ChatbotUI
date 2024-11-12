@@ -18,3 +18,5 @@ RUN npm run build
 
 # Expose the port on which your NextJS application will run (change as per your application)
 EXPOSE 3000
+
+CMD ["npm", "start"]

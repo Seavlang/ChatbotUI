@@ -107,7 +107,7 @@ export default function NavbarComponent() {
                   </a>
                 </li>
                 <li>
-                  <a onClick={ onClick={handleLogout}}>
+                  <a onClick={handleLogout}>
                     <Image src={"/asset/images/logout.png"} alt="logout" width={18} height={18} />
                     <span className="text-red-500">Log Out</span>
                   </a>
