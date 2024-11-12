@@ -71,16 +71,16 @@ export default async function Page({ searchParams }) {
       </div>
       {/* table */}
       <div className="overflow-x-auto ml-10  mt-10">
-        <table className="min-w-full bg-white border border-gray-200 rounded-xl">
+        <table className="min-w-full bg-white  rounded-xl">
           <thead>
             <tr className="bg-primary text-white rounded-lg">
-              <th className="py-3 px-6 text-left font-semibold">ID</th>
+              <th className="py-3 px-6 text-left font-semibold rounded-s-xl">ID</th>
               <th className="py-3 px-6 text-left font-semibold">Project</th>
               <th className="py-3 px-6 text-left w-1/2 font-semibold">
                 Description
               </th>
               <th className="py-3 px-6 text-left font-semibold">Created_at</th>
-              <th className="py-3 px-6"></th>
+              <th className="py-3 px-6 rounded-r-xl"></th>
             </tr>
           </thead>
           <tbody>

@@ -15,6 +15,7 @@ import {
   uploadExternalFileAction,
 } from "@/actions/docAction";
 import { getAllFilesService } from "@/services/doc.service";
+import toast from "react-hot-toast";
 
 export default function Page({ params }) {
   const [activeCollapse, setActiveCollapse] = useState(null);
@@ -69,6 +70,7 @@ export default function Page({ params }) {
     },
   ];
   const [resolvedParams, setResolvedParams] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [projectData, setProjectData] = useState(null);
   const [description, setDescription] = useState(
     projectData?.project_id?.description || ""
@@ -144,14 +146,19 @@ export default function Page({ params }) {
     console.log("file in file handle", file);
     if (!file || !resolvedParams?.projectId) return;
 
+    setIsLoading(true);
     try {
       const response = await uploadExternalFileAction(file, project);
+      toast.success("Uploaded File Successfully!");
       console.log("response uploaded:", response);
       // Assuming response includes the file metadata, like `file_name`
       setUploadedFiles((prevFiles) => [...prevFiles, response]);
+       // Clear files in FileUpload component after successful upload
       clearFiles();
     } catch (error) {
       console.error("File upload failed:", error);
+    }finally {
+      setIsLoading(false); // Stop loading
     }
   };
   const clearFiles = () => setUploadedFiles([]);
@@ -309,9 +316,9 @@ export default function Page({ params }) {
               <span className="font-medium text-primary mr-2">No document</span>
             </div>
           ) : (
-            <ul>
+            <div>
               {uploadedFiles?.map((file, index) => (
-                <div
+                <ul
                   key={file.id}
                   className="inline-flex mr-2 items-center border border-gray-300 rounded-md mb-5 px-3 py-1 text-md"
                 >
@@ -319,15 +326,17 @@ export default function Page({ params }) {
                   <li key={file.id} className="font-medium text-primary mr-2">
                     {file?.file_name}
                   </li>
-                </div>
+                </ul>
               ))}
-            </ul>
+            </div>
           )}
         </div>
         <FileComponent
           uploadedFiles={uploadedFiles}
           onFileUpload={handleFileUpload}
           projectId={project}
+          clearFiles={clearFiles}
+          isLoading={isLoading}
         />
         <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
           <svg

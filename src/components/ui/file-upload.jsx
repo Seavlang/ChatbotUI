@@ -1,9 +1,12 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { IconX } from "@tabler/icons-react"; 
+import { IconX } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
-import Image from "next/image";
+import Image from "next/image";     
+import { dotWave } from 'ldrs'
+
+dotWave.register()
 
 const mainVariant = {
   initial: {
@@ -26,7 +29,13 @@ const secondaryVariant = {
   },
 };
 
-export const FileUpload = ({ uploadedFiles = [], onChange , projectId }) => {
+export const FileUpload = ({
+  uploadedFiles = [],
+  onChange,
+  projectId,
+  clearFiles,
+  isLoading,
+}) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
@@ -45,6 +54,11 @@ export const FileUpload = ({ uploadedFiles = [], onChange , projectId }) => {
     onChange && onChange([...files, fileMetadata]); // Notify parent with updated files
     setError(""); // Clear error on successful file selection
   };
+
+  useEffect(() => {
+    // Clear files when clearFiles is called
+    if (clearFiles) setFiles([]);
+  }, [clearFiles]);
 
   console.log("file in file-upload:", files);
 
@@ -81,7 +95,7 @@ export const FileUpload = ({ uploadedFiles = [], onChange , projectId }) => {
         onClick={handleClick}
         whileHover="animate"
         className="p-10 group/file block rounded-lg border border-primary cursor-pointer w-full relative overflow-hidden"
-        style={{ height: '220px' }}
+        style={{ height: "220px" }}
       >
         <input
           ref={fileInputRef}
@@ -91,132 +105,146 @@ export const FileUpload = ({ uploadedFiles = [], onChange , projectId }) => {
           className="hidden"
           {...getInputProps()}
         />
-        <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
-          <GridPattern />
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <div className="relative w-full mb-5 max-w-xl mx-auto">
-            {/* Display error as a dismissible alert */}
-            {error && (
-              <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 max-w-xl mx-auto">
-                <p className="text-sm">{error}</p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();  // Stop event propagation to prevent triggering the upload action
-                    dismissError();
-                  }}
-                  className="ml-4 text-red-600"
-                >
-                  <IconX size={20} />
-                </button>
-              </div>
-            )}
-            {files.length > 0 &&
-              files.map((file, idx) => (
-                <motion.div
-                  key={"file" + idx}
-                  layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
-                  className={cn(
-                    "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
-                    "shadow-sm"
-                  )}
-                  style={{ borderRadius: "12px", padding: "2px", width: "80%" }}
-                >
-                  <div className="flex w-full items-center gap-4">
-                    {/* Dynamic Icon based on file extension */}
-                    <div className="p-2">
-                      {file.file_name?.endsWith(".pdf") ? (
-                        <Image
-                          src={"/asset/images/pdf.png"}
-                          alt="pdf file"
-                          width={40}
-                          height={40}
-                        />
-                      ) : file.file_name?.endsWith(".txt") ? (
-                        <Image
-                          src={"/asset/images/txt.png"}
-                          alt="txt file"
-                          width={40}
-                          height={40}
-                        />
-                      ) : (
-                        <Image
-                          src={"/asset/images/file.png"}
-                          alt="file"
-                          width={50}
-                          height={50}
-                        />
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <l-dot-wave size="47" speed="1" color="#090854"></l-dot-wave>
+          </div>
+        ) : (
+          <>
+            <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
+              <GridPattern />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <div className="relative w-full mb-5 max-w-xl mx-auto">
+                {/* Display error as a dismissible alert */}
+                {error && (
+                  <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 max-w-xl mx-auto">
+                    <p className="text-sm">{error}</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Stop event propagation to prevent triggering the upload action
+                        dismissError();
+                      }}
+                      className="ml-4 text-red-600"
+                    >
+                      <IconX size={20} />
+                    </button>
+                  </div>
+                )}
+                {files.length > 0 &&
+                  files.map((file, idx) => (
+                    <motion.div
+                      key={"file" + idx}
+                      layoutId={
+                        idx === 0 ? "file-upload" : "file-upload-" + idx
+                      }
+                      className={cn(
+                        "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
+                        "shadow-sm"
                       )}
-                    </div>
+                      style={{
+                        borderRadius: "12px",
+                        padding: "2px",
+                        width: "80%",
+                      }}
+                    >
+                      <div className="flex w-full items-center gap-4">
+                        {/* Dynamic Icon based on file extension */}
+                        <div className="p-2">
+                          {file.file_name?.endsWith(".pdf") ? (
+                            <Image
+                              src={"/asset/images/pdf.png"}
+                              alt="pdf file"
+                              width={40}
+                              height={40}
+                            />
+                          ) : file.file_name?.endsWith(".txt") ? (
+                            <Image
+                              src={"/asset/images/txt.png"}
+                              alt="txt file"
+                              width={40}
+                              height={40}
+                            />
+                          ) : (
+                            <Image
+                              src={"/asset/images/file.png"}
+                              alt="file"
+                              width={50}
+                              height={50}
+                            />
+                          )}
+                        </div>
 
-                    {/* File Name */}
-                    <div className="flex justify-between items-center w-full gap-4">
+                        {/* File Name */}
+                        <div className="flex justify-between items-center w-full gap-4">
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            layout
+                            className="text-base font-medium text-gray-900 truncate max-w-xs"
+                          >
+                            {file.file_name}
+                          </motion.p>
+
+                          {/* Remove Icon */}
+                          <button
+                            type="button"
+                            onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
+                            className="p-2 text-red-600 hover:text-red-800"
+                          >
+                            <IconX size={20} />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                {!files.length && (
+                  <motion.div
+                    layoutId="file-upload"
+                    variants={mainVariant}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                    }}
+                    className={cn(
+                      "relative z-40 dark:bg-neutral-900 flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
+                    )}
+                  >
+                    {isDragActive ? (
                       <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        layout
-                        className="text-base font-medium text-gray-900 truncate max-w-xs"
+                        className="text-neutral-600 flex flex-col items-center"
                       >
-                        {file.file_name}
+                        Drop it
                       </motion.p>
-
-                      {/* Remove Icon */}
-                      <button
-                        type="button"
-                        onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
-                        className="p-2 text-red-600 hover:text-red-800"
-                      >
-                        <IconX size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            {!files.length && (
-              <motion.div
-                layoutId="file-upload"
-                variants={mainVariant}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20,
-                }}
-                className={cn(
-                  "relative z-40 dark:bg-neutral-900 flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md",
+                    ) : (
+                      <Image
+                        src={"/asset/images/file.png"} // Default file image
+                        width={80}
+                        height={80}
+                        alt="Default file icon"
+                      />
+                    )}
+                  </motion.div>
                 )}
-              >
-                {isDragActive ? (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-neutral-600 flex flex-col items-center"
-                  >
-                    Drop it
-                  </motion.p>
-                ) : (
-                  <Image
-                    src={"/asset/images/file.png"} // Default file image
-                    width={80}
-                    height={80}
-                    alt="Default file icon"
-                  />
+                {!files.length && (
+                  <motion.div
+                    variants={secondaryVariant}
+                    className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
+                  ></motion.div>
                 )}
-              </motion.div>
-            )}
-            {!files.length && (
-              <motion.div
-                variants={secondaryVariant}
-                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
-              ></motion.div>
-            )}
-          </div>
-          <p className="relative z-20 font-sans font-bold text-primary dark:text-neutral-300 text-xl">
-            Drop txt or pdf file
-          </p>
-          <p className="relative z-20 font-sans font-normal text-primary dark:text-neutral-400 text-md mt-2">
-            Add any file here to add to conversation
-          </p>
-        </div>
+              </div>
+              <p className="relative z-20 font-sans font-bold text-primary dark:text-neutral-300 text-xl">
+                Drop txt or pdf file
+              </p>
+              <p className="relative z-20 font-sans font-normal text-primary dark:text-neutral-400 text-md mt-2">
+                Add any file here to add to conversation
+              </p>
+            </div>
+          </>
+        )}
       </motion.div>
     </div>
   );
