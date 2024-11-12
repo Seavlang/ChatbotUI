@@ -2,20 +2,19 @@ import React from 'react'
 
 function CodeComponent() {
     const code = `
-import  Chatbot  from "@seavlang/hrdchatbotwidget/src/index";
+import  Chatbot  from "@kshrd/chatbotwidget/src/index";
 
 export default function Chat() {
   return 
-    (
-        <div>
-            <Chatbot 
-                SessionId="SESSION_ID" 
-                projectId="PROJECT_ID"  
-                apiKey="API_KEY"
-            />
-     </div>;
-    )
-}`
+  <div>
+    <Chatbot 
+        SessionId="Your_session_id" 
+        projectId="Your_project_id"  
+        apiKey="Your_api_key"
+    />
+  </div>;
+}
+`
     return (
         <div>
             <pre>

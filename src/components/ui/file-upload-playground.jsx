@@ -6,6 +6,7 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { createSessionService } from "@/services/session/session.service";
+import { Underline } from "lucide-react";
 
 const mainVariant = {
   initial: {
@@ -28,11 +29,15 @@ const secondaryVariant = {
   },
 };
 
-export const FileUploadPlayground = ({ uploadedFiles, onChange }) => {
+export const FileUploadPlayground = ({ onChange, activeSession }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setFiles([])
+  }, [activeSession])
 
   const handleFileChange = async (newFiles) => {
     const file = newFiles[0];
@@ -40,11 +45,18 @@ export const FileUploadPlayground = ({ uploadedFiles, onChange }) => {
 
     try {
       setIsLoading(true);
-      const sessionPayload = await createSessionService();
-      const session = await sessionPayload?.session_id;
+      var sessionPayload = null;
+      var session = null;
+      var response = null;
 
-      // Upload the file to the server
-      const response = await uploadFilePlaygroundService(session, file);
+      if (((activeSession?.id == 1 || activeSession?.id == 2) && activeSession?.session == 'New Chat' && activeSession?.history.length == 0) || activeSession == undefined) {
+        sessionPayload = await createSessionService();
+        console.log("sessionPayload: ", sessionPayload)
+        // Upload the file to the server
+        response = await uploadFilePlaygroundService(sessionPayload?.session_id, file);
+      }
+      else
+        response = await uploadFilePlaygroundService(activeSession?.session, file);
 
       if (response) {
         const uploadedFile = {
@@ -66,23 +78,7 @@ export const FileUploadPlayground = ({ uploadedFiles, onChange }) => {
     }
   };
 
-  // const handleFileChange = (newFiles) => {
-  //   // Filter out any undefined values in the new files
-  //   const validNewFiles = newFiles.filter((file) => file !== undefined);
-
-  //   setFiles((prevFiles = []) => {
-  //     // Filter out undefined in previous files (or use empty array) and combine with new files
-  //     const updatedFiles = [
-  //       ...prevFiles.filter((file) => file !== undefined),
-  //       ...validNewFiles,
-  //     ];
-  //     onFileUpload && onFileUpload(updatedFiles);
-  //     return updatedFiles;
-  //   });
-
-  //   setError(""); // Clear error when a valid file is added
-  // };
-
+  console.log("file in file upload playground: ", files)
 
   const handleRemoveFile = (index, e) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action

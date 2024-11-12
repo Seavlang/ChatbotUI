@@ -22,12 +22,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Trash2 } from "lucide-react";
-import Typewriter from "../components/Typewriter";
-import FileComponentPlayground from "@/app/components/FileComponentPlayground";
-import { getLM } from "@/actions/modelAction";
+
 import { getLMService } from "@/services/model/model.service";
 import { createSessionService, deleteSessionService, getAllSessionService, getChatHistoryBySessionIdService } from "@/services/session/session.service";
-import { getAllFilesService } from "@/services/file/file.service";
 import FileComponent from "../components/FileComponent";
 
 
@@ -73,6 +70,7 @@ export default function Page() {
         setMessages(initialSession?.history)
         setActiveSession(result?.payload[activeChat])
 
+
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -84,14 +82,15 @@ export default function Page() {
   }, []);
 
   const handleChangeActiveChat = (sessionId) => {
+    console.log("sessionId in page: ", sessionId)
     const selectedSession = allSessions.find((session) => session.id === sessionId);
+    console.log("selectedSession in page: ", selectedSession)
     if (selectedSession) {
       setActiveChat(sessionId);
+      setActiveSession(selectedSession)
       setMessages(selectedSession.history); // Set messages based on the selected session's history
     }
   };
-
-  console.log("message in page: ", messages)
 
   const generateAIResponse = async (userInput) => {
     // Simulate AI processing time
@@ -117,17 +116,24 @@ export default function Page() {
     scrollToBottom();
   }, [messages]);
 
+  cosnt [isTempChat, setIsTempChat] = useState(false)
   const startNewChat = () => {
     if (allSessions.length >= 3) {
       return;
     }
-    const newChat = { id: Date.now(), session: "New Chat", history: [] };
-    setAllSessions([...allSessions, newChat]);
-    setActiveChat(newChat?.id);
-    setActiveSession(newChat)
-    setMessages(activeSession?.history)
+    console.log(allSessions?.length == 2 && allSessions[1].session == 'New Chat')
+    if (allSessions?.length == 2 && allSessions[1].session == 'New Chat' && allSessions[1]?.history.length == 0) {
+      return;
+    }
+    else {
+      const newChat = { id: allSessions?.length + 1, session: "New Chat", history: [] };
+      setAllSessions([...allSessions, newChat]);
+      setActiveChat(newChat?.id);
+      setActiveSession(newChat)
+      setMessages(activeSession?.history)
+    }
   }
-
+  console.log("active session: ", activeSession)
 
   const handleDeleteChat = (chat) => {
     setChatToDelete(chat);
@@ -181,7 +187,7 @@ export default function Page() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="font-medium text-black dark:text-white whitespace-pre"
-                  onClick={startNewChat}
+
                 >
                   <div className="flex justify-between my-10">
 
@@ -191,7 +197,9 @@ export default function Page() {
                         <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
                       </svg>
 
-                      <span className="text-primary text-lg ms-3 font-semibold ">
+                      <span
+                        className="text-primary text-lg ms-3 font-semibold "
+                        onClick={startNewChat}>
                         New Chat
                       </span>
                     </button>
@@ -302,9 +310,8 @@ export default function Page() {
           </DialogContent>
         </Dialog>
 
-        <Suspense fallback={<div>Loading...</div>}>
-          <FileComponent open={open} handleSetOpen={handleSetOpen} lm={LM} sessionId={activeChat} messages={messages} activeSession={activeSession} />
-        </Suspense>
+        <FileComponent open={open} handleSetOpen={handleSetOpen} lm={LM} sessionId={activeChat} messages={messages} activeSession={activeSession} />
+
       </div>
     </>
 

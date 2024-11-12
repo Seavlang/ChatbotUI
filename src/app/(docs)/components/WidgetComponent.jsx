@@ -37,6 +37,7 @@ function WidgetComponent() {
     return (
         <div>
             <div className='text-base font-normal'>Simply select your preferred chatbot model, upload your document, and start chatting with the AI assistant to retrieve information effortlessly.</div>
+            <a className='text-primary mt-2 text-lg font-semibold inline-block' href='https://www.npmjs.com/package/@kshrd/chatbotwidget' target="_blank">Read detailed documentation</a>
             <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-5 ">
                 <Tabs tabs={tabs} />
             </div>

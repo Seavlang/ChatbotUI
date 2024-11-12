@@ -5,7 +5,7 @@ import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function PlaceHolderComponent({ setOnFileUpload, handleSendMessage, setNewMessage, sessionId, activeSession }) {
+export function PlaceHolderComponent({ handleFileUpload, handleSendMessage, setNewMessage, activeSession }) {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
@@ -19,11 +19,6 @@ export function PlaceHolderComponent({ setOnFileUpload, handleSendMessage, setNe
     "How to assemble your own PC?",
   ];
 
-  const handleFileUpload = async (files) => {
-    setUploadedFiles(files);
-    // setUploadedFiles((prev) => [...prev, ...files]);
-  };
-
   const handleChange = (e) => {
     console.log(e.target.value);
   };
@@ -34,10 +29,35 @@ export function PlaceHolderComponent({ setOnFileUpload, handleSendMessage, setNe
 
     try {
       setIsLoading(true);
+      setIsLoading(true);
+      var sessionPayload = null;
+      var session = null;
+      var response = null;
 
-      // Upload the file to the server
-      const response = await uploadFilePlaygroundService(activeSession?.session, file);
+      if (activeSession == undefined) {
+        sessionPayload = await createSessionService();
+        console.log("sessionPayload: ", sessionPayload)
+        session = await sessionPayload?.session_id;
+        // Upload the file to the server
+        response = await uploadFilePlaygroundService(session, file);
+      }
+      console.log("new files in place holder: ", newFiles)
+      console.log("new session in place holder: ", session)
+      console.log("new sessionId in place holder: ", activeSession?.session)
+      response = await uploadFilePlaygroundService(activeSession?.session, file);
 
+
+      if (response) {
+        const uploadedFile = {
+          id: response.id,
+          project_id: 3,
+          file_name: file.name,
+          created_at: new Date(file.lastModifiedDate).toISOString(),
+        };
+
+        setFiles((prevFiles) => [...prevFiles, uploadedFile]);
+        handleFileUpload && handleFileUpload([...files, uploadedFile]);
+      }
     } catch (e) {
       setError("File upload error: " + e.message);
     } finally {

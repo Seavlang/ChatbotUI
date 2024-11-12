@@ -29,11 +29,6 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
       }
     );
 
-    if (!response.ok) {
-      console.error('Failed to upload file:', response.statusText);
-      return null;
-    }
-
     const data = await response?.json();
     console.log('File uploaded successfully:', data);
     revalidateTag("fileService");

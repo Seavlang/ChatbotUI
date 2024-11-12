@@ -38,6 +38,7 @@ export const createSessionService = async () => {
         }
         const response = await res?.json();
         console.log("response: ", response)
+        revalidateTag('sessions')
         return response
     } catch (e) {
         console.log("Error: ", e);
@@ -72,6 +73,9 @@ export const getChatHistoryBySessionIdService = async (session_id) => {
         const res = await fetch(`${authUrl}/session/history/9?limit=10&page=1`, {
             method: "GET",
             headers,
+            next: {
+                tags: ["sessions"],
+            },
         });
         if (!res.ok) {
             console.error("Failed to get chat history with session id", res.statusText);

@@ -12,19 +12,27 @@ export default function FileComponent({ open, handleSetOpen, lm, sessionId, mess
     const [newMessage, setNewMessage] = useState("");
     const [onFileUpload, setOnFileUpload] = useState();
 
-    console.log("session id: ", sessionId)
-
     useEffect(() => {
         const getFileFromService = async () => {
             try {
-                console.log("session id in filecomponent: ", sessionId)
-                const response = await getAllFilesService(sessionId);
-                setFiles(response?.payload);
+                console.log("active session in filecomponent: ", activeSession)
+
+                if ((activeSession?.id == 1 || activeSession?.id == 2) && activeSession?.session == 'New Chat' && activeSession?.history.length == 0) {
+                    console.log("condition if")
+                    setFiles([])
+                    return;
+                }
+                else {
+                    console.log("checking active session condition else")
+                    const response = await getAllFilesService(activeSession?.id);
+                    setFiles(response?.payload);
+                }
+
             } catch (err) {
             }
         }
         getFileFromService();
-    }, [sessionId])
+    }, [activeSession, setOnFileUpload, uploadedFiles])
 
     useEffect(() => {
         setContent(messages)
@@ -125,7 +133,7 @@ export default function FileComponent({ open, handleSetOpen, lm, sessionId, mess
                     <div className="flex mx-auto w-2/3 h-full">
                         <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8">
                             {
-                                files?.length !== 0 && sessionId == 'undefined' ?
+                                files?.length > 0 && content?.length > 0 ?
                                     content?.map((message, index) => (
 
                                         <div
@@ -153,9 +161,10 @@ export default function FileComponent({ open, handleSetOpen, lm, sessionId, mess
                                     (
                                         <div className="flex flex-row items-center justify-center mt-20">
                                             <FileComponentPlayground
-                                                uploadedFiles={uploadedFiles}
-                                                onFileUpload={handleFileUpload} />
+                                                onFileUpload={handleFileUpload}
+                                                activeSession={activeSession} />
                                         </div>
+
                                     )
                             }
                         </div>
@@ -163,15 +172,12 @@ export default function FileComponent({ open, handleSetOpen, lm, sessionId, mess
                     <div className="relative bottom-5 h-screen">
                         <div className="flex flex-col items-center h-full">
                             <div className="mt-auto w-full max-w-4xl mx-auto mb-20 ">
-                                <Suspense fallback={<div>Loading...</div>}>
-                                    <PlaceHolderComponent
-                                        setOnFileUpload={setOnFileUpload}
-                                        handleSendMessage={handleSendMessage}
-                                        setNewMessage={setNewMessage}
-                                        sessionId={sessionId}
-                                        activeSession={activeSession}
-                                    />
-                                </Suspense>
+                                <PlaceHolderComponent
+                                    handleFileUpload={handleFileUpload}
+                                    handleSendMessage={handleSendMessage}
+                                    setNewMessage={setNewMessage}
+                                    activeSession={activeSession}
+                                />
 
                             </div>
                         </div>
