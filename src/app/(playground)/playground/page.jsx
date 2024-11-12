@@ -305,7 +305,6 @@ export default function Page() {
         <Suspense fallback={<div>Loading...</div>}>
           <FileComponent open={open} handleSetOpen={handleSetOpen} lm={LM} sessionId={activeChat} messages={messages} activeSession={activeSession} />
         </Suspense>
-
       </div>
     </>
 
