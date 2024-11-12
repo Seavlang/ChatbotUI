@@ -125,7 +125,7 @@ export default function FileComponent({ open, handleSetOpen, lm, sessionId, mess
                     <div className="flex mx-auto w-2/3 h-full">
                         <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8">
                             {
-                                content?.length !== 0 && sessionId == 'undefined' ?
+                                files?.length !== 0 && sessionId == 'undefined' ?
                                     content?.map((message, index) => (
 
                                         <div
