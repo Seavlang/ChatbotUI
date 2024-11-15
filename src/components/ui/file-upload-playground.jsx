@@ -6,6 +6,8 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { createSessionService } from "@/services/session/session.service";
+import { Underline } from "lucide-react";
+import { createDocumentAction } from "@/actions/fileAction";
 
 const mainVariant = {
   initial: {
@@ -28,61 +30,35 @@ const secondaryVariant = {
   },
 };
 
-export const FileUploadPlayground = ({ uploadedFiles, onChange }) => {
+export const FileUploadPlayground = ({ session }) => {
+  const [activeSession, setActiveSession] = useState()
+  const onChange = () => {
+
+  }
+  const [sessionId, setSessionId] = useState()
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [error, setError] = useState(""); // Track error state for invalid files
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setSessionId(session?.sessionId);
+  }, [session])
 
   const handleFileChange = async (newFiles) => {
     const file = newFiles[0];
     if (!file) return;
 
     try {
-      setIsLoading(true);
-      const sessionPayload = await createSessionService();
-      const session = await sessionPayload?.session_id;
-
-      // Upload the file to the server
-      const response = await uploadFilePlaygroundService(session, file);
-
-      if (response) {
-        const uploadedFile = {
-          id: response.id,
-          project_id: 3,
-          file_name: file.name,
-          created_at: new Date(file.lastModifiedDate).toISOString(),
-        };
-
-        setFiles((prevFiles) => [...prevFiles, uploadedFile]);
-        onChange && onChange([...files, uploadedFile]);
-      } else {
-        setError("File upload failed. Please try again.");
-      }
+      const response = await createDocumentAction(sessionId, file)
+      console.log("file created: ", response)
+      setFiles((prevFiles) => [...prevFiles, response?.payload?.file_name]);
     } catch (e) {
       setError("File upload error: " + e.message);
     } finally {
       setIsLoading(false);
     }
   };
-
-  // const handleFileChange = (newFiles) => {
-  //   // Filter out any undefined values in the new files
-  //   const validNewFiles = newFiles.filter((file) => file !== undefined);
-
-  //   setFiles((prevFiles = []) => {
-  //     // Filter out undefined in previous files (or use empty array) and combine with new files
-  //     const updatedFiles = [
-  //       ...prevFiles.filter((file) => file !== undefined),
-  //       ...validNewFiles,
-  //     ];
-  //     onFileUpload && onFileUpload(updatedFiles);
-  //     return updatedFiles;
-  //   });
-
-  //   setError(""); // Clear error when a valid file is added
-  // };
-
 
   const handleRemoveFile = (index, e) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action
@@ -273,26 +249,3 @@ export const FileUploadPlayground = ({ uploadedFiles, onChange }) => {
 
   );
 };
-
-export function GridPattern() {
-  const columns = 41;
-  const rows = 11;
-  return (
-    <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
-      {Array.from({ length: rows }).map((_, row) =>
-        Array.from({ length: columns }).map((_, col) => {
-          const index = row * columns + col;
-          return (
-            <div
-              key={`${col}-${row}`}
-              className={`w-10 h-10 flex flex-shrink-0 rounded-[2px] ${index % 2 === 0
-                ? "bg-gray-50 dark:bg-neutral-950"
-                : "bg-gray-50 dark:bg-neutral-950 shadow-[0px_0px_1px_3px_rgba(255,255,255,1)_inset] dark:shadow-[0px_0px_1px_3px_rgba(0,0,0,1)_inset]"
-                }`}
-            />
-          );
-        })
-      )}
-    </div>
-  );
-}

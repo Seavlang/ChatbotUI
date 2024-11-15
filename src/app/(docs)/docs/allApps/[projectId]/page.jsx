@@ -112,9 +112,9 @@ export default function Page({ params }) {
       // setIsLoading(true);
       try {
         const files = await getAllFilesService(resolvedParams.projectId);
-        console.log("id  files",files);
+        console.log("id  files", files);
         setUploadedFiles(files?.payload); // Ensure files is an array
-  
+
         console.log("uploaded files fetch", files);
       } catch (error) {
         console.error("Error fetching files:", error);
@@ -160,7 +160,7 @@ export default function Page({ params }) {
       console.log("response uploaded:", response);
       // Assuming response includes the file metadata, like `file_name`
       setUploadedFiles((prevFiles) => [...prevFiles, response]);
-       // Clear files in FileUpload component after successful upload
+      // Clear files in FileUpload component after successful upload
       clearFiles();
     } catch (error) {
       console.error("File upload failed:", error);

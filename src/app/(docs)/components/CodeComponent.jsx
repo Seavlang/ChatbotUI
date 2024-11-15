@@ -2,7 +2,7 @@ import React from 'react'
 
 function CodeComponent({projectId}) {
     const code = `
-import  Chatbot  from "@seavlang/hrdchatbotwidget/src/index";
+import  Chatbot  from "@kshrd/chatbotwidget/src/index";
 
 export default function Chat() {
   return 

@@ -29,13 +29,7 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
       }
     );
 
-    if (!response.ok) {
-      console.error('Failed to upload file:', response.statusText);
-      return null;
-    }
-
-    const data = await response?.json();
-    console.log('File uploaded successfully:', data);
+    const data = await response.json();
     revalidateTag("fileService");
     return data;
   } catch (error) {
@@ -65,6 +59,28 @@ export const getAllFilesService = async (sessionId) => {
     }
 
     const data = await response?.json();
+    console.log('Retrieve Files successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    return null;
+  }
+}
+export const getAllSessionFilesService = async (session) => {
+  const headers = await reqHeader();
+  try {
+    const sessionData = session
+    const response = await fetch(
+      `${authUrl}/files/get_all_files_by_session?session=${sessionData?.sessionId}`,
+      {
+        method: 'GET',
+        headers: { ...headers },
+        next: {
+          tag: ["fileService"],
+        },
+      }
+    );
+    const data = await response.json();
     console.log('Retrieve Files successfully:', data);
     return data;
   } catch (error) {

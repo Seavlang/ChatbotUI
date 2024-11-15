@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pb-60`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <Toaster />
         <SessionProvider>{children}</SessionProvider>

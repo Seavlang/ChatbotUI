@@ -7,7 +7,6 @@ import Link from "next/link";
 import ChatbotComponent from "./components/ChatbotComponent";
 
 export default function Home() {
-  
   return (
     <div>
       <div className="bg-white mx-40">
