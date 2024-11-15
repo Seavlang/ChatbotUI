@@ -3,17 +3,29 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { getSessionDetailAction } from "@/actions/sessionAction";
+import { getSessionDetailService } from "@/services/session/session.service";
+import { usePathname } from "next/navigation";
+import { getCurrentUserAction } from "@/actions/userAction";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
-  onSubmit,
-  setNewMessage
+  socket,
+  session
 }) {
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
-
+  const [activeSession, setActiveSession] = useState();
   const intervalRef = useRef(null);
+  const canvasRef = useRef(null);
+  const newDataRef = useRef([]);
+  const inputRef = useRef(null);
+  const [value, setValue] = useState("");
+  const [animating, setAnimating] = useState(false);
+  const pathname = usePathname()
+  const [userId, setUserId] = useState();
+
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
@@ -29,6 +41,25 @@ export function PlaceholdersAndVanishInput({
   };
 
   useEffect(() => {
+
+    const id = pathname.split('/').pop();
+    const session = {
+      sessionId: id
+    }
+    const fetchUser = async () =>{
+      const result = await getCurrentUserAction();
+      console.log("result : ",result)
+      setUserId(result?.payload?.id);
+    }
+    const fetchSessionDetail = async () => {
+      const sessionData = await getSessionDetailAction(session)
+      setActiveSession(sessionData?.payload)
+    }
+    fetchUser()
+    fetchSessionDetail();
+  }, [])
+
+  useEffect(() => {
     startAnimation();
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -40,11 +71,7 @@ export function PlaceholdersAndVanishInput({
     };
   }, [placeholders]);
 
-  const canvasRef = useRef(null);
-  const newDataRef = useRef([]);
-  const inputRef = useRef(null);
-  const [value, setValue] = useState("");
-  const [animating, setAnimating] = useState(false);
+
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -166,14 +193,26 @@ export function PlaceholdersAndVanishInput({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    vanishAndSubmit();
-    onSubmit && onSubmit(e);
-    e.preventDefault();
+    if (socket && value) {
+      socket.send(JSON.stringify(
+        {
+          "input": {
+            "input": value,
+            "user_id": userId,
+            "session_id": activeSession?.id,
+            "file_id": null
+          }
+        }
+      ));
+      onChange(value);
+      setValue('');
+      vanishAndSubmit();
 
-    // Resize to original size
-    const textarea = inputRef.current;
-    textarea.style.height = 'auto'; // Reset height to the initial size
-  };
+      //   // Resize to original size
+      //   const textarea = inputRef.current;
+      //   textarea.style.height = 'auto'; // Reset height to the initial size
+    }
+  }
 
   const adjustHeight = () => {
     const textarea = inputRef.current;
@@ -184,7 +223,6 @@ export function PlaceholdersAndVanishInput({
     setValue(e.target.value);
     if (!animating) {
       setValue(e.target.value);
-      onChange && onChange(e);
       adjustHeight(); // Adjust height on each change
     }
   };
@@ -214,14 +252,16 @@ export function PlaceholdersAndVanishInput({
   //     textarea.removeEventListener('keyup', handleResize);
   //   };
   // }, []);
-  useEffect(() => {
-    adjustHeight();
-    setNewMessage(value)
-  }, [value]);
+
+
+  // useEffect(() => {
+  //   adjustHeight();
+  //   setNewMessage(value)
+  // }, [value]);
 
   return (
     (
-      <div className="relative w-full max-w-3xl mx-auto dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200"> {/* Container with relative positioning */}
+      <div className="relative w-full max-w-3xl dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200"> {/* Container with relative positioning */}
 
         <form
           className={cn(

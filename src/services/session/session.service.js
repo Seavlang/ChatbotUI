@@ -31,14 +31,15 @@ export const createSessionService = async () => {
         const res = await fetch(`${authUrl}/session/create_session`, {
             method: "POST",
             headers,
+            next: {
+                tags: ["sessions"],
+            },
         });
         if (!res.ok) {
             console.error("Failed to create session", res.statusText);
             return null;
         }
         const response = await res?.json();
-        console.log("response: ", response)
-        revalidateTag('sessions')
         return response
     } catch (e) {
         console.log("Error: ", e);
@@ -51,6 +52,9 @@ export const deleteSessionService = async (id) => {
         const res = await fetch(`${authUrl}/session/delete/${id}`, {
             method: "DELETE",
             headers,
+            next: {
+                tags: ["sessions"],
+            },
         });
         if (!res.ok) {
             console.error("Failed to delete session", res.statusText);
@@ -88,3 +92,26 @@ export const getChatHistoryBySessionIdService = async (session_id) => {
         console.log("Error: ", e);
     }
 };
+
+export const getSessionDetailService = async (session) => {
+    const headers = await reqHeader();
+    console.log("session : ",session?.sessionId)
+    try {
+        const res = await fetch(`${authUrl}/session/get_session_detail?session=${session.sessionId}`, {
+            method: "GET",
+            headers,
+            next: {
+                tags: ["session"],
+            },
+        });
+        if (!res.ok) {
+            console.error("Failed to get session detail", res.statusText);
+            return null;
+        }
+        const response = await res?.json();
+        console.log("response: ", response)
+        return response
+    } catch (e) {
+        console.log("Error: ", e);
+    }
+}
