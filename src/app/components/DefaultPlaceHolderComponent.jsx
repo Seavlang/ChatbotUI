@@ -8,6 +8,8 @@ import { useDropzone } from "react-dropzone";
 
 export function DefaultPlaceHolderComponent({ session,onChange,handleSendMessage,socket }) {
   const fileInputRef = useRef(null);
+  const [error, setError] = useState();
+  
   const placeholders = [
     "What's the first rule of Fight Club?",
     "Who is Tyler Durden?",
@@ -17,9 +19,11 @@ export function DefaultPlaceHolderComponent({ session,onChange,handleSendMessage
   ];
 
   const handleFileChange = async (newFiles) => {
+    console.log("first", newFiles)
     const file = newFiles[0];
-    if (!file) return;
+    // if (!file) return;
     try {
+      console.log("session in pages: ",session)
       const response = await createDocumentAction(session?.sessionId, file)
       console.log("file created: ", response)
     } catch (e) {

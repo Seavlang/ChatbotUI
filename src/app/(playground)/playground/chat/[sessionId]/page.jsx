@@ -6,6 +6,7 @@ import { getAllHistoryBySessionService } from '@/services/history/history.servic
 import { getLM } from '@/actions/modelAction';
 import { usePathname } from 'next/navigation';
 import Loading from '../../loading';
+import { getAllDocumentAction } from '@/actions/fileAction';
 
 
 export default function Page({ params }) {
@@ -18,6 +19,8 @@ export default function Page({ params }) {
     const [isLoading, setIsLoading] = useState()
     const pathname = usePathname()
     const id = pathname.split('/').pop();
+    const [files, setFiles] = useState([]);
+
     useEffect(() => {
         const fetchLM = async () => {
             await getLM();
@@ -54,51 +57,45 @@ export default function Page({ params }) {
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
-        const fetchParam = async () => {
-            var result = await params;
-            setResolvedParams(result);
-        }
-
-        const fetchSessionHistory = async () => {
-            const result = await getAllHistoryBySessionService(resolvedParams);
-            setMessages(result?.payload);
-        }
-
-        if (params == undefined) {
-            result = {
-                sessionId: id
+        const resolveParams = async () => {
+            if (!params) {
+                setResolvedParams({ sessionId: id });
+            } else {
+                const result = await params;
+                setResolvedParams(result);
             }
-            setResolvedParams(result);
-        }
-        else {
-            fetchParam();
-        }
+        };
 
-        fetchSessionHistory()
-        setIsLoading(false)
-    }, [params])
+        resolveParams();
+    }, []); // Run this effect when `params` or `id` changes
 
-    const handleSendMessage = async (e) => {
-        e.preventDefault();
-        if (newMessage.trim()) {
-            setContent((prev) => [
-                ...prev,
-                {
-                    id: messages?.length + 1,
-                    role: "user",
-                    content: newMessage.trim()
-                },
-            ]);
-            setNewMessage(""); // Clear input
+    // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
+    useEffect(() => {
+        if (!resolvedParams) return; // Wait until `resolvedParams` is set
 
-            // Generate and add AI response
-            const aiResponse = await generateAIResponse(newMessage.trim());
-            setContent((prev) => [...prev, aiResponse]);
+        const fetchData = async () => {
+            setIsLoading(true);
 
-            setTimeout(scrollToBottom, 100);
-        }
-    };
+            try {
+                // Fetch all documents
+                const documentResult = await getAllDocumentAction(resolvedParams);
+                console.log("documentResult", documentResult);
+                setFiles(documentResult?.payload);
+
+                // Fetch session history
+                const historyResult = await getAllHistoryBySessionService(resolvedParams);
+                console.log("historyResult", historyResult);
+                setMessages(historyResult?.payload);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false); // End loading after all fetches complete
+            }
+        };
+
+        fetchData();
+    }, [resolvedParams]);
+
     const handleSubmit = (e) => {
         const humanPrompt = {
             role: "user",
@@ -107,26 +104,22 @@ export default function Page({ params }) {
         setMessages((prev) => [...prev, humanPrompt]);
     };
 
-
     return (
         <>
-            {isLoading ? <Loading></Loading>
+            {isLoading ? <div>Loading</div>
                 :
                 <div className='h-full'>
-                    <Suspense fallback={<Loading />}>
-                        <div className='h-4/5'>
-                            {/* file upload and messsage rendering */}
-                            <DefaultFileComponent session={resolvedParams} messages={messages} />
-                        </div>
-                        <div className="">
-                            {/* user input */}
-                            <DefaultPlaceHolderComponent
-                                session={resolvedParams}
-                                socket={socket}
-                                onChange={handleSubmit} />
-                        </div>
-                    </Suspense>
-
+                    <div className='h-4/5'>
+                        {/* file upload and messsage rendering */}
+                        <DefaultFileComponent session={resolvedParams} messages={messages} files={files} />
+                    </div>
+                    <div className="">
+                        {/* user input */}
+                        <DefaultPlaceHolderComponent
+                            session={resolvedParams}
+                            socket={socket}
+                            onChange={handleSubmit} />
+                    </div>
                 </div>}
         </>
     )

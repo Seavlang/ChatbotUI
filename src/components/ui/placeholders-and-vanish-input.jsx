@@ -59,138 +59,139 @@ export function PlaceholdersAndVanishInput({
     fetchUser()
     fetchSessionDetail();
   }, [])
-console.log("user id: ", userId)
-  useEffect(() => {
-    startAnimation();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [placeholders]);
 
 
+  // useEffect(() => {
+  //   startAnimation();
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
 
-  const draw = useCallback(() => {
-    if (!inputRef.current) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  //   return () => {
+  //     if (intervalRef.current) {
+  //       clearInterval(intervalRef.current);
+  //     }
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, [placeholders]);
 
-    canvas.width = 500;
-    canvas.height = 500;
-    ctx.clearRect(0, 0, 500, 500);
-    const computedStyles = getComputedStyle(inputRef.current);
 
-    const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
-    ctx.font = `${fontSize}px light Poppin`;
-    ctx.fillStyle = "#FFF";
-    ctx.fillText(value, 16, 30);
 
-    const imageData = ctx.getImageData(50, 50, 800, 800);
-    const pixelData = imageData.data;
-    const newData = [];
+  // const draw = useCallback(() => {
+  //   if (!inputRef.current) return;
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return;
+  //   const ctx = canvas.getContext("2d");
+  //   if (!ctx) return;
 
-    for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800;
-      for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n;
-        if (
-          pixelData[e] !== 0 &&
-          pixelData[e + 1] !== 0 &&
-          pixelData[e + 2] !== 0
-        ) {
-          newData.push({
-            x: n,
-            y: t,
-            color: [
-              pixelData[e],
-              pixelData[e + 1],
-              pixelData[e + 2],
-              pixelData[e + 3],
-            ],
-          });
-        }
-      }
-    }
+  //   canvas.width = 500;
+  //   canvas.height = 500;
+  //   ctx.clearRect(0, 0, 500, 500);
+  //   const computedStyles = getComputedStyle(inputRef.current);
 
-    newDataRef.current = newData.map(({ x, y, color }) => ({
-      x,
-      y,
-      r: 1,
-      color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`,
-    }));
-  }, [value]);
+  //   const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
+  //   ctx.font = `${fontSize}px light Poppin`;
+  //   ctx.fillStyle = "#FFF";
+  //   ctx.fillText(value, 16, 30);
 
-  useEffect(() => {
-    draw();
-  }, [value, draw]);
+  //   const imageData = ctx.getImageData(50, 50, 800, 800);
+  //   const pixelData = imageData.data;
+  //   const newData = [];
 
-  const animate = (start) => {
-    const animateFrame = (pos = 0) => {
-      requestAnimationFrame(() => {
-        const newArr = [];
-        for (let i = 0; i < newDataRef.current.length; i++) {
-          const current = newDataRef.current[i];
-          if (current.x < pos) {
-            newArr.push(current);
-          } else {
-            if (current.r <= 0) {
-              current.r = 0;
-              continue;
-            }
-            current.x += Math.random() > 0.5 ? 1 : -1;
-            current.y += Math.random() > 0.5 ? 1 : -1;
-            current.r -= 0.05 * Math.random();
-            newArr.push(current);
-          }
-        }
-        newDataRef.current = newArr;
-        const ctx = canvasRef.current?.getContext("2d");
-        if (ctx) {
-          ctx.clearRect(pos, 0, 800, 800);
-          newDataRef.current.forEach((t) => {
-            const { x: n, y: i, r: s, color: color } = t;
-            if (n > pos) {
-              ctx.beginPath();
-              ctx.rect(n, i, s, s);
-              ctx.fillStyle = color;
-              ctx.strokeStyle = color;
-              ctx.stroke();
-            }
-          });
-        }
-        if (newDataRef.current.length > 0) {
-          animateFrame(pos - 8);
-        } else {
-          setValue("");
-          setAnimating(false);
-        }
-      });
-    };
-    animateFrame(start);
-  };
+  //   for (let t = 0; t < 800; t++) {
+  //     let i = 4 * t * 800;
+  //     for (let n = 0; n < 800; n++) {
+  //       let e = i + 4 * n;
+  //       if (
+  //         pixelData[e] !== 0 &&
+  //         pixelData[e + 1] !== 0 &&
+  //         pixelData[e + 2] !== 0
+  //       ) {
+  //         newData.push({
+  //           x: n,
+  //           y: t,
+  //           color: [
+  //             pixelData[e],
+  //             pixelData[e + 1],
+  //             pixelData[e + 2],
+  //             pixelData[e + 3],
+  //           ],
+  //         });
+  //       }
+  //     }
+  //   }
+
+  //   newDataRef.current = newData.map(({ x, y, color }) => ({
+  //     x,
+  //     y,
+  //     r: 1,
+  //     color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`,
+  //   }));
+  // }, [value]);
+
+  // useEffect(() => {
+  //   draw();
+  // }, [value, draw]);
+
+  // const animate = (start) => {
+  //   const animateFrame = (pos = 0) => {
+  //     requestAnimationFrame(() => {
+  //       const newArr = [];
+  //       for (let i = 0; i < newDataRef.current.length; i++) {
+  //         const current = newDataRef.current[i];
+  //         if (current.x < pos) {
+  //           newArr.push(current);
+  //         } else {
+  //           if (current.r <= 0) {
+  //             current.r = 0;
+  //             continue;
+  //           }
+  //           current.x += Math.random() > 0.5 ? 1 : -1;
+  //           current.y += Math.random() > 0.5 ? 1 : -1;
+  //           current.r -= 0.05 * Math.random();
+  //           newArr.push(current);
+  //         }
+  //       }
+  //       newDataRef.current = newArr;
+  //       const ctx = canvasRef.current?.getContext("2d");
+  //       if (ctx) {
+  //         ctx.clearRect(pos, 0, 800, 800);
+  //         newDataRef.current.forEach((t) => {
+  //           const { x: n, y: i, r: s, color: color } = t;
+  //           if (n > pos) {
+  //             ctx.beginPath();
+  //             ctx.rect(n, i, s, s);
+  //             ctx.fillStyle = color;
+  //             ctx.strokeStyle = color;
+  //             ctx.stroke();
+  //           }
+  //         });
+  //       }
+  //       if (newDataRef.current.length > 0) {
+  //         animateFrame(pos - 8);
+  //       } else {
+  //         setValue("");
+  //         setAnimating(false);
+  //       }
+  //     });
+  //   };
+  //   animateFrame(start);
+  // };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !animating) {
-      vanishAndSubmit();
+      handleSubmit(e)
     }
   };
 
-  const vanishAndSubmit = () => {
-    setAnimating(true);
-    draw();
+  // const vanishAndSubmit = () => {
+  //   setAnimating(true);
+  //   draw();
 
-    const value = inputRef.current?.value || "";
-    if (value && inputRef.current) {
-      const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
-      animate(maxX);
-    }
-  };
+  //   const value = inputRef.current?.value || "";
+  //   if (value && inputRef.current) {
+  //     const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
+  //     animate(maxX);
+  //   }
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -227,38 +228,6 @@ console.log("user id: ", userId)
       adjustHeight(); // Adjust height on each change
     }
   };
-  // const maxHeight = 150;
-  // useEffect(() => {
-  //   const textarea = inputRef?.current;
-
-  //   const handleResize = (e) => {
-  //     textarea.style.height = 'auto'; // Reset height to auto to recalculate
-  //     if (textarea.scrollHeight > maxHeight) {
-  //       // If the content exceeds max height, set max height and enable overflow
-  //       textarea.style.height = `${maxHeight}px`;
-  //       // textarea.style.overflowY = 'auto';
-  //     }
-  //     else {
-  //       // Otherwise, grow the textarea as needed and hide the scrollbar
-  //       textarea.style.height = `${textarea.scrollHeight}px`;
-  //       textarea.style.overflowY = 'hidden';
-  //     }
-  //   };
-
-  //   // Add event listener to adjust height on keyup
-  //   textarea.addEventListener('keyup', handleResize);
-
-  //   // Clean up the event listener on unmount
-  //   return () => {
-  //     textarea.removeEventListener('keyup', handleResize);
-  //   };
-  // }, []);
-
-
-  // useEffect(() => {
-  //   adjustHeight();
-  //   setNewMessage(value)
-  // }, [value]);
 
   return (
     (

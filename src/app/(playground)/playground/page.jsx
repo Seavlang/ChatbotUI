@@ -4,7 +4,7 @@ import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolder
 
 function Page() {
   return (
-    <div className='mb-10 h-full'>
+    <div className='mb-10 h-full '>
       <div className='h-4/5'>
         <DefaultFirstFileComponent />
       </div>
