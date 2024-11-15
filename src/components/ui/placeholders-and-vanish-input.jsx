@@ -25,6 +25,7 @@ export function PlaceholdersAndVanishInput({
   const [animating, setAnimating] = useState(false);
   const pathname = usePathname()
   const [userId, setUserId] = useState();
+  
 
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
@@ -58,7 +59,7 @@ export function PlaceholdersAndVanishInput({
     fetchUser()
     fetchSessionDetail();
   }, [])
-
+console.log("user id: ", userId)
   useEffect(() => {
     startAnimation();
     document.addEventListener("visibilitychange", handleVisibilityChange);

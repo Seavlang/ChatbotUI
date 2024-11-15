@@ -8,6 +8,7 @@ import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { createSessionService } from "@/services/session/session.service";
 import { Underline } from "lucide-react";
 import { createDocumentAction } from "@/actions/fileAction";
+import Loading from "@/app/(playground)/playground/loading";
 
 const mainVariant = {
   initial: {
@@ -48,7 +49,7 @@ export const FileUploadPlayground = ({ session }) => {
   const handleFileChange = async (newFiles) => {
     const file = newFiles[0];
     if (!file) return;
-
+    setIsLoading(true);
     try {
       const response = await createDocumentAction(sessionId, file)
       console.log("file created: ", response)
@@ -89,7 +90,7 @@ export const FileUploadPlayground = ({ session }) => {
 
   return (
     <>
-      {isLoading ? <div>Loading.....</div>
+      {isLoading ? <Loading></Loading>
         :
         <div>
           {/* display uploaded file  */}

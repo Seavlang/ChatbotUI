@@ -1,10 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import DefaultFileComponent from '../../../components/DefaultFileComponent'
 import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolderComponent';
 import { getAllHistoryBySessionService } from '@/services/history/history.service';
 import { getLM } from '@/actions/modelAction';
 import { usePathname } from 'next/navigation';
+import Loading from '../../loading';
+
 
 export default function Page({ params }) {
 
@@ -13,6 +15,7 @@ export default function Page({ params }) {
     const [content, setContent] = useState('');
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [isLoading, setIsLoading] = useState()
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     useEffect(() => {
@@ -51,6 +54,7 @@ export default function Page({ params }) {
     }, []);
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchParam = async () => {
             var result = await params;
             setResolvedParams(result);
@@ -72,7 +76,7 @@ export default function Page({ params }) {
         }
 
         fetchSessionHistory()
-
+        setIsLoading(false)
     }, [params])
 
     const handleSendMessage = async (e) => {
@@ -105,18 +109,25 @@ export default function Page({ params }) {
 
 
     return (
-        <div className='h-full'>
-            <div className='h-4/5'>
-                {/* file upload and messsage rendering */}
-                <DefaultFileComponent session={resolvedParams} messages={messages} />
-            </div>
-            <div className="">
-                {/* user input */}
-                <DefaultPlaceHolderComponent
-                    session={resolvedParams}
-                    socket={socket}
-                    onChange={handleSubmit} />
-            </div>
-        </div>
+        <>
+            {isLoading ? <Loading></Loading>
+                :
+                <div className='h-full'>
+                    <Suspense fallback={<Loading />}>
+                        <div className='h-4/5'>
+                            {/* file upload and messsage rendering */}
+                            <DefaultFileComponent session={resolvedParams} messages={messages} />
+                        </div>
+                        <div className="">
+                            {/* user input */}
+                            <DefaultPlaceHolderComponent
+                                session={resolvedParams}
+                                socket={socket}
+                                onChange={handleSubmit} />
+                        </div>
+                    </Suspense>
+
+                </div>}
+        </>
     )
 }
