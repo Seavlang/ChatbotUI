@@ -11,12 +11,12 @@ WORKDIR /app
 COPY . .
 
 # Install all dependencies in package.json
-RUN npm install -f
+RUN npm install
 
 # Used for applications that need to be compiled before run
 RUN npm run build
 
 # Expose the port on which your NextJS application will run (change as per your application)
-EXPOSE 3000
+EXPOSE 4001
 
 CMD ["npm", "start"]
