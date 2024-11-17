@@ -24,6 +24,7 @@ import { MoreVertical, Trash2 } from "lucide-react";
 
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
+import Loading from '../playground/loading';
 export default function PlaygroundSidebarComponent({ children }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
@@ -77,15 +78,18 @@ export default function PlaygroundSidebarComponent({ children }) {
         try {
             setIsLoading(true);
             const response = await deleteSessionAction(chatToDelete);
-            if (response?.success == true)
+            if (response?.success == true) {
+                setIsLoading(false);
                 router.push(`/playground`)
+            }
         } catch (err) {
             console.error("Error fetching data:", err);
+            setIsLoading(false);
         }
         if (activeChat && activeChat.id === chatToDelete) {
             setActiveChat(null);
         }
-        setIsLoading(false);
+
         setIsDeleteDialogOpen(false);
     };
 
@@ -96,7 +100,7 @@ export default function PlaygroundSidebarComponent({ children }) {
     return (
         <>
             {
-                isLoading ? <div>Loading....</div>
+                isLoading ? <div>looddoodod</div>
                     :
                     <div>
                         <div
@@ -118,27 +122,39 @@ export default function PlaygroundSidebarComponent({ children }) {
 
                                             >
                                                 <div className="flex justify-between my-10">
-                                                    <Link href={`${allSessions == 3 ? '#': '/playground'}`}>
-                                                        <button className={`flex items-center  px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 text-white' : 'text-primary bg-blue-100'}`}>
+                                                    <Link href={`${allSessions?.length == 3 ? '#' : '/playground'}`}>
+                                                        <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
                                                             {
-                                                                allSessions == 3 ?
-                                                                    <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M9 4.5L9 13.5" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                        <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                    </svg>
+                                                                allSessions?.length == 3 ?
+                                                                    <div className='flex items-center point'>
+                                                                        <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                            <path d="M13.5 9L4.5 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                        </svg>
+                                                                        <span
+                                                                            className="text-lg ms-3 font-semibold text-white"
+                                                                        >
+                                                                            New Chat
+                                                                        </span>
+                                                                    </div>
+
                                                                     :
-                                                                    <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                        <path d="M13.5 9L4.5 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                    </svg>
+                                                                    <div className='flex items-center'>
+                                                                        <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M9 4.5L9 13.5" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                            <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                        </svg>
+                                                                        <span
+                                                                            className="text-lg ms-3 font-semibold text-primary"
+                                                                        >
+                                                                            New Chat
+                                                                        </span>
+                                                                    </div>
+
                                                             }
 
 
-                                                            <span
-                                                                className="text-lg ms-3 font-semibold "
-                                                            >
-                                                                New Chat
-                                                            </span>
+
 
                                                         </button>
                                                     </Link>

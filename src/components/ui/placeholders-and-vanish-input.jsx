@@ -12,7 +12,6 @@ export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
   socket,
-  session
 }) {
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
@@ -25,21 +24,22 @@ export function PlaceholdersAndVanishInput({
   const [animating, setAnimating] = useState(false);
   const pathname = usePathname()
   const [userId, setUserId] = useState();
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
     }, 3000);
   };
-  const handleVisibilityChange = () => {
-    if (document.visibilityState !== "visible" && intervalRef.current) {
-      clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
-      intervalRef.current = null;
-    } else if (document.visibilityState === "visible") {
-      startAnimation(); // Restart the interval when the tab becomes visible
-    }
-  };
+  // const handleVisibilityChange = () => {
+  //   if (document.visibilityState !== "visible" && intervalRef.current) {
+  //     clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
+  //     intervalRef.current = null;
+  //   } else if (document.visibilityState === "visible") {
+  //     startAnimation(); // Restart the interval when the tab becomes visible
+  //   }
+  // };
 
   useEffect(() => {
 
@@ -47,9 +47,9 @@ export function PlaceholdersAndVanishInput({
     const session = {
       sessionId: id
     }
-    const fetchUser = async () =>{
+    const fetchUser = async () => {
       const result = await getCurrentUserAction();
-      console.log("result : ",result)
+      console.log("result : ", result)
       setUserId(result?.payload?.id);
     }
     const fetchSessionDetail = async () => {
@@ -208,7 +208,7 @@ export function PlaceholdersAndVanishInput({
       ));
       onChange(value);
       setValue('');
-      vanishAndSubmit();
+      // vanishAndSubmit();
 
       //   // Resize to original size
       //   const textarea = inputRef.current;
@@ -299,6 +299,8 @@ export function PlaceholdersAndVanishInput({
               <path d="M13 18l6 -6" />
               <path d="M13 6l6 6" />
             </motion.svg>
+
+
           </button>
           <div
             className="absolute inset-0 flex items-end bottom-4 rounded-full pointer-events-none">

@@ -17,6 +17,7 @@ export default function Page({ params }) {
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const [isLoading, setIsLoading] = useState()
+    // const [isResponding, setIsResponding] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     const [files, setFiles] = useState([]);
@@ -43,7 +44,9 @@ export default function Page({ params }) {
                     return [...prevMessages, message];
                 }
             });
+            console.log("message: ",messages)
         };
+        // setIsResponding(false)
 
         ws.onclose = () => {
             console.log("WebSocket disconnected");
@@ -55,7 +58,7 @@ export default function Page({ params }) {
             ws.close();
         };
     }, []);
-
+    console.log("message: ",messages)
     useEffect(() => {
         const resolveParams = async () => {
             if (!params) {
@@ -84,10 +87,10 @@ export default function Page({ params }) {
 
                 // Fetch session history
                 const historyResult = await getAllHistoryBySessionService(resolvedParams);
-                console.log("historyResult", historyResult);
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
+                setIsLoading(false);
             } finally {
                 setIsLoading(false); // End loading after all fetches complete
             }
@@ -106,19 +109,24 @@ export default function Page({ params }) {
 
     return (
         <>
-            {isLoading ? <div>Loading</div>
+            {isLoading ? <Loading></Loading>
                 :
                 <div className='h-full'>
                     <div className='h-4/5'>
                         {/* file upload and messsage rendering */}
-                        <DefaultFileComponent session={resolvedParams} messages={messages} files={files} />
+                        <DefaultFileComponent 
+                        session={resolvedParams} 
+                        messages={messages} 
+                        files={files} 
+                        />
                     </div>
                     <div className="">
                         {/* user input */}
                         <DefaultPlaceHolderComponent
                             session={resolvedParams}
                             socket={socket}
-                            onChange={handleSubmit} />
+                            onChange={handleSubmit} 
+                            />
                     </div>
                 </div>}
         </>

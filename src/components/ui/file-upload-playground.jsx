@@ -32,10 +32,6 @@ const secondaryVariant = {
 };
 
 export const FileUploadPlayground = ({ session }) => {
-  const [activeSession, setActiveSession] = useState()
-  const onChange = () => {
-
-  }
   const [sessionId, setSessionId] = useState()
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -56,6 +52,7 @@ export const FileUploadPlayground = ({ session }) => {
       setFiles((prevFiles) => [...prevFiles, response?.payload?.file_name]);
     } catch (e) {
       setError("File upload error: " + e.message);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
