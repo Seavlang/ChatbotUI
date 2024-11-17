@@ -12,7 +12,7 @@ export default function layout({ children }) {
       </div>
       <hr />
       <div className="grid grid-cols-10 min-h-screen">
-        <div className="col-span-2 border-r-2">
+        <div className="col-span-2 border-r">
           <SidebarComponent />
         </div>
         <div className="col-span-7 flex justify-center ">

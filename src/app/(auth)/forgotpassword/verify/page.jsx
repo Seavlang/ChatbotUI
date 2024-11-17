@@ -95,61 +95,62 @@ export default function CodeVerificationForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-blue-800">
-          Code Verification
-        </h2>
-        <p className="text-center text-gray-500">
-          An authentication code has been sent to your email.
-        </p>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Code"
-                      {...field}
-                      className="h-12 text-base px-4 rounded-md border-gray-300"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <div className="text-center">
-              <a href="/login" className="text-sm text-primary">
-                Back to Login
-              </a>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-primary text-white h-12 rounded-md font-semibold hover:bg-blue-700"
-              disabled={isLoading}
-            >
-              {isLoading ? "Verifying..." : "Verify"}
-            </Button>
-          </form>
-        </Form>
-
-        <div className="text-center text-sm text-gray-500">
-        <p>Didn&apos;t receive a code?</p>
-          <button
-            onClick={handleResend}
-            disabled={isResending}
-            className="text-primary underline"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-center text-blue-800 dark:text-blue-400">
+        Code Verification
+      </h2>
+      <p className="text-center text-gray-500 dark:text-gray-400">
+        An authentication code has been sent to your email.
+      </p>
+  
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Code"
+                    {...field}
+                    className="h-12 text-base px-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+  
+          <div className="text-center">
+            <a href="/login" className="text-sm text-primary dark:text-blue-400">
+              Back to Login
+            </a>
+          </div>
+  
+          <Button
+            type="submit"
+            className="w-full bg-primary dark:bg-blue-600 text-white h-12 rounded-md font-semibold hover:bg-blue-700 dark:hover:bg-blue-500"
+            disabled={isLoading}
           >
-            {isResending ? "Resending..." : "Resend"}
-          </button>
-        </div>
+            {isLoading ? "Verifying..." : "Verify"}
+          </Button>
+        </form>
+      </Form>
+  
+      <div className="text-center flex text-sm justify-center text-gray-500 dark:text-gray-400">
+        <p className="mr-1">Didn&apos;t receive a code?</p>
+        <button
+          onClick={handleResend}
+          disabled={isResending}
+          className="text-primary dark:text-blue-400 underline"
+        >
+          {isResending ? "Resending..." : "Resend"}
+        </button>
       </div>
     </div>
+  </div>
+  
   );
 }
