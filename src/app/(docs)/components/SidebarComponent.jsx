@@ -25,7 +25,7 @@ export default function SidebarComponent() {
     <div>
       <div className=" font-semibold">
         <div className="">
-          <ul className="ml-32 text-md w-3/5 leading-10 mt-10 space-y-1">
+          <ul className="mx-10 text-md w-[80%]  leading-10 mt-10 space-y-1">
             {/* All Apps */}
             <li>
               <Link

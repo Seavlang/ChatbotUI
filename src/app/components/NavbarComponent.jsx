@@ -168,7 +168,7 @@ export default function NavbarComponent() {
                       >
                         Settings
                       </button>
-                      <dialog id="my_modal_3" className="modal">
+                       <dialog id="my_modal_3" className="modal">
                         <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                           {/* Close Button */}
                           <form method="dialog">
