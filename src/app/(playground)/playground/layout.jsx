@@ -1,4 +1,5 @@
-import NavbarComponent from "../components/NavbarComponent";
+
+import NavbarComponent from "@/app/components/NavbarComponent";
 import PlaygroundSidebarComponent from "../components/PlaygroundSidebarComponent";
 
 

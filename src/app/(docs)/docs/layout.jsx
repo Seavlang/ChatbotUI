@@ -1,6 +1,7 @@
-import NavbarComponent from '@/app/(playground)/components/NavbarComponent';
+
 import React from 'react';
 import SidebarComponent from '../components/SidebarComponent';
+import NavbarComponent from '@/app/components/NavbarComponent';
 
 
 export default function layout({ children }) {

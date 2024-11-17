@@ -2,7 +2,6 @@
 
 import localFont from "next/font/local";
 import "./globals.css";
-import NavbarComponent from "./components/NavbarComponent";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
