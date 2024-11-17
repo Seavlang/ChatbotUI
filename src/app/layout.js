@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,6 +18,34 @@ const geistMono = localFont({
 });
 
 export default function RootLayout({ children }) {
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
+
+  // Toggle Theme
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    if (darkMode) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
+
+  // Initialize theme from localStorage on mount
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    const html = document.documentElement;
+    if (storedTheme === "dark") {
+      html.classList.add("dark");
+      setDarkMode(true);
+    } else {
+      html.classList.remove("dark");
+      setDarkMode(false);
+    }
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
     <html lang="en">
       <head>
@@ -28,10 +57,12 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-black dark:text-white`}
       >
         <Toaster />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

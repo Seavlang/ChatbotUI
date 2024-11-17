@@ -14,11 +14,36 @@ export default function NavbarComponent() {
   const isLoggedIn = !!session;
   const accessToken = session?.access_token;
   const [lmData, setLmData] = useState(null); // State to store fetched data
-
+  const [darkMode, setDarkMode] = useState(false);
   const handleLogout = () => {
     signOut({ redirect: false });
     router.push("/");
   };
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    if (darkMode) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
+
+  useEffect(() => {
+    // Initialize theme from localStorage
+    const storedTheme = localStorage.getItem("theme") || "light";
+    const html = document.documentElement;
+    if (storedTheme === "dark") {
+      html.classList.add("dark");
+      setDarkMode(true);
+    } else {
+      html.classList.remove("dark");
+      setDarkMode(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLM = async () => {
@@ -34,11 +59,11 @@ export default function NavbarComponent() {
     fetchLM();
   }, []);
 
-  console.log("lmdata",lmData);
+  console.log("lmdata", lmData);
 
   return (
     <div>
-      <div className="navbar bg-base-100 font-semibold text-primary">
+      <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
         <div className="navbar-start">
           <div className="flex">
             <Link href="/">
@@ -109,7 +134,7 @@ export default function NavbarComponent() {
                 {/* Dropdown content - Centered */}
                 <ul
                   tabIndex="0"
-                  className="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-4 shadow absolute left-1/2 transform -translate-x-1/2 mt-2"
+                  className="dropdown-content  dark:bg-gray-900 menu bg-base-100 rounded-box z-[1] w-64 p-4 shadow absolute left-1/2 transform -translate-x-1/2 mt-2"
                 >
                   <li>
                     <a>
@@ -144,23 +169,28 @@ export default function NavbarComponent() {
                         Settings
                       </button>
                       <dialog id="my_modal_3" className="modal">
-                        <div className="modal-box w-full max-w-3xl p-6 bg-white rounded-lg shadow-lg">
+                        <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                           {/* Close Button */}
                           <form method="dialog">
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
-                              <Image src={"/asset/images/cross.png"} alt="close" width={30} height={30}/>
+                              <Image
+                                src={"/asset/images/cross.png"}
+                                alt="close"
+                                width={30}
+                                height={30}
+                              />
                             </button>
                           </form>
 
                           {/* Modal Header */}
-                          <h3 className="font-bold pb-3 text-primary border-b border-primary text-2xl ">
+                          <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
                             Settings
                           </h3>
 
                           {/* Content Grid */}
-                          <div className="grid grid-cols-4 ">
+                          <div className="grid grid-cols-4">
                             {/* Sidebar */}
-                            <div className="col-span-1 border-r p-4 text-lg text-primary border-primary">
+                            <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
                               Custom Model
                             </div>
 
@@ -168,12 +198,12 @@ export default function NavbarComponent() {
                             <div className="col-span-3 p-4">
                               <div className="flex justify-between mb-5">
                                 <div>
-                                  <h1 className="text-lg font-bold text-primary ">
+                                  <h1 className="text-lg font-bold text-primary dark:text-white">
                                     Model Configuration
                                   </h1>
                                 </div>
                                 <div className="flex justify-end space-x-3">
-                                  <button className="px-4 py-2 border border-primary text-gray-600 font-medium rounded-lg hover:bg-gray-200">
+                                  <button className="px-4 py-2 border border-primary text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800">
                                     Secrets & API keys
                                   </button>
                                   <button className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700">
@@ -181,57 +211,58 @@ export default function NavbarComponent() {
                                   </button>
                                 </div>
                               </div>
-                              <p className="text-sm text-gray-600 mb-4">
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                 Access tokens authenticate your identity to the
                                 Hugging Face Hub and allow applications to
-                                perform actions based on token permissions
+                                perform actions based on token permissions.
                               </p>
 
                               {/* Configuration Fields */}
                               <div className="gap-4">
                                 <div>
-                                  <label className="text-sm font-medium text-gray-700">
+                                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Provider
                                   </label>
                                   <input
                                     type="text"
                                     placeholder="Default"
-                                    className="w-full p-3 border my-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+                                    className="w-full p-3 border my-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
                                   />
                                 </div>
                                 <div>
-                                  <label className="text-sm font-medium text-gray-700">
+                                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Model
                                   </label>
                                   <input
                                     type="text"
-                                    placeholder={lmData?.payload?.provider_info?.model_name}
-                                    className="w-full p-3 border my-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+                                    placeholder={
+                                      lmData?.payload?.provider_info?.model_name
+                                    }
+                                    className="w-full p-3 border my-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                 <div>
-                                  <label className="text-sm font-medium text-gray-700">
-                                    Temperature
-                                  </label>
-                                  <input
-                                    type="number"
-                                    placeholder={lmData?.payload?.temperature}
-                                    className="w-full p-3  my-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                                  />
+                                  <div>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                      Temperature
+                                    </label>
+                                    <input
+                                      type="number"
+                                      placeholder={lmData?.payload?.temperature}
+                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                      Max Length
+                                    </label>
+                                    <input
+                                      type="number"
+                                      placeholder={lmData?.payload?.max_token}
+                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                    />
+                                  </div>
                                 </div>
-                                <div>
-                                  <label className="text-sm font-medium text-gray-700">
-                                    Max Length
-                                  </label>
-                                  <input
-                                    type="number"
-                                    placeholder={lmData?.payload?.max_token}
-                                    className="w-full p-3 my-2  border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                                  />
-                                </div> 
-                                </div>
-                                
                               </div>
                             </div>
                           </div>
@@ -247,7 +278,9 @@ export default function NavbarComponent() {
                         width={20}
                         height={20}
                       />
-                      Light Mode
+                      <span className="cursor-pointer" onClick={toggleTheme}>
+                        {darkMode ? "Dark Mode" : "Light Mode"}
+                      </span>
                     </a>
                   </li>
                   <li>

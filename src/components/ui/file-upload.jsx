@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconX } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
-import Image from "next/image";     
-import { dotWave } from 'ldrs'
+import Image from "next/image";
+import { dotWave } from 'ldrs';
 
-dotWave.register()
+dotWave.register();
 
 const mainVariant = {
   initial: {
@@ -94,7 +94,7 @@ export const FileUpload = ({
       <motion.div
         onClick={handleClick}
         whileHover="animate"
-        className="p-10 group/file block rounded-lg border border-primary cursor-pointer w-full relative overflow-hidden"
+        className="p-10 group/file block rounded-lg border border-primary dark:border-gray-700 cursor-pointer w-full relative overflow-hidden dark:bg-gray-800"
         style={{ height: "220px" }}
       >
         <input
@@ -118,14 +118,14 @@ export const FileUpload = ({
               <div className="relative w-full mb-5 max-w-xl mx-auto">
                 {/* Display error as a dismissible alert */}
                 {error && (
-                  <div className="flex items-center w-[80%] justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 max-w-xl mx-auto">
+                  <div className="flex items-center w-[80%] justify-between bg-red-100 dark:bg-red-800 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-2 rounded relative mb-4 max-w-xl mx-auto">
                     <p className="text-sm">{error}</p>
                     <button
                       onClick={(e) => {
                         e.stopPropagation(); // Stop event propagation to prevent triggering the upload action
                         dismissError();
                       }}
-                      className="ml-4 text-red-600"
+                      className="ml-4 text-red-600 dark:text-red-400"
                     >
                       <IconX size={20} />
                     </button>
@@ -139,8 +139,8 @@ export const FileUpload = ({
                         idx === 0 ? "file-upload" : "file-upload-" + idx
                       }
                       className={cn(
-                        "relative overflow-hidden z-40 border-2 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
-                        "shadow-sm"
+                        "relative overflow-hidden z-40 border-2 dark:border-gray-700 flex items-center justify-between p-3 mt-4 mx-auto rounded-lg",
+                        "shadow-sm dark:bg-gray-700"
                       )}
                       style={{
                         borderRadius: "12px",
@@ -181,7 +181,7 @@ export const FileUpload = ({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             layout
-                            className="text-base font-medium text-gray-900 truncate max-w-xs"
+                            className="text-base font-medium text-gray-900 dark:text-gray-200 truncate max-w-xs"
                           >
                             {file.file_name}
                           </motion.p>
@@ -190,7 +190,7 @@ export const FileUpload = ({
                           <button
                             type="button"
                             onClick={(e) => handleRemoveFile(idx, e)} // Pass the event to stop propagation
-                            className="p-2 text-red-600 hover:text-red-800"
+                            className="p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-500"
                           >
                             <IconX size={20} />
                           </button>
@@ -215,7 +215,7 @@ export const FileUpload = ({
                       <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="text-neutral-600 flex flex-col items-center"
+                        className="text-neutral-600 dark:text-neutral-300 flex flex-col items-center"
                       >
                         Drop it
                       </motion.p>
@@ -232,7 +232,7 @@ export const FileUpload = ({
                 {!files.length && (
                   <motion.div
                     variants={secondaryVariant}
-                    className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
+                    className="absolute opacity-0 border border-dashed border-sky-400 dark:border-sky-700 inset-0 z-30 bg-transparent flex items-center justify-center h-16 w-full max-w-[4rem] mx-auto rounded-md"
                   ></motion.div>
                 )}
               </div>

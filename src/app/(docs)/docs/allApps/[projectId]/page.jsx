@@ -187,7 +187,7 @@ export default function Page({ params }) {
       ) : (
         <div>
           <div>
-            <div className="breadcrumbs mx-10  mt-10 mb-5 text-sm">
+            <div className="breadcrumbs mx-10 mt-10 mb-5 text-sm dark:text-gray-400">
               <ul>
                 <li>
                   <Link href="/docs/allApps">App</Link>
@@ -200,13 +200,13 @@ export default function Page({ params }) {
               </ul>
             </div>
           </div>
-          <h1 className="mx-10 text-4xl font-medium text-primary">
+          <h1 className="mx-10 text-4xl font-medium text-primary dark:text-white">
             {projectData?.project_id?.project_name}
           </h1>
           {/* textarea */}
-          <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary rounded-lg">
+          <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
             <div className="mb-4">
-              <h2 className="ml-5 text-primary text-xl font-bold">
+              <h2 className="ml-5 text-primary text-xl font-bold dark:text-white">
                 Description
                 <Image
                   src={"/asset/images/pen.png"}
@@ -221,7 +221,7 @@ export default function Page({ params }) {
               placeholder={`${projectData?.project_id?.description ? projectData?.project_id.description : "No description"}`}
             /> */}
               <textarea
-                className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium placeholder-black focus:outline-none resize-none overflow-hidden"
+                className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium dark:placeholder-gray-500 placeholder-black focus:outline-none resize-none overflow-hidden  dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600  rounded"
                 value={description}
                 onChange={handleDescriptionChange}
                 onBlur={handleDescriptionSave} // Trigger save on blur
@@ -235,7 +235,7 @@ export default function Page({ params }) {
             </div>
           </div>
           {/* api key */}
-          <div className="flex flex-col gap-2  mx-10 w-[80%] ">
+          <div className="flex flex-col gap-2 mx-10 w-[80%] dark:text-gray-300">
             <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
               <svg
                 width="28"
@@ -258,28 +258,20 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold">API Key</span>
+              <span className="text-primary text-xl font-bold  dark:text-gray-200">
+                API Key
+              </span>
             </label>
             <div className="relative w-full">
               <input
                 type="text"
                 value={projectData?.project_id?.api_key ?? ""}
                 readOnly
-                className="w-full pl-8 pr-20 py-3 border font-medium border-primary rounded-lg text-sm text-gray-800"
+                className="w-full pl-8 pr-20 py-3 border font-medium border-primary dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-800"
               />
-              {/* <button
-              onClick={copyToClipboard}
-              className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            >
-              {copySuccess ? (
-                "✔️"
-              ) : (
-                <Image src={"/asset/images/copy.png"} width={24} height={24} alt="copy img" />
-              )}
-            </button> */}
               <button
                 onClick={handleCopy}
-                className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute top-1/2 right-5 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
               >
                 {copied ? (
                   "Copied!"
@@ -293,7 +285,8 @@ export default function Page({ params }) {
                 )}
               </button>
             </div>
-            <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
+
+            <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700 dark:text-gray-200">
               <svg
                 width="24"
                 height="24"
@@ -301,7 +294,7 @@ export default function Page({ params }) {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect width="18" height="18" fill="white" />
+                <rect width="18" height="18" fill="transparent" />
                 <path
                   d="M16.125 1.875V1.375H16.625V1.875H16.125ZM12.7286 5.97855C12.5333 6.17382 12.2167 6.17382 12.0214 5.97855C11.8262 5.78329 11.8262 5.46671 12.0214 5.27145L12.7286 5.97855ZM15.625 5.25V1.875H16.625V5.25H15.625ZM16.125 2.375H12.75V1.375H16.125V2.375ZM16.4786 2.22855L12.7286 5.97855L12.0214 5.27145L15.7714 1.52145L16.4786 2.22855Z"
                   fill="#004B93"
@@ -318,46 +311,53 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold">
+              <span className="text-primary text-xl font-bold dark:text-gray-200">
                 Upload Document
               </span>
             </label>
+
             {/* Display Uploaded Files */}
             <div>
-  {uploadedFiles?.length === 0 ? (
-    <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-1 mb-5 text-md">
-      <span className="font-medium text-primary mr-2">No document</span>
-    </div>
-  ) : (
-    <div className="mb-5">
-      <div className="relative w-1/3">
-        <select
-          id="uploadedFilesDropdown"
-          className="appearance-none w-full border border-primary rounded-lg px-4 py-2 pr-10 text-md focus:outline-none "
-        >
-          {uploadedFiles.map((file) => (
-            <option key={file.id} value={file.id}>
-              {file.file_name}
-            </option>
-          ))}
-        </select>
-        {/* Custom dropdown icon */}
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <svg
-            className="w-4 h-4 text-primary"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      </div>
-    </div>
-  )}
-</div>
-
+              {uploadedFiles?.length === 0 ? (
+                <div className="inline-flex items-center border border-gray-300 dark:border-gray-700 rounded-md px-3 py-1 mb-5 text-md">
+                  <span className="font-medium text-primary dark:text-gray-200 mr-2">
+                    No document
+                  </span>
+                </div>
+              ) : (
+                <div className="mb-5">
+                  <div className="relative w-1/3">
+                    <select
+                      id="uploadedFilesDropdown"
+                      className="appearance-none w-full border border-primary dark:border-gray-700 rounded-lg px-4 py-2 pr-10 text-md focus:outline-none bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    >
+                      {uploadedFiles.map((file) => (
+                        <option key={file.id} value={file.id}>
+                          {file.file_name}
+                        </option>
+                      ))}
+                    </select>
+                    {/* Custom dropdown icon */}
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                      <svg
+                        className="w-4 h-4 text-primary dark:text-gray-200"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <FileComponent
               uploadedFiles={uploadedFiles}
@@ -366,7 +366,7 @@ export default function Page({ params }) {
               clearFiles={clearFiles}
               isLoading={isUploading}
             />
-            <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
+            <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700 dark:text-gray-200">
               <svg
                 width="28"
                 height="28"
@@ -380,7 +380,7 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold">
+              <span className="text-primary text-xl font-bold dark:text-gray-200">
                 API Service
               </span>
             </label>
@@ -390,14 +390,14 @@ export default function Page({ params }) {
                 {apiEndpoint?.map((endpoint, idx) => (
                   <div key={idx}>
                     <Collapsible.Root className="w-full cursor-pointer ml-5">
-                      <div className="rounded p-2.5">
+                      <div className="rounded p-2.5 ">
                         <Collapsible.Trigger
                           asChild
                           onClick={(e) => handleClick(e, idx)}
                         >
                           <div
                             className={cn(
-                              "flex justify-between items-center pr-3 text-left transition-colors text-primary pl-2 pb-3 text-2xl border-b-[0.8px] border-primary font-bold"
+                              "flex justify-between items-center pr-3 text-left transition-colors text-primary dark:text-gray-200 pl-2 pb-3 text-2xl border-b-[0.8px] border-primary dark:border-gray-700 font-bold"
                             )}
                           >
                             <span>{endpoint.Controller}</span>
@@ -417,7 +417,7 @@ export default function Page({ params }) {
                         <Collapsible.Content
                           key={id}
                           open={activeCollapse === idx}
-                          className="w-4/5 "
+                          className="w-4/5"
                         >
                           <div
                             className="my-2.5 rounded grid grid-cols-7 p-2.5 cursor-pointer"
@@ -427,24 +427,23 @@ export default function Page({ params }) {
                                 .showModal()
                             }
                           >
-                            <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold">
+                            <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold dark:text-gray-200">
                               {endpoint.path}
                             </span>
                             <div className="col-span-5">
                               <div className="flex justify-start items-center h-full">
                                 <span
                                   className={`text-xs rounded-md px-8 font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${
-                                    endpoint.method == "POST"
+                                    endpoint.method === "POST"
                                       ? "bg-[#49CC90]"
-                                      : endpoint.method == "GET"
+                                      : endpoint.method === "GET"
                                       ? "bg-[#61AFFE]"
                                       : "bg-[#C9002B]"
-                                  }
-                    `}
+                                  }`}
                                 >
                                   {endpoint.method}
                                 </span>
-                                <span className="w-auto text-base font-normal text-[#878787] ml-10">
+                                <span className="w-auto text-base font-normal text-[#878787] dark:text-gray-400 ml-10">
                                   {endpoint.description}
                                 </span>
                               </div>
@@ -509,9 +508,12 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold">Widget</span>
+              <span className="text-primary text-xl font-bold dark:text-gray-200">
+                Widget
+              </span>
             </div>
-            <div className="">
+
+            <div className="mb-20">
               <WidgetComponent projectId={project} />
             </div>
           </div>

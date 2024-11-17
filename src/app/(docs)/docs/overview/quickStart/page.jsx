@@ -20,30 +20,35 @@ export default function Page() {
   };
 
   return (
-    <div className="grid grid-cols-12">
+    <div className="grid grid-cols-12 bg-white dark:bg-gray-900 dark:text-gray-300 min-h-screen">
+      {/* Main Content */}
       <div className="col-span-9">
-        <div className=" flex justify-center">
+        <div className="flex justify-center">
           <div className="w-4/5">
-            <h1 className="mx-10  mt-10 mb-5 text-4xl font-medium text-primary">
+            <h1 className="mx-10 mt-10 mb-5 text-4xl font-medium text-primary dark:text-white">
               Quick Start
             </h1>
-            <hr className="w-[80%] mb-5 ml-10" />
+            <hr className="w-[80%] mb-5 ml-10 border-gray-300 dark:border-gray-700" />
             <p className="ml-10 mr-20">
               Welcome to our API service! This guide will help you get started
               and integrate our API into your application quickly and
               efficiently. You can interact with our API through HTTP requests
               from any programming language or environment.
             </p>
-            <h1 className="ml-10 my-5 text-lg font-medium">Get Your API Key</h1>
-            <div className=" ml-10 mr-20 ">
-              <p className="text-gray-700 mb-4">
+            <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
+              Get Your API Key
+            </h1>
+            <div className="ml-10 mr-20">
+              <p className="text-gray-700 dark:text-gray-400 mb-4">
                 To authenticate and interact with the API, you will need an API
                 key. Follow these steps to get started:
               </p>
 
-              <ol className="list-decimal pl-6 space-y-4 text-gray-700">
+              <ol className="list-decimal pl-6 space-y-4 text-gray-700 dark:text-gray-400">
                 <li>
-                  <h2 className="font-semibold mb-2">Generate Your API Key:</h2>
+                  <h2 className="font-semibold mb-2 dark:text-white">
+                    Generate Your API Key:
+                  </h2>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
                       You can create an API key at the user account level.
@@ -64,7 +69,9 @@ export default function Page() {
                 </li>
 
                 <li>
-                  <h2 className="font-semibold mb-2">Keep Your Key Secure:</h2>
+                  <h2 className="font-semibold mb-2 dark:text-white">
+                    Keep Your Key Secure:
+                  </h2>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
                       Your API key is confidential. Do not share it with others
@@ -78,7 +85,7 @@ export default function Page() {
                 </li>
               </ol>
             </div>
-            <h1 className="ml-10 my-5 text-lg font-medium">
+            <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
               Making Your First Request
             </h1>
             <p className="ml-10 mr-20">
@@ -87,9 +94,9 @@ export default function Page() {
               request:
             </p>
             <div className="mt-5 ml-10 mr-10">
-              <div className="bg-[#004655] rounded-lg overflow-hidden">
+              <div className="bg-[#004655] dark:bg-gray-800 rounded-lg overflow-hidden">
                 {/* Title Section */}
-                <div className="bg-[#004655] text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
+                <div className="bg-[#004655] dark:bg-gray-700 text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
                   <span className="font-semibold">REQUEST</span>
 
                   {/* Custom Copy Button */}
@@ -131,26 +138,29 @@ export default function Page() {
               with the actual key from your account.
             </p>
 
-            <h1 className="ml-10 my-5 text-lg font-medium">
+            <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
               API Documentation
             </h1>
             <div className="ml-10 my-5 mr-20">
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 dark:text-gray-400 mb-4">
                 Refer to our{" "}
                 <Link
                   href="/docs/overview/quickStart"
-                  className="text-blue-600 underline"
+                  className="text-blue-600 dark:text-blue-400 underline"
                 >
                   API Overview
                 </Link>{" "}
                 and{" "}
-                <Link href="/docs/example" className="text-blue-600 underline">
+                <Link
+                  href="/docs/example"
+                  className="text-blue-600 dark:text-blue-400 underline"
+                >
                   Examples
                 </Link>{" "}
                 sections for more detailed instructions on how to use various
                 endpoints, including how to:
               </p>
-              <ul className="list-disc pl-6 text-gray-700">
+              <ul className="list-disc pl-6 text-gray-700 dark:text-gray-400">
                 <li>Create a session</li>
                 <li>Upload documents</li>
               </ul>
@@ -158,24 +168,23 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="col-span-3 border-l ">
-        <h1 className="ml-5 mt-5 text-md font-bold">Contents</h1>
-        <div className="ml-8 mb-5 leading-7 font-semibold text-[#878787]">
-          {" "}
+
+      {/* Sidebar Content */}
+      <div className="col-span-3 border-l border-gray-300 dark:border-gray-700">
+        <h1 className="ml-5 mt-5 text-md font-bold dark:text-white">
+          Contents
+        </h1>
+        <div className="ml-8 mb-5 leading-7 font-semibold text-[#878787] dark:text-gray-400">
           <Link href={"#"}>
-            {" "}
-            <p>Get Your API Key</p>{" "}
+            <p>Get Your API Key</p>
           </Link>
           <Link href={"#"}>
-            {" "}
-            <p> Making Your First Request</p>
+            <p>Making Your First Request</p>
           </Link>
           <Link href={"#"}>
-            {" "}
-            <p>API Documentation</p>{" "}
+            <p>API Documentation</p>
           </Link>
           <Link href={"#"}>
-            {" "}
             <p>Troubleshooting</p>
           </Link>
         </div>

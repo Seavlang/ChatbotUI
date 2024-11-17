@@ -20,33 +20,41 @@ export default async function Page({ searchParams }) {
     : tableData;
 
   return (
-    <div className="w-full h-screen overflow-hidden">
-      <div className="breadcrumbs mx-10 mt-10 mb-5 text-sm">
+    <div className="w-full h-screen overflow-hidden bg-white dark:bg-gray-900 dark:text-gray-300">
+      {/* Breadcrumbs */}
+      <div className="breadcrumbs mx-10 mt-10 mb-5 text-sm text-gray-600 dark:text-gray-400">
         <ul>
           <li>
-            <Link href="/docs/allApps">App</Link>
+            <Link href="/docs/allApps" className="hover:underline">
+              App
+            </Link>
           </li>
         </ul>
       </div>
-      <h1 className="mx-10 mb-10 text-4xl font-medium text-primary">My Apps</h1>
+      <h1 className="mx-10 mb-10 text-4xl font-medium text-primary dark:text-white">
+        My Apps
+      </h1>
+
       <Chatbot
         SessionId="14"
         projectId="8"
         apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
       />
-      <div className="flex justify-between ">
+
+      {/* Search and Create */}
+      <div className="flex justify-between">
         <div className="w-1/5 ml-10">
           {/* Search form for server-side filtering */}
           <form
             method="get"
             action="/docs/allApps"
-            className="input input-bordered flex items-center gap-2"
+            className="input input-bordered flex items-center gap-2 dark:bg-gray-800"
           >
             <input
               type="text"
               name="search"
               defaultValue={searchTerm}
-              className="grow"
+              className="grow bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 "
               placeholder="Search Project"
             />
             <button type="submit">
@@ -54,7 +62,7 @@ export default async function Page({ searchParams }) {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70"
+                className="h-4 w-4 text-gray-600 dark:text-gray-400 opacity-70"
               >
                 <path
                   fillRule="evenodd"
@@ -69,12 +77,15 @@ export default async function Page({ searchParams }) {
           <CreateProjectModal />
         </div>
       </div>
-      {/* table */}
-      <div className="overflow-x-auto ml-10  mt-10">
-        <table className="min-w-full bg-white  rounded-lg">
+
+      {/* Table */}
+      <div className="overflow-x-auto ml-10 mt-10">
+        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
           <thead>
-            <tr className="bg-primary text-white rounded-lg">
-              <th className="py-3 px-6 text-left font-semibold rounded-s-xl">ID</th>
+            <tr className="bg-primary text-white dark:bg-gray-700">
+              <th className="py-3 px-6 text-left font-semibold rounded-s-xl">
+                ID
+              </th>
               <th className="py-3 px-6 text-left font-semibold">Project</th>
               <th className="py-3 px-6 text-left w-1/2 font-semibold">
                 Description
@@ -84,13 +95,16 @@ export default async function Page({ searchParams }) {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item,index) => (
-              <tr key={item?.id} className="border-b border-gray-200">
-                <td className="py-3 px-6">{index+1}</td>
+            {filteredData.map((item, index) => (
+              <tr
+                key={item?.id}
+                className="border-b border-gray-200 dark:border-gray-700"
+              >
+                <td className="py-3 px-6">{index + 1}</td>
                 <td className="py-3 px-6">
                   <Link
                     href={`/docs/allApps/${item?.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     {item?.project_name}
                   </Link>
