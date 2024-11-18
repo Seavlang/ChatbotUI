@@ -1,6 +1,12 @@
 import ChatLoading from "@/app/components/ChatLoading";
+import { Spinner } from "@nextui-org/react";
 
 export default function Loading() {
-    // You can add any UI inside Loading, including a Skeleton.
-    return <span className="absolute justify-center items-center loading loading-spinner loading-md"></span>
-  }
+  // You can add any UI inside Loading, including a Skeleton.
+  return (
+    <div className=" h-full flex justify-center items-center gap-4">
+      <Spinner label="Loading..." color="default" labelColor="primary" />
+    </div>
+  )
+
+}

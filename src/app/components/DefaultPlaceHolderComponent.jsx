@@ -2,12 +2,13 @@
 
 import { createDocumentAction } from "@/actions/fileAction";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
-import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function DefaultPlaceHolderComponent({ session,onChange,handleSendMessage,socket }) {
+export function DefaultPlaceHolderComponent({ session, onChange, socket }) {
   const fileInputRef = useRef(null);
+  const [error, setError] = useState();
+
   const placeholders = [
     "What's the first rule of Fight Club?",
     "Who is Tyler Durden?",
@@ -17,11 +18,12 @@ export function DefaultPlaceHolderComponent({ session,onChange,handleSendMessage
   ];
 
   const handleFileChange = async (newFiles) => {
+    console.log("first", newFiles)
     const file = newFiles[0];
-    if (!file) return;
+    // if (!file) return;
     try {
+      console.log("session in pages: ", session)
       const response = await createDocumentAction(session?.sessionId, file)
-      console.log("file created: ", response)
     } catch (e) {
       setError("File upload error: " + e.message);
     } finally {
@@ -53,11 +55,11 @@ export function DefaultPlaceHolderComponent({ session,onChange,handleSendMessage
               </div>
             </div>
 
-            <PlaceholdersAndVanishInput 
-            placeholders={placeholders} 
-            onChange={onChange} 
-            socket={socket}
-            session={session}
+            <PlaceholdersAndVanishInput
+              placeholders={placeholders}
+              onChange={onChange}
+              socket={socket}
+
             />
           </div>
         </div>

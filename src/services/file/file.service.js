@@ -8,14 +8,6 @@ import { revalidateTag } from "next/cache";
 export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
   const headers = await reqHeader(); // Assuming reqHeader() adds necessary headers
   const formData = new FormData();
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    // Handle case when there's no session
-    return null;
-  }
-
-  const accessToken = session.access_token;
   formData.append('file', uploadedFiles); // Append the file to the form data
 
   try {
@@ -26,11 +18,13 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
         method: 'POST',
         headers: { ...headers },
         body: formData, // Send form data as the request body
+        next: {
+          tag: ["fileService"],
+        },
       }
     );
-
-    const data = await response.json();
-    revalidateTag("fileService");
+    const data = await response?.json();
+    console.log("data: ",response)
     return data;
   } catch (error) {
     console.error('Error uploading file:', error);

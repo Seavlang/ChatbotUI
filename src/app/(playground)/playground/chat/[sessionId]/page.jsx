@@ -1,10 +1,13 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import DefaultFileComponent from '../../../components/DefaultFileComponent'
 import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolderComponent';
 import { getAllHistoryBySessionService } from '@/services/history/history.service';
 import { getLM } from '@/actions/modelAction';
 import { usePathname } from 'next/navigation';
+import Loading from '../../loading';
+import { getAllDocumentAction } from '@/actions/fileAction';
+
 
 export default function Page({ params }) {
 
@@ -13,8 +16,12 @@ export default function Page({ params }) {
     const [content, setContent] = useState('');
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [isLoading, setIsLoading] = useState()
+    // const [isResponding, setIsResponding] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
+    const [files, setFiles] = useState([]);
+
     useEffect(() => {
         const fetchLM = async () => {
             await getLM();
@@ -37,7 +44,9 @@ export default function Page({ params }) {
                     return [...prevMessages, message];
                 }
             });
+            console.log("message: ",messages)
         };
+        // setIsResponding(false)
 
         ws.onclose = () => {
             console.log("WebSocket disconnected");
@@ -49,52 +58,47 @@ export default function Page({ params }) {
             ws.close();
         };
     }, []);
-
+    console.log("message: ",messages)
     useEffect(() => {
-        const fetchParam = async () => {
-            var result = await params;
-            setResolvedParams(result);
-        }
-
-        const fetchSessionHistory = async () => {
-            const result = await getAllHistoryBySessionService(resolvedParams);
-            setMessages(result?.payload);
-        }
-
-        if (params == undefined) {
-            result = {
-                sessionId: id
+        const resolveParams = async () => {
+            if (!params) {
+                setResolvedParams({ sessionId: id });
+            } else {
+                const result = await params;
+                setResolvedParams(result);
             }
-            setResolvedParams(result);
-        }
-        else {
-            fetchParam();
-        }
+        };
 
-        fetchSessionHistory()
+        resolveParams();
+    }, []); // Run this effect when `params` or `id` changes
 
-    }, [params])
+    // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
+    useEffect(() => {
+        if (!resolvedParams) return; // Wait until `resolvedParams` is set
 
-    const handleSendMessage = async (e) => {
-        e.preventDefault();
-        if (newMessage.trim()) {
-            setContent((prev) => [
-                ...prev,
-                {
-                    id: messages?.length + 1,
-                    role: "user",
-                    content: newMessage.trim()
-                },
-            ]);
-            setNewMessage(""); // Clear input
+        const fetchData = async () => {
+            setIsLoading(true);
 
-            // Generate and add AI response
-            const aiResponse = await generateAIResponse(newMessage.trim());
-            setContent((prev) => [...prev, aiResponse]);
+            try {
+                // Fetch all documents
+                const documentResult = await getAllDocumentAction(resolvedParams);
+                console.log("documentResult", documentResult);
+                setFiles(documentResult?.payload);
 
-            setTimeout(scrollToBottom, 100);
-        }
-    };
+                // Fetch session history
+                const historyResult = await getAllHistoryBySessionService(resolvedParams);
+                setMessages(historyResult?.payload);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setIsLoading(false);
+            } finally {
+                setIsLoading(false); // End loading after all fetches complete
+            }
+        };
+
+        fetchData();
+    }, [resolvedParams]);
+
     const handleSubmit = (e) => {
         const humanPrompt = {
             role: "user",
@@ -103,20 +107,28 @@ export default function Page({ params }) {
         setMessages((prev) => [...prev, humanPrompt]);
     };
 
-
     return (
-        <div className='h-full'>
-            <div className='h-4/5'>
-                {/* file upload and messsage rendering */}
-                <DefaultFileComponent session={resolvedParams} messages={messages} />
-            </div>
-            <div className="">
-                {/* user input */}
-                <DefaultPlaceHolderComponent
-                    session={resolvedParams}
-                    socket={socket}
-                    onChange={handleSubmit} />
-            </div>
-        </div>
+        <>
+            {isLoading ? <Loading></Loading>
+                :
+                <div className='h-full'>
+                    <div className='h-4/5'>
+                        {/* file upload and messsage rendering */}
+                        <DefaultFileComponent 
+                        session={resolvedParams} 
+                        messages={messages} 
+                        files={files} 
+                        />
+                    </div>
+                    <div className="">
+                        {/* user input */}
+                        <DefaultPlaceHolderComponent
+                            session={resolvedParams}
+                            socket={socket}
+                            onChange={handleSubmit} 
+                            />
+                    </div>
+                </div>}
+        </>
     )
 }

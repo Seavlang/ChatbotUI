@@ -8,6 +8,7 @@ import { uploadFilePlaygroundService } from "@/services/file/file.service";
 import { createSessionService } from "@/services/session/session.service";
 import { Underline } from "lucide-react";
 import { createDocumentAction } from "@/actions/fileAction";
+import Loading from "@/app/(playground)/playground/loading";
 
 const mainVariant = {
   initial: {
@@ -31,10 +32,6 @@ const secondaryVariant = {
 };
 
 export const FileUploadPlayground = ({ session }) => {
-  const [activeSession, setActiveSession] = useState()
-  const onChange = () => {
-
-  }
   const [sessionId, setSessionId] = useState()
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -48,13 +45,14 @@ export const FileUploadPlayground = ({ session }) => {
   const handleFileChange = async (newFiles) => {
     const file = newFiles[0];
     if (!file) return;
-
+    setIsLoading(true);
     try {
       const response = await createDocumentAction(sessionId, file)
       console.log("file created: ", response)
       setFiles((prevFiles) => [...prevFiles, response?.payload?.file_name]);
     } catch (e) {
       setError("File upload error: " + e.message);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +87,7 @@ export const FileUploadPlayground = ({ session }) => {
 
   return (
     <>
-      {isLoading ? <div>Loading.....</div>
+      {isLoading ? <Loading></Loading>
         :
         <div>
           {/* display uploaded file  */}

@@ -1,39 +1,23 @@
-"use client";
-import FileComponentPlayground from "@/app/components/FileComponentPlayground";
-import { getAllFilesService } from "@/services/file/file.service";
-import React, { Suspense, useEffect, useState } from "react";
+'use client'
+import FileComponentPlayground from '@/app/components/FileComponentPlayground';
+import React, { useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
-import { PlaceHolderComponent } from "@/app/components/PlaceHolderComponent";
-import { getAllDocumentAction } from "@/actions/fileAction";
-import { DefaultPlaceHolderComponent } from "@/app/components/DefaultPlaceHolderComponent";
-import { getHistoriesBySessionAction } from "@/actions/historyAction";
-import { getAllHistoryBySessionService } from "@/services/history/history.service";
 
-export default function DefaultFileComponent({ session, messages }) {
-  const [files, setFiles] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [open, setOpen] = useState(false);
+export default function DefaultFileComponent({ session, messages, files }) {
+  const messagesEndRef = useRef(null);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Scroll to bottom whenever `messages` changes
   useEffect(() => {
-    const fetchAllDocuments = async () => {
-      const result = await getAllDocumentAction(session);
-      setFiles(result?.payload);
-    };
-    fetchAllDocuments();
-  }, [session]);
+    const timeout = setTimeout(() => {
+      scrollToBottom();
+    }, 100); // Delay to ensure DOM is updated
 
-  const handleSetOpen = () => {
-    setOpen(!open);
-  };
-
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (newMessage.trim()) {
-      // Call WebSocket function to send the new message instead of updating the state directly
-      // Assuming the WebSocket logic will handle adding the new message to `messages`
-      setNewMessage(""); // Clear input
-    }
-  };
+    return () => clearTimeout(timeout); // Cleanup timeout
+  }, [messages]);
 
   return (
     <div className="">
@@ -97,10 +81,9 @@ export default function DefaultFileComponent({ session, messages }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`py-3 rounded-2xl break-words ${
-                    message?.role === "user"
-                      ? "bg-[#90A1FE] px-5 max-w-xl text-white"
-                      : ""
+                  className={`py-3 rounded-2xl break-words ${message?.role === "user" ? 
+                    "bg-[#90A1FE] px-5 max-w-xl text-white" : 
+                    ""
                   }`}
                 >
                   {message?.content}
@@ -112,6 +95,8 @@ export default function DefaultFileComponent({ session, messages }) {
               <FileComponentPlayground session={session} />
             </div>
           )}
+          {/* This div is used as the reference to scroll to */}
+          <div ref={messagesEndRef} />
         </div>
       </div>
     </div>
