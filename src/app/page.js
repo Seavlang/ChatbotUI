@@ -7,10 +7,10 @@ import closeIcon from '../../public/cross.png';
 import catIcon from '../../public/cat.png';
 import sent from '../../public/sent.png';
 
-export default function Chat({ apiKey, SessionId, projectId }) {
+export default function Chat({defaultText, apiKey, sessionId, projectId }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
-    { type: 'bot', text: "Hello! I'm here to lend a helping hand whenever you need it. What can I do for you?" },
+    { type: 'bot', text: defaultText ? defaultText : "Hello, How can I help you?" },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -53,13 +53,13 @@ export default function Chat({ apiKey, SessionId, projectId }) {
         position: 'fixed',
         bottom: '30px',
         right: '30px',
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         transition: 'transform 0.3s ease',
         width: isExpanded ? '450px' : '80px',
         height: isExpanded ? '550px' : '80px',
         borderRadius: isExpanded ? '20px' : '50%',
         overflow: 'hidden',
-        backgroundColor: isExpanded ? 'white' : 'transparent'
+        backgroundColor: isExpanded ? 'white' : 'transparent',
+        padding: '10px'
       }}
       onClick={() => !isExpanded && setIsExpanded(true)}
     >
