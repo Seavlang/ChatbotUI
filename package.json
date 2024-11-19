@@ -1,6 +1,6 @@
 {
   "name": "@kshrd/chatbotwidget",
-  "version": "3.0.0",
+  "version": "3.0.3",
   "description": "A Rchatbot widget for web applications built with Next.js",
   "main": "src/index.js",
   "scripts": {

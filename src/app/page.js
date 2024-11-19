@@ -7,10 +7,10 @@ import closeIcon from '../../public/cross.png';
 import catIcon from '../../public/cat.png';
 import sent from '../../public/sent.png';
 
-export default function Chat({ apiKey, SessionId, projectId }) {
+export default function Chat({defaultText, apiKey, sessionId, projectId }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
-    { type: 'bot', text: "Hello! I'm here to lend a helping hand whenever you need it. What can I do for you?" },
+    { type: 'bot', text: defaultText ? defaultText : "Hello, How can I help you?" },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function Chat({ apiKey, SessionId, projectId }) {
     setIsLoading(true); // Start loading
 
     try {
-      const response = await ChatbotAction(input, "14", "8", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0");
+      const response = await ChatbotAction(input, sessionId, projectId, apiKey);
       setMessages((prevMessages) => [...prevMessages, { type: 'bot', text: response.output }]);
     } catch (error) {
       setMessages((prevMessages) => [...prevMessages, { type: 'bot', text: 'Sorry, there was an error processing your request.' }]);
@@ -53,13 +53,16 @@ export default function Chat({ apiKey, SessionId, projectId }) {
         position: 'fixed',
         bottom: '30px',
         right: '30px',
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         transition: 'transform 0.3s ease',
         width: isExpanded ? '450px' : '80px',
         height: isExpanded ? '550px' : '80px',
         borderRadius: isExpanded ? '20px' : '50%',
         overflow: 'hidden',
-        backgroundColor: isExpanded ? 'white' : 'transparent'
+        backgroundColor: isExpanded ? 'transparent' : 'white',
+        padding: '10px',
+        boxShadow: isExpanded
+      ? 'none' // shadow for expanded state
+      : '0 4px 10px rgba(0, 0, 0, 0.25)'
       }}
       onClick={() => !isExpanded && setIsExpanded(true)}
     >
