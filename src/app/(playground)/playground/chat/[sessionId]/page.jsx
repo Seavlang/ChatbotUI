@@ -12,8 +12,6 @@ import { getAllDocumentAction } from '@/actions/fileAction';
 export default function Page({ params }) {
 
     const [resolvedParams, setResolvedParams] = useState(null);
-    const [newMessage, setNewMessage] = useState('');
-    const [content, setContent] = useState('');
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const [isLoading, setIsLoading] = useState()
@@ -27,24 +25,32 @@ export default function Page({ params }) {
             await getLM();
         }
         fetchLM();
-        const ws = new WebSocket("ws://110.74.194.123:8085/ws/playground_generate-response");
+        const ws = new WebSocket("ws://110.74.194.123:1234/ws/playground_generate-response");
 
         ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
+            try {
+                const message = JSON.parse(event.data);
 
-            setMessages((prevMessages) => {
-                const lastMessage = prevMessages[prevMessages.length - 1];
+                setMessages((prevMessages) => {
+                    // Update the latest bot response with new token content
+                    const lastMessage = prevMessages[prevMessages.length - 1];
 
-                if (lastMessage && message.type === 'paragraph' && lastMessage.type === 'paragraph') {
-                    return [
-                        ...prevMessages.slice(0, -1),
-                        { ...lastMessage, content: lastMessage.content + " " + message.content }
-                    ];
-                } else {
-                    return [...prevMessages, message];
-                }
-            });
-            console.log("message: ",messages)
+                    if (lastMessage && lastMessage.role === "ai") {
+                        return [
+                            ...prevMessages.slice(0, -1),
+                            { ...lastMessage, content: lastMessage.content + message.content }
+                        ];
+                    } else {
+                        // Start a new ai response
+                        return [
+                            ...prevMessages,
+                            { role: "ai", content: message.content }
+                        ];
+                    }
+                });
+            } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+            }
         };
         // setIsResponding(false)
 
@@ -58,7 +64,6 @@ export default function Page({ params }) {
             ws.close();
         };
     }, []);
-    console.log("message: ",messages)
     useEffect(() => {
         const resolveParams = async () => {
             if (!params) {
@@ -72,6 +77,7 @@ export default function Page({ params }) {
         resolveParams();
     }, []); // Run this effect when `params` or `id` changes
 
+    console.log(" message in pages: " ,messages)
     // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
     useEffect(() => {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
@@ -114,10 +120,10 @@ export default function Page({ params }) {
                 <div className='h-full'>
                     <div className='h-4/5'>
                         {/* file upload and messsage rendering */}
-                        <DefaultFileComponent 
-                        session={resolvedParams} 
-                        messages={messages} 
-                        files={files} 
+                        <DefaultFileComponent
+                            session={resolvedParams}
+                            messages={messages}
+                            files={files}
                         />
                     </div>
                     <div className="">
@@ -125,8 +131,8 @@ export default function Page({ params }) {
                         <DefaultPlaceHolderComponent
                             session={resolvedParams}
                             socket={socket}
-                            onChange={handleSubmit} 
-                            />
+                            onChange={handleSubmit}
+                        />
                     </div>
                 </div>}
         </>

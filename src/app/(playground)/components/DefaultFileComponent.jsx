@@ -2,8 +2,14 @@
 import FileComponentPlayground from '@/app/components/FileComponentPlayground';
 import React, { useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
-export default function DefaultFileComponent({ session, messages, files }) {
+export default function DefaultFileComponent({ session, messages, files, renderedContent }) {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -18,7 +24,17 @@ export default function DefaultFileComponent({ session, messages, files }) {
 
     return () => clearTimeout(timeout); // Cleanup timeout
   }, [messages]);
-
+  // Function to copy code to clipboard
+  const copyToClipboard = (code) => {
+    navigator.clipboard.writeText(code).then(
+      () => {
+        console.log('Code copied to clipboard');
+      },
+      (err) => {
+        console.error('Could not copy code: ', err);
+      }
+    );
+  };
   return (
     <div className="">
       <div className="flex">
@@ -70,23 +86,26 @@ export default function DefaultFileComponent({ session, messages, files }) {
       <div className="flex mx-auto w-2/3">
         <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[550px]">
           {messages?.length > 0 ? (
-            messages.map((message, index) => (
+            messages?.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  message?.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${message?.role === "user" ? "justify-end" : "justify-start"
+                  }`}
               >
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`py-3 rounded-2xl break-words ${message?.role === "user" ? 
-                    "bg-[#90A1FE] px-5 max-w-xl text-white" : 
+                  className={`py-3 rounded-2xl break-words ${message?.role === "user" ?
+                    "bg-[#90A1FE] px-5 max-w-xl text-white" :
                     ""
-                  }`}
+                    }`}
                 >
-                  {message?.content}
+                  <ReactMarkdown
+                    rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                  >
+                    {message?.content}
+                  </ReactMarkdown>
                 </motion.div>
               </div>
             ))

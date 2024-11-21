@@ -32,3 +32,52 @@ textarea::-webkit-scrollbar {
 .no-visible-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+
+/* Wrapper for code blocks to position the copy button */
+.code-block-wrapper {
+    position: relative;
+  }
+  
+  /* Code blocks */
+  pre.code-block {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  
+  /* Remove default margin from pre element inside the wrapper */
+  .code-block-wrapper pre.code-block {
+    margin: 0;
+  }
+  
+  /* Inline code */
+  code.inline-code {
+    background-color: rgba(175, 184, 193, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 85%;
+    color: #24292e;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  
+  /* Copy Code Button */
+  .copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #f6f8fa;
+    border: none;
+    color: #586069;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .copy-code-button:hover {
+    background-color: #eaecef;
+  }
+  
