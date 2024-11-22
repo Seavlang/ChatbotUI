@@ -35,6 +35,8 @@ export default function DefaultFileComponent({ session, messages, files, rendere
       }
     );
   };
+
+  
   return (
     <div className="">
       <div className="flex">

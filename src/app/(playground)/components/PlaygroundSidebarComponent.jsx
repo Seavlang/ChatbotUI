@@ -21,16 +21,18 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Trash2 } from "lucide-react";
-
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
+
+
+
 export default function PlaygroundSidebarComponent({ children }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
@@ -39,8 +41,29 @@ export default function PlaygroundSidebarComponent({ children }) {
     const router = useRouter()
     const id = pathname.split('/').pop();
 
+    console.log("is loading in sidebar: ", isLoading);
+
+    // useEffect(() => {
+
+    //     const fetchAllSessions = async () => {
+    //         // setIsLoading(true)
+    //         try {
+
+    //             const response = await getAllSessionsAction();
+
+    //             setAllSessions(response?.payload);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //         finally {
+    //             setIsLoading(false)
+    //         }
+    //     }
+    //     fetchAllSessions();
+    // }, []);
+
     useEffect(() => {
-        setIsLoading(true)
+        // setIsLoading(true)
         const fetchAllSessions = async () => {
             try {
                 const response = await getAllSessionsAction();
@@ -49,24 +72,12 @@ export default function PlaygroundSidebarComponent({ children }) {
             } catch (error) {
                 console.error(error);
             }
-        }
-        fetchAllSessions();
-        setIsLoading(false)
-    }, []);
-
-    useEffect(() => {
-        setIsLoading(true)
-        const fetchAllSessions = async () => {
-            try {
-                const response = await getAllSessionsAction();
-
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
+            finally {
+                setIsLoading(false)
             }
         }
         fetchAllSessions();
-        setIsLoading(false)
+
     }, [id]);
 
     const handleDeleteChat = (sessionId) => {
@@ -99,82 +110,83 @@ export default function PlaygroundSidebarComponent({ children }) {
 
     return (
         <>
-            {
-                isLoading ? <div>looddoodod</div>
-                    :
-                    <div>
-                        <div
-                            className={cn(
-                                "flex  w-full overflow-hidden",
-                                "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
-                            )}
-                        >
-                            <Sidebar open={open} setOpen={setOpen}>
-                                <SidebarBody className="justify-between gap-10">
 
-                                    <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                                        <div className="flex flex-col gap-2">
-                                            {/* New Chat Button */}
-                                            <motion.span
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                className="font-medium text-black dark:text-white whitespace-pre"
+            <div>
+                <div
+                    className={cn(
+                        "flex  w-full overflow-hidden",
+                        "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
+                    )}
+                >
+                    <Sidebar open={open} setOpen={setOpen}>
+                        <SidebarBody className="justify-between gap-10">
 
-                                            >
-                                                <div className="flex justify-between my-10">
-                                                    <Link href={`${allSessions?.length == 3 ? '#' : '/playground'}`}>
-                                                        <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
-                                                            {
-                                                                allSessions?.length == 3 ?
-                                                                    <div className='flex items-center point'>
-                                                                        <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                            <path d="M13.5 9L4.5 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                        </svg>
-                                                                        <span
-                                                                            className="text-lg ms-3 font-semibold text-white"
-                                                                        >
-                                                                            New Chat
-                                                                        </span>
-                                                                    </div>
+                            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+                                <div className="flex flex-col gap-2">
+                                    {/* New Chat Button */}
+                                    <motion.span
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="font-medium text-black dark:text-white whitespace-pre"
 
-                                                                    :
-                                                                    <div className='flex items-center'>
-                                                                        <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M9 4.5L9 13.5" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                            <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
-                                                                        </svg>
-                                                                        <span
-                                                                            className="text-lg ms-3 font-semibold text-primary"
-                                                                        >
-                                                                            New Chat
-                                                                        </span>
-                                                                    </div>
+                                    >
+                                        <div className="flex justify-between my-10">
+                                            <Link href={`${allSessions?.length == 3 ? '#' : '/playground'}`}>
+                                                <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
+                                                    {
+                                                        allSessions?.length == 3 ?
+                                                            <div className='flex items-center point'>
+                                                                <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                    <path d="M13.5 9L4.5 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                </svg>
+                                                                <span
+                                                                    className="text-lg ms-3 font-semibold text-white"
+                                                                >
+                                                                    New Chat
+                                                                </span>
+                                                            </div>
 
-                                                            }
+                                                            :
+                                                            <div className='flex items-center'>
+                                                                <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M9 4.5L9 13.5" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                    <path d="M13.5 9L4.5 9" stroke="#004B93" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
+                                                                </svg>
+                                                                <span
+                                                                    className="text-lg ms-3 font-semibold text-primary"
+                                                                >
+                                                                    New Chat
+                                                                </span>
+                                                            </div>
+
+                                                    }
 
 
 
 
-                                                        </button>
-                                                    </Link>
-                                                    <div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
-                                                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
-                                                            <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
-                                                            <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
-                                                        </svg>
-                                                    </div>
+                                                </button>
+                                            </Link>
+                                            <div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
+                                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
+                                                    <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
+                                                    <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
+                                                </svg>
+                                            </div>
 
-                                                </div>
-                                            </motion.span>
-                                            <motion.span
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                className="font-medium text-black dark:text-white whitespace-pre"
-                                            >
-                                                {/* map all session in side bar */}
-                                                {allSessions?.map((session) => (
+                                        </div>
+                                    </motion.span>
+                                    <motion.span
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="font-medium text-black dark:text-white whitespace-pre"
+                                    >
+                                        {/* map all session in side bar */}
+                                        {
+                                            isLoading ? <div>loading...</div>
+                                                :
+                                                allSessions?.map((session) => (
                                                     <div
                                                         key={session?.session}
                                                         className={`flex justify-between items-center w-full px-3 py-2  rounded-md mb-2 cursor-pointer ${session?.session === id
@@ -233,66 +245,69 @@ export default function PlaygroundSidebarComponent({ children }) {
                                                         </div>
                                                         {/* )} */}
                                                     </div>
-                                                ))}
-                                            </motion.span>
-                                            {/* Chat Items (Active/Inactive) */}
+                                                ))
+                                        }
 
-                                        </div>
-                                    </div>
-                                </SidebarBody>
-                            </Sidebar>
 
-                            {/* Delete Confirmation Dialog */}
-                            <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen} >
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Confirm Deletion</DialogTitle>
-                                        <DialogDescription>
-                                            Are you sure you want to delete this chat session?
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter>
-                                        <Button
-                                            variant="cancel"
-                                            onClick={() => setIsDeleteDialogOpen(false)}
-                                        >
-                                            <div className={`${isLoading ? 'disabled' : ''}`}>Cancel</div>
-                                        </Button>
-                                        <Button variant="delete" onClick={confirmDeleteChat} >
-                                            {
-                                                isLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
-                                            }
+                                    </motion.span>
+                                    {/* Chat Items (Active/Inactive) */}
 
-                                        </Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-
-                            <div className="w-full">
-                                <div className="p-2 md:p-10 h-screen flex flex-col gap-2 flex-1 w-full">
-                                    <div className="flex flex-col">
-                                        <div className='flex'>
-                                            {
-                                                open ? (
-                                                    ''
-                                                )
-                                                    :
-                                                    (<div className="my-auto cursor-pointer" onClick={handleSetOpen}>
-                                                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
-                                                            <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
-                                                            <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
-                                                        </svg>
-                                                    </div>)
-                                            }
-                                        </div>
-                                    </div>
-                                    {children}
                                 </div>
                             </div>
+                        </SidebarBody>
+                    </Sidebar>
+
+                    {/* Delete Confirmation Dialog */}
+                    <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen} >
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Confirm Deletion</DialogTitle>
+                                <DialogDescription>
+                                    Are you sure you want to delete this chat session?
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <Button
+                                    variant="cancel"
+                                    onClick={() => setIsDeleteDialogOpen(false)}
+                                >
+                                    <div className={`${isLoading ? 'disabled' : ''}`}>Cancel</div>
+                                </Button>
+                                <Button variant="delete" onClick={confirmDeleteChat} >
+                                    {
+                                        isLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
+                                    }
+
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    <div className="w-full">
+                        <div className="p-2 md:p-10 h-screen flex flex-col gap-2 flex-1 w-full">
+                            <div className="flex flex-col">
+                                <div className='flex'>
+                                    {
+                                        open ? (
+                                            ''
+                                        )
+                                            :
+                                            (<div className="my-auto cursor-pointer" onClick={handleSetOpen}>
+                                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
+                                                    <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
+                                                    <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
+                                                </svg>
+                                            </div>)
+                                    }
+                                </div>
+                            </div>
+                            {children}
                         </div>
                     </div>
-            }
+                </div>
+            </div>
+
         </>
 
     )
