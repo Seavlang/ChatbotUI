@@ -14,7 +14,7 @@ export default function Page({ params }) {
     const [resolvedParams, setResolvedParams] = useState(null);
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
-    const [isLoading, setIsLoading] = useState()
+    const [isLoading, setIsLoading] = useState(true)
     // const [isResponding, setIsResponding] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
@@ -90,7 +90,7 @@ export default function Page({ params }) {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
 
         const fetchData = async () => {
-            setIsLoading(true);
+            // setIsLoading(true);
 
             try {
                 // Fetch all documents
@@ -103,7 +103,7 @@ export default function Page({ params }) {
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                setIsLoading(false);
+                // setIsLoading(false);
             } finally {
                 setIsLoading(false); // End loading after all fetches complete
             }
@@ -131,7 +131,7 @@ export default function Page({ params }) {
         <>
             {isLoading ? <Loading></Loading>
                 :
-                <div className='h-full'>
+                <div className='h-full w-full'>
                     <div className='h-4/5'>
                         {/* file upload and messsage rendering */}
                         <DefaultFileComponent

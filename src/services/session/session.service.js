@@ -6,7 +6,7 @@ import { revalidateTag } from 'next/cache'
 export const getAllSessionService = async () => {
     const headers = await reqHeader();
     try {
-        const res = await fetch(`${authUrl}/session/all_session_histories`, {
+        const res = await fetch(`${authUrl}/session/all_sessions`, {
             method: "GET",
             headers,
             next: {
@@ -48,6 +48,7 @@ export const createSessionService = async () => {
 
 export const deleteSessionService = async (id) => {
     const headers = await reqHeader();
+    console.log("id in server to delete: ",id)
     try {
         const res = await fetch(`${authUrl}/session/delete/${id}`, {
             method: "DELETE",
@@ -61,7 +62,6 @@ export const deleteSessionService = async (id) => {
             return null;
         }
         const response = await res?.json();
-        revalidateTag('sessions')
         return response
     } catch (e) {
         console.log("Error: ", e);

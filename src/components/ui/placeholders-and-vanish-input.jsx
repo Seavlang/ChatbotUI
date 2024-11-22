@@ -75,7 +75,6 @@ export function PlaceholdersAndVanishInput({
     if (socket && value) {
       console.log("file_id ",selectedDocument)
       const file_id = selectedDocument == 0 ? null : selectedDocument
-      console.log("file_id ",file_id)
       socket.send(JSON.stringify(
         {
           "input": {

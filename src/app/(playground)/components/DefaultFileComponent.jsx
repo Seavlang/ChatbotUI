@@ -36,7 +36,7 @@ export default function DefaultFileComponent({ session, messages, files, handleS
     );
   };
 
-  
+
   return (
     <div className="">
       <div className="flex">
@@ -51,7 +51,7 @@ export default function DefaultFileComponent({ session, messages, files, handleS
                 <select
                   id="filesDropdown"
                   className="appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => handleSelectDocument(e.target.value)} 
+                  onChange={(e) => handleSelectDocument(e.target.value)}
                 >
                   {files.map((file) => (
                     <option key={file?.id} value={file?.id}>
@@ -86,37 +86,40 @@ export default function DefaultFileComponent({ session, messages, files, handleS
         </div>
       </div>
 
-      <div className="flex mx-auto w-2/3">
-        <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[550px]">
-          {messages?.length > 0 ? (
-            messages?.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message?.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`py-3 rounded-2xl break-words ${message?.role === "user" ?
-                    "bg-[#90A1FE] px-5 max-w-xl text-white" :
-                    ""
+      <div className="flex mx-auto w-full">
+        <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5">
+          <div className='mx-80 '>
+            {messages?.length > 0 ? (
+              messages?.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${message?.role === "user" ? "justify-end" : "justify-start"
                     }`}
                 >
-                  <ReactMarkdown
-                    rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`py-3 rounded-2xl break-words ${message?.role === "user" ?
+                      "bg-[#90A1FE] px-5 max-w-xl text-white" :
+                      ""
+                      }`}
                   >
-                    {message?.content}
-                  </ReactMarkdown>
-                </motion.div>
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                    >
+                      {message?.content}
+                    </ReactMarkdown>
+                  </motion.div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-row items-center justify-center mt-20 bg-yellow-200">
+                <FileComponentPlayground session={session} />
               </div>
-            ))
-          ) : (
-            <div className="flex flex-row items-center justify-center mt-20">
-              <FileComponentPlayground session={session} />
-            </div>
-          )}
+            )}
+          </div>
+
           {/* This div is used as the reference to scroll to */}
           <div ref={messagesEndRef} />
         </div>

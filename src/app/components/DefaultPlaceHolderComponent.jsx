@@ -37,7 +37,7 @@ export function DefaultPlaceHolderComponent({ session, onChange, socket,selected
     (
       <>
         <div className="">
-          <div className="flex justify-center">
+          <div className="flex justify-center items-end">
             <div className="mr-5">
               <input
                 ref={fileInputRef}
