@@ -5,7 +5,7 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function DefaultPlaceHolderComponent({ session, onChange, socket }) {
+export function DefaultPlaceHolderComponent({ session, onChange, socket,selectedDocument }) {
   const fileInputRef = useRef(null);
   const [error, setError] = useState();
 
@@ -59,7 +59,7 @@ export function DefaultPlaceHolderComponent({ session, onChange, socket }) {
               placeholders={placeholders}
               onChange={onChange}
               socket={socket}
-
+              selectedDocument={selectedDocument}
             />
           </div>
         </div>

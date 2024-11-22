@@ -9,7 +9,7 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 
-export default function DefaultFileComponent({ session, messages, files, renderedContent }) {
+export default function DefaultFileComponent({ session, messages, files, handleSelectDocument }) {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -51,6 +51,7 @@ export default function DefaultFileComponent({ session, messages, files, rendere
                 <select
                   id="filesDropdown"
                   className="appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => handleSelectDocument(e.target.value)} 
                 >
                   {files.map((file) => (
                     <option key={file?.id} value={file?.id}>

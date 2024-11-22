@@ -18,7 +18,14 @@ export default function Page({ params }) {
     // const [isResponding, setIsResponding] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
-    const [files, setFiles] = useState([]);
+    const [files, setFiles] = useState([{
+        id: 0,
+        collection_name: "Sample Document",
+        created_at: null,
+        session_id: null,
+        file_name: "Default"
+    }]);
+    const [selectedDocument, setSelectedDocument] = useState(null);
 
     useEffect(() => {
         const fetchLM = async () => {
@@ -89,7 +96,7 @@ export default function Page({ params }) {
                 // Fetch all documents
                 const documentResult = await getAllDocumentAction(resolvedParams);
                 console.log("documentResult", documentResult);
-                setFiles(documentResult?.payload);
+                setFiles((prev) => [...prev, ...(documentResult?.payload || [])]);
 
                 // Fetch session history
                 const historyResult = await getAllHistoryBySessionService(resolvedParams);
@@ -113,6 +120,13 @@ export default function Page({ params }) {
         setMessages((prev) => [...prev, humanPrompt]);
     };
 
+    const handleSelectDocument = (id) =>{
+        // handle file selection and upload
+        console.log("handleSelectDocument", id)
+        setSelectedDocument(id)
+    }
+
+    console.log("files: ",files)
     return (
         <>
             {isLoading ? <Loading></Loading>
@@ -124,6 +138,7 @@ export default function Page({ params }) {
                             session={resolvedParams}
                             messages={messages}
                             files={files}
+                            handleSelectDocument={handleSelectDocument}
                         />
                     </div>
                     <div className="">
@@ -132,6 +147,7 @@ export default function Page({ params }) {
                             session={resolvedParams}
                             socket={socket}
                             onChange={handleSubmit}
+                            selectedDocument={selectedDocument}
                         />
                     </div>
                 </div>}
