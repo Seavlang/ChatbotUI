@@ -40,6 +40,10 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
     const handleClick = () => {
         fileInputRef.current?.click();
     };
+    const { allSessions, isLoading, fetchAllSessions  } = useSessions();
+    useEffect(() => {
+        console.log("session in first file component", allSessions)
+    }, [allSessions])
 
     // const [allSessions, setAllSessions] = useState([])
     const dismissError = () => {
@@ -53,6 +57,7 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
         setIsLoading(true)
 
         try {
+            await fetchAllSessions ()
             // const session = await getAllSessionsAction();
             // setAllSessions(session);
             if (allSessions.length >= 3) {
@@ -93,8 +98,7 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
             }
         },
     });
-    const { allSessions, isLoading } = useSessions();
-    console.log("session in first file component", allSessions)
+
     return (
         <>
             <div className="">

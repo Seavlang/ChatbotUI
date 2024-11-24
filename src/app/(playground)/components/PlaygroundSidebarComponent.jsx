@@ -34,19 +34,11 @@ export default function PlaygroundSidebarComponent({ children }) {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    const [messages, setMessages] = useState([]);
-    const messagesEndRef = useRef(null);
     const [allSessions, setAllSessions] = useState([])
     const pathname = usePathname()
     const router = useRouter()
     const id = pathname.split('/').pop();
     const [isDeleting, setIsDeleting] = useState(false)
-
-    // Pass sessions as props to children
-    const childrenWithProps = React.Children.map(children, (child) =>
-        React.cloneElement(child, { allSessions, isLoading })
-    );
 
     useEffect(() => {
 
@@ -108,10 +100,8 @@ export default function PlaygroundSidebarComponent({ children }) {
         setOpen(!open);
     }
 
-
-
     return (
-        <SessionsProvider>
+        <>
             <div>
                 <div
                     className={cn(
@@ -182,7 +172,7 @@ export default function PlaygroundSidebarComponent({ children }) {
                                     >
                                         {/* map all session in side bar */}
                                         {
-                                            isLoading ? <div>loading...</div>
+                                            isLoading ? <div className='flex justify-center'><Loading/></div>
                                                 :
                                                 allSessions?.map((session) => (
                                                     <div
@@ -306,7 +296,7 @@ export default function PlaygroundSidebarComponent({ children }) {
                 </div>
             </div>
 
-        </SessionsProvider>
+        </>
 
     )
 }

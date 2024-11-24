@@ -16,7 +16,8 @@ export default function DefaultFileComponent({
   handleSelectDocument,
   fetchOlderMessages,
   isLoadingMore,
-  hasMoreMessages
+  hasMoreMessages,
+  isResponding
 }) {
   const messagesContainerRef = useRef(null);
 
@@ -67,7 +68,7 @@ export default function DefaultFileComponent({
     }, 100);
 
     return () => clearTimeout(timeout);
-  }, [messages]);
+  }, [isResponding]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -161,7 +162,7 @@ export default function DefaultFileComponent({
           ref={messagesContainerRef}
           className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
           {isLoadingMore && <div className="text-center py-4">Loading older messages...</div>}
-          <div className='mx-80 '>
+          <div className='mx-96 '>
             {messages?.length > 0 ? (
               messages?.map((message, index) => (
                 <div
@@ -173,14 +174,86 @@ export default function DefaultFileComponent({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`py-3 rounded-2xl break-words ${message?.role === "user" ?
-                      "bg-[#90A1FE] px-5 max-w-xl text-white" :
+                    className={`py-2 rounded-3xl break-words ${message?.role === "user" ?
+                      "bg-[#90A1FE] px-5 max-w-xl text-white my-5" :
                       ""
                       }`}
                   >
                     <ReactMarkdown
                       rehypePlugins={[rehypeRaw, rehypeHighlight]}
                       components={{
+                        p: ({ node, children, ...props }) => (
+                          <p
+                            style={{
+                              fontSize: '16px', // Adjust font size
+                              fontWeight: 'medium',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </p>
+                        ),
+                        h1: ({ node, children, ...props }) => (
+                          <h1
+                            style={{
+                              fontSize: '2rem', // Large and bold for main headings
+                              fontWeight: 'bold',
+                              lineHeight: '1.4',
+                              marginBottom: '1em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ node, children, ...props }) => (
+                          <h2
+                            style={{
+                              fontSize: '1.75rem', // Subheadings slightly smaller than h1
+                              fontWeight: 'bold',
+                              lineHeight: '1.5',
+                              marginBottom: '0.8em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ node, children, ...props }) => (
+                          <h3
+                            style={{
+                              fontSize: '1.5rem',
+                              fontWeight: 'bold',
+                              lineHeight: '1.5',
+                              marginBottom: '0.8em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h3>
+                        ),
+                        li: ({ node, children, ...props }) => (
+                          <li
+                            style={{
+                              fontSize: '16px', // Consistent with paragraph text
+                              lineHeight: '1.8',
+                              marginBottom: '0.5em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </li>
+                        ),
+                        strong: ({ node, children, ...props }) => (
+                          <strong style={{ fontWeight: 'bold'}} {...props}>
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ node, children, ...props }) => (
+                          <em style={{ fontStyle: 'italic' }} {...props}>
+                            {children}
+                          </em>
+                        ),
                         code: ({ node, inline, className = '', children, ...props }) => {
                           const language = className.replace('language-', '');
                           const code = String(children).replace(/\n$/, '');

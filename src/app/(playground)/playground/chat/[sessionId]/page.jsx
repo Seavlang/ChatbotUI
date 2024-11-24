@@ -18,7 +18,7 @@ export default function Page({ params }) {
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
-    // const [isResponding, setIsResponding] = useState(false)
+    const [isResponding, setIsResponding] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     const [files, setFiles] = useState([{
@@ -26,10 +26,11 @@ export default function Page({ params }) {
         collection_name: "Sample Document",
         created_at: null,
         session_id: null,
-        file_name: "Default"
+        file_name: "All Documents"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
 
+    // Response from web socket
     useEffect(() => {
         const fetchLM = async () => {
             await getLM();
@@ -40,7 +41,7 @@ export default function Page({ params }) {
         ws.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-
+                setIsResponding(true);
                 setMessages((prevMessages) => {
                     // Update the latest bot response with new token content
                     const lastMessage = prevMessages[prevMessages.length - 1];
@@ -60,9 +61,10 @@ export default function Page({ params }) {
                 });
             } catch (error) {
                 console.error("Error parsing WebSocket message:", error);
+            } finally {
+                setIsResponding(false);
             }
         };
-        // setIsResponding(false)
 
         ws.onclose = () => {
             console.log("WebSocket disconnected");
@@ -74,6 +76,7 @@ export default function Page({ params }) {
             ws.close();
         };
     }, []);
+
     useEffect(() => {
         const resolveParams = async () => {
             if (!params) {
@@ -152,31 +155,33 @@ export default function Page({ params }) {
     console.log("files: ", files)
     return (
         <>
-            {isLoading ? <Loading></Loading>
-                :
-                <div className='h-full w-full'>
-                    <div className='h-4/5'>
-                        {/* file upload and messsage rendering */}
-                        <DefaultFileComponent
-                            session={resolvedParams}
-                            messages={messages}
-                            files={files}
-                            handleSelectDocument={handleSelectDocument}
-                            fetchOlderMessages={() => fetchMessages(page + 1)}
-                            isLoadingMore={isLoadingMore}
-                            hasMoreMessages={hasMoreMessages}
-                        />
-                    </div>
-                    <div className="">
-                        {/* user input */}
-                        <DefaultPlaceHolderComponent
-                            session={resolvedParams}
-                            socket={socket}
-                            onChange={handleSubmit}
-                            selectedDocument={selectedDocument}
-                        />
-                    </div>
-                </div>}
+            {
+                isLoading ? <div className='h-full w-full flex justify-center'><Loading /></div>
+                    :
+                    <div className='h-full w-full '>
+                        <div className='h-4/5'>
+                            {/* file upload and messsage rendering */}
+                            <DefaultFileComponent
+                                session={resolvedParams}
+                                messages={messages}
+                                files={files}
+                                handleSelectDocument={handleSelectDocument}
+                                fetchOlderMessages={() => fetchMessages(page + 1)}
+                                isLoadingMore={isLoadingMore}
+                                hasMoreMessages={hasMoreMessages}
+                                isResponding={isResponding}
+                            />
+                        </div>
+                        <div className="">
+                            {/* user input */}
+                            <DefaultPlaceHolderComponent
+                                session={resolvedParams}
+                                socket={socket}
+                                onChange={handleSubmit}
+                                selectedDocument={selectedDocument}
+                            />
+                        </div>
+                    </div>}
         </>
     )
 }

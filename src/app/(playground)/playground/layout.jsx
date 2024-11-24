@@ -5,20 +5,15 @@ import NavbarComponent from "@/app/components/NavbarComponent";
 
 
 export default function layout({ children }) {
-    const [open, setOpen] = useState(null);
-    const handleSetOpen = () => {
-        setOpen(!open);
-    }
     return (
-        <div>
+        <>
             <div className="bg-white mx-40">
-                <NavbarComponent/>
+                <NavbarComponent />
             </div>
-
             <hr />
             <div className="">
                 <PlaygroundSidebarComponent children={children} />
             </div>
-        </div>
+        </>
     );
 }
