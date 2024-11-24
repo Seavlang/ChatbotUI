@@ -1,6 +1,6 @@
 'use client'
 import FileComponentPlayground from '@/app/components/FileComponentPlayground';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from "framer-motion";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -11,19 +11,50 @@ import 'highlight.js/styles/github.css';
 
 export default function DefaultFileComponent({ session, messages, files, handleSelectDocument }) {
   const messagesEndRef = useRef(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Scroll to bottom whenever `messages` changes
+  const handleScroll = (e) => {
+    const element = e.target;
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight - 10) {
+      setShowScrollButton(false); // Hide button when at the bottom
+    } else {
+      setShowScrollButton(true); // Show button when user scrolls up
+    }
+  };
+
+  // Attach scroll listener to the container
   useEffect(() => {
+    const container = document.querySelector('.messages-container');
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    // Trigger after the DOM update
     const timeout = setTimeout(() => {
       scrollToBottom();
-    }, 100); // Delay to ensure DOM is updated
+    }, 100);
 
-    return () => clearTimeout(timeout); // Cleanup timeout
+    return () => clearTimeout(timeout);
   }, [messages]);
+
+
+
   // Function to copy code to clipboard
   const copyToClipboard = (code) => {
     navigator.clipboard.writeText(code).then(
@@ -36,11 +67,23 @@ export default function DefaultFileComponent({ session, messages, files, handleS
     );
   };
 
+  const [copiedCode, setCopiedCode] = useState(null);
+
+  const handleCopy = (code) => {
+    console.log("code copied to clipboard: ", code)
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        setCopiedCode(code);
+        setTimeout(() => setCopiedCode(null), 2000);
+      })
+      .catch((err) => console.error('Failed to copy code:', err));
+  };
 
   return (
     <div className="">
       <div className="flex">
-        <div className="ml-5 inline-flex items-center border border-primary rounded-md px-3 py-2 text-md">
+        <div className="ml-5 inline-flex items-center border border-primary rounded-md px-3 py-2 text-md ">
           <span className="font-bold text-primary mr-2">Default</span>
           <span className="font-normal text-black">Llama3.1</span>
         </div>
@@ -87,7 +130,9 @@ export default function DefaultFileComponent({ session, messages, files, handleS
       </div>
 
       <div className="flex mx-auto w-full">
-        <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5">
+        <div 
+        
+        className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
           <div className='mx-80 '>
             {messages?.length > 0 ? (
               messages?.map((message, index) => (
@@ -107,6 +152,33 @@ export default function DefaultFileComponent({ session, messages, files, handleS
                   >
                     <ReactMarkdown
                       rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                      components={{
+                        code: ({ node, inline, className = '', children, ...props }) => {
+                          const language = className.replace('language-', '');
+                          const code = String(children).replace(/\n$/, '');
+                          if (!inline) {
+                            return (
+                              <div className="code-block-wrapper">
+                                <button
+                                  className="copy-code-button"
+                                  onClick={() => handleCopy(code)}
+                                >
+                                  {copiedCode === code ? 'Copied!' : 'Copy Code'}
+                                </button>
+                                <pre className={`code-block language-${language}`} {...props}>
+                                  <code>{children}</code>
+                                </pre>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <code className={`inline-code`} {...props}>
+                                {children}
+                              </code>
+                            );
+                          }
+                        },
+                      }}
                     >
                       {message?.content}
                     </ReactMarkdown>
@@ -123,7 +195,16 @@ export default function DefaultFileComponent({ session, messages, files, handleS
           {/* This div is used as the reference to scroll to */}
           <div ref={messagesEndRef} />
         </div>
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
+          >
+            Scroll to Bottom
+          </button>
+        )}
       </div>
+
     </div>
   );
 }

@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import DefaultFileComponent from '../../../components/DefaultFileComponent'
 import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolderComponent';
 import { getAllHistoryBySessionService } from '@/services/history/history.service';
@@ -26,6 +26,11 @@ export default function Page({ params }) {
         file_name: "Default"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
+
+    const messagesContainerRef = useRef(null);
+    const [page, setPage] = useState(1); // Current page for pagination
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
     useEffect(() => {
         const fetchLM = async () => {
@@ -99,7 +104,7 @@ export default function Page({ params }) {
                 setFiles((prev) => [...prev, ...(documentResult?.payload || [])]);
 
                 // Fetch session history
-                const historyResult = await getAllHistoryBySessionService(resolvedParams);
+                const historyResult = await getAllHistoryBySessionService(resolvedParams,page);
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -126,7 +131,46 @@ export default function Page({ params }) {
         setSelectedDocument(id)
     }
 
-    console.log("files: ",files)
+
+    const fetchOlderMessages = async () => {
+        if (!hasMoreMessages || isLoadingMore) return;
+
+        setIsLoadingMore(true);
+        try {
+            const result = await getAllHistoryBySessionService(resolvedParams, page + 1);
+            if (result?.payload?.length > 0) {
+                setMessages((prev) => [...result.payload, ...prev]); // Prepend older messages
+                setPage((prevPage) => prevPage + 1); // Increment page
+            } else {
+                setHasMoreMessages(false);
+            }
+        } catch (error) {
+            console.error("Error fetching older messages:", error);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
+
+    const handleScroll = () => {
+        const container = messagesContainerRef.current;
+        if (container && container.scrollTop === 0) {
+            fetchOlderMessages();
+        }
+    };
+
+    useEffect(() => {
+        const container = messagesContainerRef.current;
+        if (container) {
+            container.addEventListener("scroll", handleScroll);
+        }
+
+        return () => {
+            if (container) {
+                container.removeEventListener("scroll", handleScroll);
+            }
+        };
+    }, [messages]);
+
     return (
         <>
             {isLoading ? <Loading></Loading>
@@ -140,6 +184,7 @@ export default function Page({ params }) {
                             files={files}
                             handleSelectDocument={handleSelectDocument}
                         />
+                        
                     </div>
                     <div className="">
                         {/* user input */}
