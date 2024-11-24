@@ -9,7 +9,23 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 
-export default function DefaultFileComponent({ session, messages, files, handleSelectDocument }) {
+export default function DefaultFileComponent({
+  session,
+  messages,
+  files,
+  handleSelectDocument,
+  fetchOlderMessages,
+  isLoadingMore,
+  hasMoreMessages
+}) {
+  const messagesContainerRef = useRef(null);
+
+  const handleInfiniteScroll = () => {
+    const container = messagesContainerRef.current;
+    if (container.scrollTop === 0 && hasMoreMessages) {
+      fetchOlderMessages();
+    }
+  };
   const messagesEndRef = useRef(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
@@ -53,7 +69,18 @@ export default function DefaultFileComponent({ session, messages, files, handleS
     return () => clearTimeout(timeout);
   }, [messages]);
 
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleInfiniteScroll);
+    }
 
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleInfiniteScroll);
+      }
+    };
+  }, [hasMoreMessages]);
 
   // Function to copy code to clipboard
   const copyToClipboard = (code) => {
@@ -130,9 +157,10 @@ export default function DefaultFileComponent({ session, messages, files, handleS
       </div>
 
       <div className="flex mx-auto w-full">
-        <div 
-        
-        className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
+        <div
+          ref={messagesContainerRef}
+          className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
+          {isLoadingMore && <div className="text-center py-4">Loading older messages...</div>}
           <div className='mx-80 '>
             {messages?.length > 0 ? (
               messages?.map((message, index) => (

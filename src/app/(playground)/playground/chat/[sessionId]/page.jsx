@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useEffect, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import DefaultFileComponent from '../../../components/DefaultFileComponent'
 import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolderComponent';
 import { getAllHistoryBySessionService } from '@/services/history/history.service';
@@ -10,6 +10,9 @@ import { getAllDocumentAction } from '@/actions/fileAction';
 
 
 export default function Page({ params }) {
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMoreMessages, setHasMoreMessages] = useState(true);
+    const [page, setPage] = useState(1); // Pagination page number
 
     const [resolvedParams, setResolvedParams] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -26,11 +29,6 @@ export default function Page({ params }) {
         file_name: "Default"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
-
-    const messagesContainerRef = useRef(null);
-    const [page, setPage] = useState(1); // Current page for pagination
-    const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
     useEffect(() => {
         const fetchLM = async () => {
@@ -89,7 +87,27 @@ export default function Page({ params }) {
         resolveParams();
     }, []); // Run this effect when `params` or `id` changes
 
-    console.log(" message in pages: " ,messages)
+
+    const fetchMessages = async (newPage = 1) => {
+        if (isLoadingMore || !hasMoreMessages) return;
+
+        setIsLoadingMore(true);
+        try {
+            const response = await getAllHistoryBySessionService(resolvedParams, newPage);
+            if (response?.payload?.length > 0) {
+                setMessages((prev) => [...response.payload, ...prev]); // Prepend new messages
+                setPage(newPage);
+            } else {
+                setHasMoreMessages(false); // No more messages to fetch
+            }
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
+
+    console.log(" message in pages: ", messages)
     // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
     useEffect(() => {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
@@ -104,7 +122,7 @@ export default function Page({ params }) {
                 setFiles((prev) => [...prev, ...(documentResult?.payload || [])]);
 
                 // Fetch session history
-                const historyResult = await getAllHistoryBySessionService(resolvedParams,page);
+                const historyResult = await getAllHistoryBySessionService(resolvedParams);
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -125,52 +143,13 @@ export default function Page({ params }) {
         setMessages((prev) => [...prev, humanPrompt]);
     };
 
-    const handleSelectDocument = (id) =>{
+    const handleSelectDocument = (id) => {
         // handle file selection and upload
         console.log("handleSelectDocument", id)
         setSelectedDocument(id)
     }
 
-
-    const fetchOlderMessages = async () => {
-        if (!hasMoreMessages || isLoadingMore) return;
-
-        setIsLoadingMore(true);
-        try {
-            const result = await getAllHistoryBySessionService(resolvedParams, page + 1);
-            if (result?.payload?.length > 0) {
-                setMessages((prev) => [...result.payload, ...prev]); // Prepend older messages
-                setPage((prevPage) => prevPage + 1); // Increment page
-            } else {
-                setHasMoreMessages(false);
-            }
-        } catch (error) {
-            console.error("Error fetching older messages:", error);
-        } finally {
-            setIsLoadingMore(false);
-        }
-    };
-
-    const handleScroll = () => {
-        const container = messagesContainerRef.current;
-        if (container && container.scrollTop === 0) {
-            fetchOlderMessages();
-        }
-    };
-
-    useEffect(() => {
-        const container = messagesContainerRef.current;
-        if (container) {
-            container.addEventListener("scroll", handleScroll);
-        }
-
-        return () => {
-            if (container) {
-                container.removeEventListener("scroll", handleScroll);
-            }
-        };
-    }, [messages]);
-
+    console.log("files: ", files)
     return (
         <>
             {isLoading ? <Loading></Loading>
@@ -183,8 +162,10 @@ export default function Page({ params }) {
                             messages={messages}
                             files={files}
                             handleSelectDocument={handleSelectDocument}
+                            fetchOlderMessages={() => fetchMessages(page + 1)}
+                            isLoadingMore={isLoadingMore}
+                            hasMoreMessages={hasMoreMessages}
                         />
-                        
                     </div>
                     <div className="">
                         {/* user input */}
