@@ -6,7 +6,7 @@ import { revalidateTag } from 'next/cache'
 export const getAllSessionService = async () => {
     const headers = await reqHeader();
     try {
-        const res = await fetch(`${authUrl}/session/all_session_histories`, {
+        const res = await fetch(`${authUrl}/session/all_sessions`, {
             method: "GET",
             headers,
             next: {
@@ -50,6 +50,7 @@ export const createSessionService = async () => {
 export const deleteSessionService = async (id) => {
     console.log("delID",id);
     const headers = await reqHeader();
+    console.log("id in server to delete: ",id)
     try {
         const res = await fetch(`${authUrl}/session/delete/${id}`, {
             method: "DELETE",

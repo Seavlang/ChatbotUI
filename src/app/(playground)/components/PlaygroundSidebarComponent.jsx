@@ -24,6 +24,7 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
+import { SessionsProvider } from './SessionProvider';
 
 
 
@@ -32,34 +33,19 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const [messages, setMessages] = useState([]);
-    // const [resolvedParams, setResolvedParams] = useState(null);
-    const messagesEndRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [allSessions, setAllSessions] = useState([])
     const pathname = usePathname()
     const router = useRouter()
     const id = pathname.split('/').pop();
-    // useEffect(() => {
-    //     // Resolve the params Promise
-    //     const fetchParams = async () => {
-    //       const result = await params;
-    //       setResolvedParams(result);
-    //     };
-    
-    //     fetchParams();
-    //   }, [params]);
-
-    console.log("is loading in sidebar: ", isLoading);
+    const [isDeleting, setIsDeleting] = useState(false)
 
     useEffect(() => {
-        // setIsLoading(true)
+
         const fetchAllSessions = async () => {
-            setIsLoading(true);
+            // setIsLoading(true)
             try {
                 const response = await getAllSessionsAction();
-
                 setAllSessions(response?.payload);
             } catch (error) {
                 console.error(error);
@@ -69,14 +55,12 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
             }
         }
         fetchAllSessions();
-
-    }, [sessionID]);
+    }, []);
 
     useEffect(() => {
         const fetchAllSessions = async () => {
             try {
                 const response = await getAllSessionsAction();
-
                 setAllSessions(response?.payload);
             } catch (error) {
                 console.error(error);
@@ -87,21 +71,23 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
     }, [id]);
 
     const handleDeleteChat = (sessionId) => {
+        console.log("id to delete: ", sessionId);
         setChatToDelete(sessionId);
         setIsDeleteDialogOpen(true);
     };
 
     const confirmDeleteChat = async () => {
         try {
-            setIsLoading(true);
+            setIsDeleting(true);
+            console.log("chat to delete: ", chatToDelete);
             const response = await deleteSessionAction(chatToDelete);
             if (response?.success == true) {
-                setIsLoading(false);
                 router.push(`/playground`)
             }
         } catch (err) {
             console.error("Error fetching data:", err);
-            setIsLoading(false);
+        } finally {
+            setIsDeleting(false);
         }
         if (activeChat && activeChat.id === chatToDelete) {
             setActiveChat(null);
@@ -116,7 +102,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
 
     return (
         <>
-
             <div>
                 <div
                     className={cn(
@@ -137,10 +122,10 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
 
                                     >
                                         <div className="flex justify-between my-10">
-                                            <Link href={`${allSessions?.length == 3 ? '#' : '/playground'}`}>
-                                                <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
+                                            <Link href={`${allSessions?.length >= 3 ? '#' : '/playground'}`}>
+                                                <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length >= 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
                                                     {
-                                                        allSessions?.length == 3 ?
+                                                        allSessions?.length >= 3 ?
                                                             <div className='flex items-center point'>
                                                                 <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
@@ -168,9 +153,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
 
                                                     }
 
-
-
-
                                                 </button>
                                             </Link>
                                             <div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
@@ -190,7 +172,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
                                     >
                                         {/* map all session in side bar */}
                                         {
-                                            isLoading ? <div>loading...</div>
+                                            isLoading ? <div className='flex justify-center'><Loading/></div>
                                                 :
                                                 allSessions?.map((session) => (
                                                     <div
@@ -220,7 +202,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
                                                                         }`}
                                                                 >
 
-                                                                    {session?.session}
+                                                                    {session?.session_name}
                                                                 </span>
 
                                                             </div>
@@ -281,7 +263,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
                                 </Button>
                                 <Button variant="delete" onClick={confirmDeleteChat} >
                                     {
-                                        isLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
+                                        isDeleting ? <div className="disabled">Loading...</div> : <div>DELETE</div>
                                     }
 
                                 </Button>
@@ -290,9 +272,9 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
                     </Dialog>
 
                     <div className="w-full">
-                        <div className="p-2 md:p-10 h-screen flex flex-col gap-2 flex-1 w-full">
-                            <div className="flex flex-col">
-                                <div className='flex'>
+                        <div className="p-2 md:p-10 h-screen flex flex-row gap-2 flex-1 ">
+                            <div className="">
+                                <div className='flex '>
                                     {
                                         open ? (
                                             ''
