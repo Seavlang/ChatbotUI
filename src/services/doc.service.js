@@ -55,7 +55,7 @@ export const getAllProjectService = async () => {
   export const createProjectService = async (projectName) => {
     const headers = await reqHeader();
     try {
-        const res = await fetch(`http://110.74.194.123:8085/api/v1/api_generation/project/create_project?project_name=${projectName}`, {
+        const res = await fetch(`http://110.74.194.123:1234/api/v1/api_generation/project/create_project?project_name=${projectName}`, {
         method: "POST",
         headers,
       });

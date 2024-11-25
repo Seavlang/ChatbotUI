@@ -27,16 +27,18 @@ import Loading from '../playground/loading';
 
 
 
-export default function PlaygroundSidebarComponent({ children, sessionID }) {
+export default function PlaygroundSidebarComponent({ children, sessionID,params }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDelLoading, setIsDelLoading] = useState(false);
 
     const [messages, setMessages] = useState([]);
     // const [resolvedParams, setResolvedParams] = useState(null);
     const messagesEndRef = useRef(null);
+    const [resolvedParams, setResolvedParams] = useState(null);
     const [allSessions, setAllSessions] = useState([])
     const pathname = usePathname()
     const router = useRouter()
@@ -50,27 +52,9 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
     
     //     fetchParams();
     //   }, [params]);
-
-    console.log("is loading in sidebar: ", isLoading);
-
-    useEffect(() => {
-        // setIsLoading(true)
-        const fetchAllSessions = async () => {
-            setIsLoading(true);
-            try {
-                const response = await getAllSessionsAction();
-
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
-            }
-            finally {
-                setIsLoading(false)
-            }
-        }
-        fetchAllSessions();
-
-    }, [sessionID]);
+    //   console.log("sidebar param", params);
+    console.log("is loading in sidebar: ",id);
+    console.log("ses loading in sidebar: ",sessionID);
 
     useEffect(() => {
         const fetchAllSessions = async () => {
@@ -85,6 +69,27 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
         fetchAllSessions();
 
     }, [id]);
+    useEffect(() => {
+        // setIsLoading(true)
+        const fetchAllSessions = async () => {
+                setIsLoading(true);
+        
+            try {
+                const response = await getAllSessionsAction();
+
+                setAllSessions(response?.payload);
+            } catch (error) {
+                console.error(error);
+            }
+            finally {
+                    setIsLoading(false)
+            }
+        }
+        fetchAllSessions();
+
+    }, [sessionID,id]);
+
+
 
     const handleDeleteChat = (sessionId) => {
         setChatToDelete(sessionId);
@@ -93,15 +98,15 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
 
     const confirmDeleteChat = async () => {
         try {
-            setIsLoading(true);
+            setIsDelLoading(true);
             const response = await deleteSessionAction(chatToDelete);
             if (response?.success == true) {
-                setIsLoading(false);
+                setIsDelLoading(false);
                 router.push(`/playground`)
             }
         } catch (err) {
             console.error("Error fetching data:", err);
-            setIsLoading(false);
+            setIsDelLoading(false);
         }
         if (activeChat && activeChat.id === chatToDelete) {
             setActiveChat(null);
@@ -277,11 +282,11 @@ export default function PlaygroundSidebarComponent({ children, sessionID }) {
                                     variant="cancel"
                                     onClick={() => setIsDeleteDialogOpen(false)}
                                 >
-                                    <div className={`${isLoading ? 'disabled' : ''}`}>Cancel</div>
+                                    <div className={`${isDelLoading ? 'disabled' : ''}`}>Cancel</div>
                                 </Button>
                                 <Button variant="delete" onClick={confirmDeleteChat} >
                                     {
-                                        isLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
+                                        isDelLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
                                     }
 
                                 </Button>

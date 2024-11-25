@@ -19,6 +19,7 @@ export default function Page({ params }) {
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     const [files, setFiles] = useState([]);
+    console.log('SESSIONID',resolvedParams);
 
     useEffect(() => {
         const fetchLM = async () => {
@@ -75,10 +76,9 @@ export default function Page({ params }) {
         };
 
         resolveParams();
-    }, []); // Run this effect when `params` or `id` changes
+    }, []); 
 
     console.log(" message in pages: " ,messages)
-    // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
     useEffect(() => {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
 
