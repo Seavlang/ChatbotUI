@@ -93,6 +93,7 @@ export default function Page({ params }) {
 
                 // Fetch session history
                 const historyResult = await getAllHistoryBySessionService(resolvedParams);
+                console.log("sessionHistory", historyResult);
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);

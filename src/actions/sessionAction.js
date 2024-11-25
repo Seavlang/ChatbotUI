@@ -4,24 +4,24 @@ import { revalidateTag } from "next/cache";
 
 export const getAllSessionsAction = async () => {
     const res = await getAllSessionService();
-    revalidateTag("sessions")
+    // revalidateTag("sessions")
     return res;
 }
 
 export const createSessionAction = async () => {
     const res = await createSessionService();
-    revalidateTag("sessions")
+    // revalidateTag("sessions")
     return res;
 }
 
 export const deleteSessionAction = async (id) => {
     const res = await deleteSessionService(id);
-    revalidateTag("sessions")
+    // revalidateTag("sessions")
     return res;
 }
 
 export const getSessionDetailAction = async (session) => {
     const res = await getSessionDetailService(session);
-    revalidateTag("session")
+    // revalidateTag("session")
     return res;
 }

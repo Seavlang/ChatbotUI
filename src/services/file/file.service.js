@@ -18,12 +18,17 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
         method: 'POST',
         headers: { ...headers },
         body: formData, // Send form data as the request body
-        next: {
-          tag: ["fileService"],
-        },
+        // next: {
+        //   tag: ["fileService"],
+        // },
       }
     );
     const data = await response?.json();
+    console.log('UPLOADPLAYGROUND',response);
+    if(response.ok === true){
+      revalidateTag('fileService')
+      revalidateTag('sessions');
+    }
     console.log("data: ",response)
     return data;
   } catch (error) {

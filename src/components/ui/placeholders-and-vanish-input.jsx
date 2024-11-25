@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getSessionDetailAction } from "@/actions/sessionAction";
-import { getSessionDetailService } from "@/services/session/session.service";
 import { usePathname } from "next/navigation";
 import { getCurrentUserAction } from "@/actions/userAction";
 
@@ -49,7 +48,6 @@ export function PlaceholdersAndVanishInput({
     }
     const fetchUser = async () => {
       const result = await getCurrentUserAction();
-      console.log("result : ", result)
       setUserId(result?.payload?.id);
     }
     const fetchSessionDetail = async () => {

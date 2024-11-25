@@ -18,7 +18,7 @@ export const getAllSessionService = async () => {
             return null;
         }
         const response = await res?.json();
-        console.log("response: ", response)
+        console.log("response: session ", response)
         return response
     } catch (e) {
         console.log("Error: ", e);
@@ -31,15 +31,16 @@ export const createSessionService = async () => {
         const res = await fetch(`${authUrl}/session/create_session`, {
             method: "POST",
             headers,
-            next: {
-                tags: ["sessions"],
-            },
         });
         if (!res.ok) {
             console.error("Failed to create session", res.statusText);
             return null;
         }
         const response = await res?.json();
+        console.log("responsecreatesession",res);
+        if(res.ok === true){
+            revalidateTag('sessions');
+        }
         return response
     } catch (e) {
         console.log("Error: ", e);
@@ -47,26 +48,33 @@ export const createSessionService = async () => {
 };
 
 export const deleteSessionService = async (id) => {
+    console.log("delID",id);
     const headers = await reqHeader();
     try {
         const res = await fetch(`${authUrl}/session/delete/${id}`, {
             method: "DELETE",
             headers,
-            next: {
-                tags: ["sessions"],
-            },
         });
+
         if (!res.ok) {
             console.error("Failed to delete session", res.statusText);
             return null;
         }
+
         const response = await res?.json();
-        revalidateTag('sessions')
-        return response
+        console.log("Session deleted: ", response);
+
+        // Revalidate the sessions tag
+        if(res.ok === true){
+            revalidateTag('sessions');
+        }
+        
+        return response;
     } catch (e) {
         console.log("Error: ", e);
     }
 };
+
 
 
 
@@ -78,7 +86,7 @@ export const getChatHistoryBySessionIdService = async (session_id) => {
             method: "GET",
             headers,
             next: {
-                tags: ["sessions"],
+                tags: ["chatHistory"],
             },
         });
         if (!res.ok) {
@@ -101,7 +109,7 @@ export const getSessionDetailService = async (session) => {
             method: "GET",
             headers,
             next: {
-                tags: ["session"],
+                tags: ["sessionDetail"],
             },
         });
         if (!res.ok) {

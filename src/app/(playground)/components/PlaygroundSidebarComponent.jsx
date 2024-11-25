@@ -27,44 +27,36 @@ import Loading from '../playground/loading';
 
 
 
-export default function PlaygroundSidebarComponent({ children }) {
+export default function PlaygroundSidebarComponent({ children, sessionID }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [messages, setMessages] = useState([]);
+    // const [resolvedParams, setResolvedParams] = useState(null);
     const messagesEndRef = useRef(null);
     const [allSessions, setAllSessions] = useState([])
     const pathname = usePathname()
     const router = useRouter()
     const id = pathname.split('/').pop();
+    // useEffect(() => {
+    //     // Resolve the params Promise
+    //     const fetchParams = async () => {
+    //       const result = await params;
+    //       setResolvedParams(result);
+    //     };
+    
+    //     fetchParams();
+    //   }, [params]);
 
     console.log("is loading in sidebar: ", isLoading);
-
-    // useEffect(() => {
-
-    //     const fetchAllSessions = async () => {
-    //         // setIsLoading(true)
-    //         try {
-
-    //             const response = await getAllSessionsAction();
-
-    //             setAllSessions(response?.payload);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //         finally {
-    //             setIsLoading(false)
-    //         }
-    //     }
-    //     fetchAllSessions();
-    // }, []);
 
     useEffect(() => {
         // setIsLoading(true)
         const fetchAllSessions = async () => {
+            setIsLoading(true);
             try {
                 const response = await getAllSessionsAction();
 
@@ -74,6 +66,20 @@ export default function PlaygroundSidebarComponent({ children }) {
             }
             finally {
                 setIsLoading(false)
+            }
+        }
+        fetchAllSessions();
+
+    }, [sessionID]);
+
+    useEffect(() => {
+        const fetchAllSessions = async () => {
+            try {
+                const response = await getAllSessionsAction();
+
+                setAllSessions(response?.payload);
+            } catch (error) {
+                console.error(error);
             }
         }
         fetchAllSessions();

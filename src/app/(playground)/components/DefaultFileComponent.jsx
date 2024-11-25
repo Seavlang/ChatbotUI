@@ -78,8 +78,8 @@ export default function DefaultFileComponent({ session, messages, files, rendere
               </div>
             </div>
           ) : (
-            <div className="inline-flex items-center border border-gray-300 rounded-md px-3 py-2 text-md">
-              <span className="font-medium text-primary mr-2">No document</span>
+            <div className="inline-flex items-center border ml-5 border-gray-300 rounded-md px-3 py-2 text-md">
+              <span className="font-medium text-primary ">No document</span>
             </div>
           )}
         </div>
