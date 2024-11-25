@@ -67,13 +67,10 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
             }
         }
         fetchAllSessions();
-
     }, [id]);
     useEffect(() => {
-        // setIsLoading(true)
         const fetchAllSessions = async () => {
                 setIsLoading(true);
-        
             try {
                 const response = await getAllSessionsAction();
 

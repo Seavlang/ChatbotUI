@@ -65,9 +65,9 @@ export const deleteSessionService = async (id) => {
         console.log("Session deleted: ", response);
 
         // Revalidate the sessions tag
-        if(res.ok === true){
-            revalidateTag('sessions');
-        }
+        // if(res.ok === true){
+        //     revalidateTag('sessions');
+        // }
         
         return response;
     } catch (e) {
