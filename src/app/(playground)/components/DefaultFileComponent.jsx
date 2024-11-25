@@ -167,7 +167,7 @@ export default function DefaultFileComponent({
             <div
               ref={messagesContainerRef}
               className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
-              {isLoadingMore && <div className="text-center py-4">Loading older messages...</div>}
+              {isLoadingMore && <div className='flex justify-center'><Loading></Loading></div>}
               <div className='mx-96 '>
                 {messages?.length > 0 ? (
                   messages?.map((message, index) => (
@@ -272,14 +272,14 @@ export default function DefaultFileComponent({
                                     >
                                       {copiedCode === code ? 'Copied!' : 'Copy Code'}
                                     </button>
-                                    <pre className={`code-block language-${language}`} {...props}>
+                                    <pre className={`code-block language-${language} `} {...props}>
                                       <code>{children}</code>
                                     </pre>
                                   </div>
                                 );
                               } else {
                                 return (
-                                  <code className={`inline-code`} {...props}>
+                                  <code className={`inline-code overflow-x-auto`} {...props}>
                                     {children}
                                   </code>
                                 );
@@ -306,9 +306,9 @@ export default function DefaultFileComponent({
         {showScrollButton && (
           <button
             onClick={scrollToBottom}
-            className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
+            className="fixed bottom-10 right-10 bg-[#deedff] text-primary px-4 py-2 rounded-full shadow-lg"
           >
-            Scroll to Bottom
+            Scroll Down
           </button>
         )}
       </div>
