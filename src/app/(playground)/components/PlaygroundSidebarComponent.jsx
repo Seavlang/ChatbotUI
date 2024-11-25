@@ -189,7 +189,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                                     >
                                         {/* map all session in side bar */}
                                         {
-                                            isLoading ? <div className='flex justify-center'><Loading/></div>
+                                            isLoading ? <div className='flex justify-center'><Loading /></div>
                                                 :
                                                 allSessions?.map((session) => (
                                                     <div

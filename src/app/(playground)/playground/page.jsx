@@ -12,15 +12,12 @@ function Page() {
   return (
     <>
       {
-        isLoading ? <Loading></Loading>
+        isLoading ? <div className='h-full w-full flex justify-center'><Loading></Loading></div>
           :
-          <div className='mb-10 h-full w-full'>
+          <div className='h-full w-full'>
             <div className='h-4/5'>
               <DefaultFirstFileComponent setIsLoading={setIsLoading} />
             </div>
-            {/* <div className="mb-10">
-              <DefaultPlaceHolderComponent setIsLoading={setIsLoading}/>
-            </div> */}
           </div>
       }
     </>

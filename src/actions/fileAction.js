@@ -9,7 +9,6 @@ export const getAllDocumentAction = async (session) => {
 }
 
 export const createDocumentAction = async (sessionId, uploadFile) => {
-    console.log("checking session id: " , sessionId)
     const res = await uploadFilePlaygroundService(sessionId, uploadFile);
     // revalidateTag("fileService");
     return res;

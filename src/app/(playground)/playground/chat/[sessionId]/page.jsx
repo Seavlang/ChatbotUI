@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import DefaultFileComponent from '../../../components/DefaultFileComponent'
 import { DefaultPlaceHolderComponent } from '@/app/components/DefaultPlaceHolderComponent';
 import { getAllHistoryBySessionService } from '@/services/history/history.service';
@@ -19,6 +19,7 @@ export default function Page({ params }) {
     const [socket, setSocket] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [isResponding, setIsResponding] = useState(false)
+    const [isFileUploading, setIsFileUploading] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     const [files, setFiles] = useState([{
@@ -29,6 +30,7 @@ export default function Page({ params }) {
         file_name: "All Documents"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
+
 
     // Response from web socket
     useEffect(() => {
@@ -81,6 +83,7 @@ export default function Page({ params }) {
         const resolveParams = async () => {
             if (!params) {
                 setResolvedParams({ sessionId: id });
+
             } else {
                 const result = await params;
                 setResolvedParams(result);
@@ -88,18 +91,24 @@ export default function Page({ params }) {
         };
 
         resolveParams();
-    }, []); 
-
-
-    const fetchMessages = async (newPage = 1) => {
+    }, []); // Run this effect when `params` or `id` changes
+    const pageRef = useRef(2);
+    const fetchMessages = async () => {
         if (isLoadingMore || !hasMoreMessages) return;
 
         setIsLoadingMore(true);
+
         try {
-            const response = await getAllHistoryBySessionService(resolvedParams, newPage);
+            const currentPage = pageRef.current;
+            console.log("Fetching messages for page:", currentPage);
+
+            // Simulate API call
+            const response = await getAllHistoryBySessionService(resolvedParams, currentPage);
+
             if (response?.payload?.length > 0) {
                 setMessages((prev) => [...response.payload, ...prev]); // Prepend new messages
-                setPage(newPage);
+                pageRef.current += 1; // Increment page manually using ref
+                console.log("Page updated to:", pageRef.current);
             } else {
                 setHasMoreMessages(false); // No more messages to fetch
             }
@@ -110,7 +119,6 @@ export default function Page({ params }) {
         }
     };
 
-    console.log(" message in pages: ", messages)
     // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
     useEffect(() => {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
@@ -119,7 +127,6 @@ export default function Page({ params }) {
             // setIsLoading(true);
 
             try {
-                // Fetch all documents
                 const documentResult = await getAllDocumentAction(resolvedParams);
                 console.log("documentResult", documentResult);
                 setFiles((prev) => [...prev, ...(documentResult?.payload || [])]);
@@ -167,10 +174,12 @@ export default function Page({ params }) {
                                 messages={messages}
                                 files={files}
                                 handleSelectDocument={handleSelectDocument}
-                                fetchOlderMessages={() => fetchMessages(page + 1)}
+                                fetchOlderMessages={() => fetchMessages()}
                                 isLoadingMore={isLoadingMore}
                                 hasMoreMessages={hasMoreMessages}
                                 isResponding={isResponding}
+                                isFileUploading={isFileUploading}
+                                setFiles={setFiles}
                             />
                         </div>
                         <div className="">
@@ -180,6 +189,8 @@ export default function Page({ params }) {
                                 socket={socket}
                                 onChange={handleSubmit}
                                 selectedDocument={selectedDocument}
+                                setIsFileUploading={setIsFileUploading}
+                                setFiles={setFiles}
                             />
                         </div>
                     </div>}

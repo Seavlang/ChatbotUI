@@ -18,20 +18,11 @@ export function PlaceholdersAndVanishInput({
   const [activeSession, setActiveSession] = useState();
   const intervalRef = useRef(null);
   const canvasRef = useRef(null);
-  const newDataRef = useRef([]);
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
   const pathname = usePathname()
   const [userId, setUserId] = useState();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-  const startAnimation = () => {
-    intervalRef.current = setInterval(() => {
-      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
-    }, 3000);
-  };
 
   useEffect(() => {
 

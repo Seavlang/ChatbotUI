@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { getLM } from "@/actions/modelAction";
+import { getLM, getModelsAction, getProvidersAction } from "@/actions/modelAction";
 
 export default function NavbarComponent() {
   const pathname = usePathname();
@@ -45,21 +45,47 @@ export default function NavbarComponent() {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchLM = async () => {
-      try {
-        const data = await getLM(); // Fetch data from the action
-        setLmData(data); // Store the data in state
-        console.log("Fetched LM Data:", data);
-      } catch (error) {
-        console.error("Error fetching LM data:", error);
-      }
-    };
 
+  const fetchLM = async () => {
+    try {
+      const data = await getLM(); // Fetch data from the action
+      setLmData(data); // Store the data in state
+      console.log("Fetched LM Data:", data);
+    } catch (error) {
+      console.error("Error fetching LM data:", error);
+    }
+  };
+
+  const [models, setModels] = useState()
+  const [providers, setProviders] = useState()
+  const fetchModel = async () => {
+    try {
+      const data = await getModelsAction();
+      console.log("model fetched:", data)
+      setModels(data?.models);
+    } catch (error) {
+
+    }
+  }
+  const fetchProvider = async () => {
+    try {
+      console.log("checking provider")
+      const data = await getProvidersAction();
+      console.log("fetchProvider fetched:", data)
+      setProviders(data?.models);
+    } catch (error) {
+
+    }
+  }
+  useEffect(() => {
+    fetchModel();
     fetchLM();
+    fetchProvider();
   }, []);
 
   console.log("lmdata", lmData);
+  console.log("models", models);
+  console.log("providers", providers);
 
   return (
     <div>
@@ -168,7 +194,7 @@ export default function NavbarComponent() {
                       >
                         Settings
                       </button>
-                       <dialog id="my_modal_3" className="modal">
+                      <dialog id="my_modal_3" className="modal">
                         <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                           {/* Close Button */}
                           <form method="dialog">
@@ -218,28 +244,36 @@ export default function NavbarComponent() {
                               </p>
 
                               {/* Configuration Fields */}
-                              <div className="gap-4">
+                              <div className="gap-4 ">
+                                <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                  Provider
+                                </label>
+                                <select
+                                  id="providerDropdown"
+                                  className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                // onChange={(e) => handleSelectProvider(e.target.value)}
+                                >
+                                  {providers?.map((provider) => (
+                                    <option key={provider?.id} value={provider?.id}>
+                                      {provider?.provider_name}
+                                    </option>
+                                  ))}
+                                </select>
                                 <div>
-                                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Provider
-                                  </label>
-                                  <input
-                                    type="text"
-                                    placeholder="Default"
-                                    className="w-full p-3 border my-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                  <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Model
                                   </label>
-                                  <input
-                                    type="text"
-                                    placeholder={
-                                      lmData?.payload?.provider_info?.model_name
-                                    }
-                                    className="w-full p-3 border my-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                  />
+                                  <select
+                                    id="providerDropdown"
+                                    className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  // onChange={(e) => handleSelectProvider(e.target.value)}
+                                  >
+                                    {models?.map((model) => (
+                                      <option key={model?.id} value={model?.id}>
+                                        {model?.model_name}
+                                      </option>
+                                    ))}
+                                  </select>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>

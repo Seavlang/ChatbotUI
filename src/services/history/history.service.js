@@ -2,7 +2,7 @@
 import { authUrl } from "@/app/utils/constants";
 import { reqHeader } from "@/config/header.config";
 
-export const getAllHistoryBySessionService = async (session, page=1, limit=10) => {
+export const getAllHistoryBySessionService = async (session, page=1, limit=6) => {
     const headers = await reqHeader();
     try {
         console.log("check history process", session)

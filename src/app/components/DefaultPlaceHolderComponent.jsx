@@ -5,7 +5,14 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function DefaultPlaceHolderComponent({ session, onChange, socket,selectedDocument }) {
+export function DefaultPlaceHolderComponent({ 
+  session, 
+  onChange, 
+  socket, 
+  selectedDocument,
+  setIsFileUploading ,
+  setFiles
+}) {
   const fileInputRef = useRef(null);
   const [error, setError] = useState();
 
@@ -22,11 +29,13 @@ export function DefaultPlaceHolderComponent({ session, onChange, socket,selected
     const file = newFiles[0];
     // if (!file) return;
     try {
-      console.log("session in pages: ", session)
+      setIsFileUploading(true)
       const response = await createDocumentAction(session?.sessionId, file)
+      setFiles((prev) => [...prev, response.payload])
+      setIsFileUploading(false)
     } catch (e) {
       setError("File upload error: " + e.message);
-    } finally {
+      setIsFileUploading(false)
     }
   };
   const handleClick = () => {
@@ -44,7 +53,7 @@ export function DefaultPlaceHolderComponent({ session, onChange, socket,selected
                 id="file-upload-handle"
                 type="file"
                 accept=".txt,.pdf" // Accepts only .txt and .pdf files
-                onClick={(e) => handleFileChange(Array.from(e.target.files || []))}
+                onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
                 className="hidden"
               />
               <div className=" bg-white flex justify-center items-center w-16 dark:bg-zinc-800 h-14 rounded-2xl overflow-hidden shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200 cursor-pointer" onClick={handleClick}>

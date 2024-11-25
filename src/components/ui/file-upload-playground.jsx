@@ -31,7 +31,7 @@ const secondaryVariant = {
   },
 };
 
-export const FileUploadPlayground = ({ session }) => {
+export const FileUploadPlayground = ({ session, isFileUploading, fileOnChange }) => {
   const [sessionId, setSessionId] = useState()
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -49,7 +49,8 @@ export const FileUploadPlayground = ({ session }) => {
     try {
       const response = await createDocumentAction(sessionId, file)
       console.log("file created: ", response)
-      setFiles((prevFiles) => [...prevFiles, response?.payload?.file_name]);
+      setFiles((prevFiles) => [...prevFiles, response?.payload]);
+      fileOnChange && fileOnChange((prev) => [...prev, response?.payload])
     } catch (e) {
       setError("File upload error: " + e.message);
       setIsLoading(false);
@@ -62,7 +63,6 @@ export const FileUploadPlayground = ({ session }) => {
     e.stopPropagation(); // Prevents the event from triggering the upload action
     const updatedFiles = files.filter((_, idx) => idx !== index);
     setFiles(updatedFiles);
-    onChange && onChange(updatedFiles); // Notify parent component about file removal
   };
 
   const handleClick = () => {
@@ -85,9 +85,10 @@ export const FileUploadPlayground = ({ session }) => {
     },
   });
 
+  console.log("setIsFileUploading(false): ", isFileUploading)
   return (
     <>
-      {isLoading ? <Loading></Loading>
+      {isLoading || isFileUploading ? <Loading></Loading>
         :
         <div>
           {/* display uploaded file  */}
