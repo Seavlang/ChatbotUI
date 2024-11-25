@@ -5,7 +5,7 @@ import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-van
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export function DefaultPlaceHolderComponent({ session, onChange, socket,selectedDocument }) {
+export function DefaultPlaceHolderComponent({ session, onChange, socket, selectedDocument }) {
   const fileInputRef = useRef(null);
   const [error, setError] = useState();
 
@@ -23,7 +23,7 @@ export function DefaultPlaceHolderComponent({ session, onChange, socket,selected
     // if (!file) return;
     try {
       console.log("session in pages: ", session)
-      const response = await createDocumentAction(session?.sessionId, file)
+      await createDocumentAction(session?.sessionId, file)
     } catch (e) {
       setError("File upload error: " + e.message);
     } finally {

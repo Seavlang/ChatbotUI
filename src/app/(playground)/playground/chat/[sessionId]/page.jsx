@@ -110,7 +110,6 @@ export default function Page({ params }) {
         }
     };
 
-    console.log(" message in pages: ", messages)
     // 2nd useEffect: Fetches documents and history when `resolvedParams` is ready
     useEffect(() => {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set

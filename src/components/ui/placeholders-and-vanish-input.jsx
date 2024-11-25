@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getSessionDetailAction } from "@/actions/sessionAction";
-import { getSessionDetailService } from "@/services/session/session.service";
 import { usePathname } from "next/navigation";
 import { getCurrentUserAction } from "@/actions/userAction";
 
@@ -19,20 +18,11 @@ export function PlaceholdersAndVanishInput({
   const [activeSession, setActiveSession] = useState();
   const intervalRef = useRef(null);
   const canvasRef = useRef(null);
-  const newDataRef = useRef([]);
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
   const pathname = usePathname()
   const [userId, setUserId] = useState();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-  const startAnimation = () => {
-    intervalRef.current = setInterval(() => {
-      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
-    }, 3000);
-  };
 
   useEffect(() => {
 

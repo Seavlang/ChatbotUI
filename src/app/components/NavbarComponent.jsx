@@ -43,6 +43,8 @@ export default function NavbarComponent() {
       html.classList.remove("dark");
       setDarkMode(false);
     }
+
+    
   }, []);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import { createSessionAction, getAllSessionsAction } from "@/actions/sessionActi
 import { createDocumentAction } from "@/actions/fileAction";
 import { useRouter } from "next/navigation";
 import { DefaultPlaceHolderComponent } from "@/app/components/DefaultPlaceHolderComponent";
-import { useSessions } from "./SessionProvider";
+// import { useSessions } from "./SessionProvider";
 
 const mainVariant = {
     initial: {
@@ -33,19 +33,18 @@ const secondaryVariant = {
     },
 };
 export default function DefaultFirstFileComponent({ setIsLoading }) {
-    const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
     const [error, setError] = useState(""); // Track error state for invalid files
     const router = useRouter()
     const handleClick = () => {
         fileInputRef.current?.click();
     };
-    const { allSessions, isLoading, fetchAllSessions  } = useSessions();
-    useEffect(() => {
-        console.log("session in first file component", allSessions)
-    }, [allSessions])
+    // const { allSessions, isLoading, fetchAllSessions  } = useSessions();
+    // useEffect(() => {
+    //     console.log("session in first file component", allSessions)
+    // }, [allSessions])
 
-    // const [allSessions, setAllSessions] = useState([])
+    const [allSessions, setAllSessions] = useState([])
     const dismissError = () => {
         setError(""); // Remove the error when clicking the dismiss button
     };
@@ -57,20 +56,19 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
         setIsLoading(true)
 
         try {
-            await fetchAllSessions ()
-            // const session = await getAllSessionsAction();
-            // setAllSessions(session);
+            // await fetchAllSessions ()
+            const session = await getAllSessionsAction();
+            setAllSessions(session);
             if (allSessions.length >= 3) {
                 setError("Maximum number of sessions reached. Cannot upload more files.");
                 return;
             }
             const sessionResult = await createSessionAction();
             const sessionId = sessionResult?.session_id;
-            const response = await createDocumentAction(sessionId, file);
+            await createDocumentAction(sessionId, file);
             router.push(`/playground/chat/${sessionId}`)
         } catch (e) {
             setError("File upload error: " + e.message);
-            setIsLoading(false)
         } finally {
             setIsLoading(false)
         }

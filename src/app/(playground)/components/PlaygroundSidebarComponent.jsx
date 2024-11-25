@@ -26,8 +26,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
 import { SessionsProvider } from './SessionProvider';
 
-
-
 export default function PlaygroundSidebarComponent({ children }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
@@ -40,35 +38,21 @@ export default function PlaygroundSidebarComponent({ children }) {
     const id = pathname.split('/').pop();
     const [isDeleting, setIsDeleting] = useState(false)
 
-    useEffect(() => {
-
-        const fetchAllSessions = async () => {
-            // setIsLoading(true)
-            try {
-                const response = await getAllSessionsAction();
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
-            }
-            finally {
-                setIsLoading(false)
-            }
+    const fetchAllSessions = async () => {
+        try {
+            const response = await getAllSessionsAction();
+            setAllSessions(response?.payload);
+        } catch (error) {
+            console.error(error);
         }
+        finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
         fetchAllSessions();
     }, []);
-
-    useEffect(() => {
-        const fetchAllSessions = async () => {
-            try {
-                const response = await getAllSessionsAction();
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchAllSessions();
-
-    }, [id]);
 
     const handleDeleteChat = (sessionId) => {
         console.log("id to delete: ", sessionId);
@@ -172,7 +156,7 @@ export default function PlaygroundSidebarComponent({ children }) {
                                     >
                                         {/* map all session in side bar */}
                                         {
-                                            isLoading ? <div className='flex justify-center'><Loading/></div>
+                                            isLoading ? <div className='flex justify-center'><Loading /></div>
                                                 :
                                                 allSessions?.map((session) => (
                                                     <div
