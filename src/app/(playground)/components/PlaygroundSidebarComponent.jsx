@@ -24,6 +24,7 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
+import { SessionsProvider } from './SessionProvider';
 
 
 
@@ -73,7 +74,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                 setIsLoading(true);
             try {
                 const response = await getAllSessionsAction();
-
                 setAllSessions(response?.payload);
             } catch (error) {
                 console.error(error);
@@ -89,6 +89,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
 
 
     const handleDeleteChat = (sessionId) => {
+        console.log("id to delete: ", sessionId);
         setChatToDelete(sessionId);
         setIsDeleteDialogOpen(true);
     };
@@ -118,7 +119,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
 
     return (
         <>
-
             <div>
                 <div
                     className={cn(
@@ -139,10 +139,10 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
 
                                     >
                                         <div className="flex justify-between my-10">
-                                            <Link href={`${allSessions?.length == 3 ? '#' : '/playground'}`}>
-                                                <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length == 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
+                                            <Link href={`${allSessions?.length >= 3 ? '#' : '/playground'}`}>
+                                                <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length >= 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
                                                     {
-                                                        allSessions?.length == 3 ?
+                                                        allSessions?.length >= 3 ?
                                                             <div className='flex items-center point'>
                                                                 <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M9 4.5L9 13.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round" />
@@ -170,9 +170,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
 
                                                     }
 
-
-
-
                                                 </button>
                                             </Link>
                                             <div className="my-auto cursor-pointer" onClick={() => setOpen(!open)}>
@@ -192,7 +189,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                                     >
                                         {/* map all session in side bar */}
                                         {
-                                            isLoading ? <div>loading...</div>
+                                            isLoading ? <div className='flex justify-center'><Loading/></div>
                                                 :
                                                 allSessions?.map((session) => (
                                                     <div
@@ -222,7 +219,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                                                                         }`}
                                                                 >
 
-                                                                    {session?.session}
+                                                                    {session?.session_name}
                                                                 </span>
 
                                                             </div>
@@ -292,9 +289,9 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                     </Dialog>
 
                     <div className="w-full">
-                        <div className="p-2 md:p-10 h-screen flex flex-col gap-2 flex-1 w-full">
-                            <div className="flex flex-col">
-                                <div className='flex'>
+                        <div className="p-2 md:p-10 h-screen flex flex-row gap-2 flex-1 ">
+                            <div className="">
+                                <div className='flex '>
                                     {
                                         open ? (
                                             ''

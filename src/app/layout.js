@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { SessionsProvider } from "./(playground)/components/SessionProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -61,7 +62,9 @@ export default function RootLayout({ children }) {
       >
         <Toaster />
         <SessionProvider>
-          {children}
+          <SessionsProvider>
+            {children}
+          </SessionsProvider>
         </SessionProvider>
       </body>
     </html>
