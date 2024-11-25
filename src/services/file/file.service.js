@@ -11,7 +11,6 @@ export const uploadFilePlaygroundService = async (sessionId, uploadedFiles) => {
   formData.append('file', uploadedFiles); // Append the file to the form data
 
   try {
-    console.log("session id in service: ", sessionId)
     const response = await fetch(
       `${authUrl}/files/upload?session=${sessionId}`,
       {

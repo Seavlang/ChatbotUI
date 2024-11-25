@@ -19,6 +19,7 @@ export default function Page({ params }) {
     const [socket, setSocket] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [isResponding, setIsResponding] = useState(false)
+    const [isFileUploading, setIsFileUploading] = useState(false)
     const pathname = usePathname()
     const id = pathname.split('/').pop();
     const [files, setFiles] = useState([{
@@ -29,6 +30,7 @@ export default function Page({ params }) {
         file_name: "All Documents"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
+
 
     // Response from web socket
     useEffect(() => {
@@ -81,6 +83,7 @@ export default function Page({ params }) {
         const resolveParams = async () => {
             if (!params) {
                 setResolvedParams({ sessionId: id });
+                
             } else {
                 const result = await params;
                 setResolvedParams(result);
@@ -118,7 +121,6 @@ export default function Page({ params }) {
             // setIsLoading(true);
 
             try {
-                // Fetch all documents
                 const documentResult = await getAllDocumentAction(resolvedParams);
                 console.log("documentResult", documentResult);
                 setFiles((prev) => [...prev, ...(documentResult?.payload || [])]);
@@ -169,6 +171,8 @@ export default function Page({ params }) {
                                 isLoadingMore={isLoadingMore}
                                 hasMoreMessages={hasMoreMessages}
                                 isResponding={isResponding}
+                                isFileUploading={isFileUploading}
+                                setFiles={setFiles}
                             />
                         </div>
                         <div className="">
@@ -178,6 +182,8 @@ export default function Page({ params }) {
                                 socket={socket}
                                 onChange={handleSubmit}
                                 selectedDocument={selectedDocument}
+                                setIsFileUploading={setIsFileUploading}
+                                setFiles={setFiles}
                             />
                         </div>
                     </div>}

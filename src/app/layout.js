@@ -62,9 +62,9 @@ export default function RootLayout({ children }) {
       >
         <Toaster />
         <SessionProvider>
-          {/* <SessionsProvider> */}
+          <SessionsProvider>
             {children}
-          {/* </SessionsProvider> */}
+          </SessionsProvider>
         </SessionProvider>
       </body>
     </html>

@@ -24,7 +24,6 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
-import { SessionsProvider } from './SessionProvider';
 
 export default function PlaygroundSidebarComponent({ children }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index

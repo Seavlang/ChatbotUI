@@ -24,12 +24,15 @@ export const getLMService = async () => {
     }
   };
 
-export const getAllModels = async () => {
+export const getAllModelsService = async () => {
   const headers = await reqHeader();
   try {
     const res = await fetch(`${authUrl}/model_provider/all__models`, {
       method: "GET",
       headers,
+      next: {
+        tag: ["model"],
+      },
     });
     if (!res.ok) {
       console.error("Failed to get all models", res.statusText);
@@ -43,13 +46,17 @@ export const getAllModels = async () => {
   }
 }
 
-export const getAllProviders = async () => {
+export const getAllProvidersService = async () => {
   const headers = await reqHeader();
   try {
-    const res = await fetch(`${authUrl}/model_provider/all__providers`, {
+    const res = await fetch(`${authUrl}/model_provider/all_providers`, {
       method: "GET",
       headers,
+      next: {
+        tag: ["provider"],
+      },
     });
+    console.log("res: ", res);
     if (!res.ok) {
       console.error("Failed to get all providers", res.statusText);
       return null;
