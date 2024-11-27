@@ -204,8 +204,8 @@ export const getAllFilesService = async (projectId) => {
   }
 };
 // create Session
-export const createSessionService = async (apiKey) => {
-  const headers = await reqHeader();
+export const createProjectSessionService = async (apiKey) => {
+  console.log("createssesionapi",apiKey);
   try {
     const res = await fetch(
       `${authUrl}/api_generation/session/create_session`,

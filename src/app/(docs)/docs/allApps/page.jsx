@@ -1,23 +1,24 @@
-"use server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CreateProjectModal from "../../components/CreateProjectModal";
 import { getAllProjectAction } from "@/actions/docAction";
-import Chatbot from "@kshrd/chatbotwidget/src/index";
 import DeleteProjectModal from "../../components/DeleteProjectModal";
 
 export default async function Page({ searchParams }) {
-  const searchTerm = searchParams?.search || ""; // Get search term from query
-  const data = await getAllProjectAction(); // Fetch all project data
+  const searchTerm = searchParams?.search || "";
+  const data = await getAllProjectAction();
   const tableData = data?.payload || [];
 
-  // Filter projects on the server side based on the search term
+  console.log("Table data: " , tableData);
+  
+
   const filteredData = searchTerm
     ? tableData.filter((item) =>
         item.project_name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : tableData;
+
 
   return (
     <div className="w-full h-screen overflow-hidden bg-white dark:bg-gray-900 dark:text-gray-300">
@@ -34,12 +35,6 @@ export default async function Page({ searchParams }) {
       <h1 className="mx-10 mb-10 text-4xl font-medium text-primary dark:text-white">
         My Apps
       </h1>
-
-      <Chatbot
-        SessionId="14"
-        projectId="8"
-        apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
-      />
 
       {/* Search and Create */}
       <div className="flex justify-between">

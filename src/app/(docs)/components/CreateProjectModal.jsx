@@ -1,28 +1,35 @@
 "use client";
 
 import React, { useState } from "react";
-import { createProjectAction } from "@/actions/docAction";
+import {
+  createProjectAction,
+  createProjectSessionAction,
+} from "@/actions/docAction";
 
-const CreateProjectModal = () => {
+const CreateProjectModal = ({ handleGetSessionId }) => {
   const [projectName, setProjectName] = useState(""); // State to track the project name
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to close the modal
   const closeModal = () => {
     document.getElementById("my_modal_1").close();
-    setProjectName(""); // Clear the input field
-    setError(null); // Clear any error message
+    setProjectName("");
+    setError(null);
   };
-
-  // Handle form submission
   const handleCreateProject = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      await createProjectAction(projectName); // Pass the project name to the action
-      closeModal(); // Close the modal on success
+      const create = await createProjectAction(projectName);
+      console.log("create", create);
+      if (create.success === true) {
+        const   session = await createProjectSessionAction(
+          create.project_id.api_key
+        );
+        if(session.success === true) {
+        closeModal();
+        }
+      } 
     } catch (error) {
       setError("Failed to create project. Please try again.");
     } finally {
@@ -44,7 +51,9 @@ const CreateProjectModal = () => {
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
           {/* Modal Header */}
-          <h2 className="text-lg text-left font-bold text-primary mb-4">Create Project</h2>
+          <h2 className="text-lg text-left font-bold text-primary mb-4">
+            Create Project
+          </h2>
 
           {/* Input Field */}
           <input
@@ -62,7 +71,9 @@ const CreateProjectModal = () => {
           <div className="flex justify-end space-x-4">
             <button
               className={`border text-primary py-2 px-4 rounded-lg ${
-                loading ? "bg-gray-400 text-white cursor-not-allowed" : "border-primary"
+                loading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "border-primary"
               }`}
               onClick={closeModal}
               disabled={loading}

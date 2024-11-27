@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 function TestComponent() {
     const [input, setInput] = useState('');
-
+    const sessionId = localStorage.getItem('sessionId');
+    console.log("sdafdfasdfsaf: " , sessionId);
     return (
         <div className="dark:text-gray-200">
             <div className="text-sm font-medium">
