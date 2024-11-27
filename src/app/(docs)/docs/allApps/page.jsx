@@ -9,10 +9,7 @@ export default async function Page({ searchParams }) {
   const searchTerm = searchParams?.search || "";
   const data = await getAllProjectAction();
   const tableData = data?.payload || [];
-
-  console.log("Table data: " , tableData);
   
-
   const filteredData = searchTerm
     ? tableData.filter((item) =>
         item.project_name.toLowerCase().includes(searchTerm.toLowerCase())
