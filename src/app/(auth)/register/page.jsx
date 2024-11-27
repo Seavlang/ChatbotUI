@@ -68,6 +68,7 @@ export default function SignUpForm() {
     setIsLoading(false);
 
     if (res?.success === true) {
+      localStorage.setItem("registeredEmail", values?.email);
       toast.success("Registered Successfully!");
       route.push("/verify" + "?email=" + values?.email);
       route.refresh();

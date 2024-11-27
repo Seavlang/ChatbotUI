@@ -21,15 +21,18 @@ export const registerService = async (req) => {
 
 
 export const resendService = async (email) => {
+  console.log("resendService",email);
+  console.log("auth",authUrl);
     try {
       const res = await fetch(
-        `${authUrl}/auth/resend-code?email=${email}`,
+        `${authUrl}/auth/resend_code?email=${email}`,
         {
           method: "POST",
         }
       )
         .then((r) => r?.json())
         .catch((e) => console.log(e));
+        console.log("resendServiceRese",res);
       return res;
     } catch (e) {
       console.log("Error: ", e);
@@ -53,6 +56,7 @@ export const resendService = async (email) => {
   };
 
   export const verifyEmailService = async (code,email) => {
+    console.log('email', email);
     try {
       const res = await fetch(
         `${authUrl}/auth/account-verify?code=${code}&email=${email}`,
@@ -74,7 +78,7 @@ export const resetPasswordVerifyService = async (email, code) => {
     console.log("verify service",code,email);
     try {
       const res = await fetch(
-        `${authUrl}/auth/code-verify?code=${code}&email=${email}`,
+        `${authUrl}/auth/code_verify?code=${code}&email=sievlangvey%40gmail.com`,
         {
           method: "POST",
         }

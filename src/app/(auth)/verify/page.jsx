@@ -19,8 +19,8 @@ const codeSchema = z.object({
 
 export default function CodeVerificationForm() {
 
-  const { data: session } = useSession();
-  const email = session?.user?.email;
+  const email = localStorage.getItem("registeredEmail");
+  console.log("email in verification",email);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -49,7 +49,7 @@ export default function CodeVerificationForm() {
 
   async function handleResend() {
     try {
-      const res = await resendVerificationCodeAction({ email });
+      const res = await resendVerificationCodeAction(encodeURIComponent(email));
       if (res.success) {
         toast.success("Verification code resent successfully!");
       } else {

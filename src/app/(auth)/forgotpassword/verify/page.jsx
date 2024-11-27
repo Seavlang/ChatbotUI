@@ -30,8 +30,8 @@ const codeSchema = z.object({
 });
 
 export default function CodeVerificationForm() {
-  const { data: session } = useSession();
-  const email = session?.user?.email;
+  const email = localStorage.getItem("resetEmail")
+  console.log("email",email);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function CodeVerificationForm() {
     setIsLoading(true);
     try {
       const res = await resetPasswordVerifyAction({
-        email,
+        email: encodeURIComponent(email),
         code: values.code,
       });
 

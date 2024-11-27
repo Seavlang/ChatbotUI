@@ -23,10 +23,13 @@ export default function Page() {
       setIsLoading(true);
 
       try {
-        // Call resend verification code action
-        const res = await resendVerificationCodeAction({ email });
+        console.log(encodeURIComponent(email));
+
+        const res = await resendVerificationCodeAction(encodeURIComponent(email));
         
+        console.log("emailRs",res);
         if (res?.success) {
+          localStorage.setItem("resetEmail",email);
           // toast.success("Verification code sent successfully!");
           router.push(`/forgotpassword/verify`);
         } else {

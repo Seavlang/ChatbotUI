@@ -13,7 +13,8 @@ export const verifyEmailAction = async (req) => {
 }
 
 export const resendVerificationCodeAction = async (req) => {
-    const res = await resendService(req.email);
+    console.log("emailAction",req);
+    const res = await resendService(req);
     return res;
 }
 
