@@ -35,10 +35,9 @@ export default function CodeVerificationForm() {
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedEmail = localStorage.getItem("email");
+      const storedEmail = localStorage.getItem("resetEmail");
       setEmail(storedEmail);
     }
   },[])

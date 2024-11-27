@@ -24,10 +24,10 @@ export default function CodeVerificationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedEmail = localStorage.getItem("email");
+      const storedEmail = localStorage.getItem("registeredEmail");
+      console.log("storeEmail",storedEmail);
       setEmail(storedEmail);
     }
   },[])
@@ -47,7 +47,7 @@ export default function CodeVerificationForm() {
     });
     setIsLoading(false);
 
-    if (res.success) {
+    if (res?.success) {
       toast.success(res.message);
       router.push("/login");
     } else {
