@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -30,11 +30,19 @@ const codeSchema = z.object({
 });
 
 export default function CodeVerificationForm() {
-  const email = localStorage.getItem("resetEmail")
-  console.log("email",email);
+  const [email,setEmail] = useState(null)
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
+
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("email");
+      setEmail(storedEmail);
+    }
+  },[])
+
 
   const form = useForm({
     resolver: zodResolver(codeSchema),
