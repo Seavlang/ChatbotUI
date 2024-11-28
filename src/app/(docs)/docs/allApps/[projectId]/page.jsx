@@ -514,7 +514,7 @@ export default function Page({ params }) {
             </div>
 
             <div className="mb-20">
-              <WidgetComponent projectId={project} />
+              <WidgetComponent projectId={project} apiKey = {projectData?.project_id?.api_key}/>
             </div>
           </div>
         </div>

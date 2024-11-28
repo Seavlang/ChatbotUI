@@ -1,4 +1,4 @@
-import { createProjectService, createProjectSessionService, deleteProjectService, getAllFilesService, getAllProjectService, getProjectByIdService, updateDescriptionService, uploadExternalFileService } from "@/services/doc.service";
+import { chatbotService, createProjectService, createProjectSessionService, deleteProjectService, getAllFilesService, getAllProjectService, getAllSessionService, getProjectByIdService, updateDescriptionService, uploadExternalFileService } from "@/services/doc.service";
 
 export const getAllProjectAction = async () => {
     const res = await getAllProjectService();
@@ -37,5 +37,15 @@ export const getAllFilesAction = async (id) => {
 
 export const createProjectSessionAction  = async (apiKey) => {
     const res = await createProjectSessionService(apiKey);
+    return res;
+}
+
+export const chatbotAction = async (input, externalSessionId, projectId, apiKey) => {
+    const res = await chatbotService(input, externalSessionId, projectId, apiKey);
+    return res;
+}
+
+export const getAllSessionAction = async (apiKey) => {
+    const res = await getAllSessionService(apiKey);
     return res;
 }

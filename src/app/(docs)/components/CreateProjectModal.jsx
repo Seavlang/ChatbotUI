@@ -27,6 +27,7 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
           create.project_id.api_key
         );
         if(session.success === true) {
+          console.log("sessionP",session);
         closeModal();
         }
       } 
