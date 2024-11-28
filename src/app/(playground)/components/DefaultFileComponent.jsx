@@ -9,6 +9,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import Loading from '../playground/loading';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css'; // Choose your theme
 
 export default function DefaultFileComponent({
   session,
@@ -237,8 +239,30 @@ export default function DefaultFileComponent({
                       }`}
                   >
                     <ReactMarkdown
-                      rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                      // rehypePlugins={[rehypeRaw, rehypeHighlight]}
                       components={{
+                        code: ({ node, inline, className = '', children, ...props }) => {
+                          const language = className.replace('language-', '');
+                          const code = String(children).replace(/\n$/, '');
+
+                          if (!inline) {
+                            const highlightedCode = language && hljs.getLanguage(language)
+                              ? hljs.highlight(code, { language }).value
+                              : code;
+
+                            return (
+                              <pre className={`code-block language-${language}`} {...props}>
+                                <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+                              </pre>
+                            );
+                          } else {
+                            return (
+                              <code className="inline-code" {...props}>
+                                {children}
+                              </code>
+                            );
+                          }
+                        }
                         p: ({ node, children, ...props }) => (
                           <p
                             style={{
@@ -303,31 +327,7 @@ export default function DefaultFileComponent({
                             {children}
                           </em>
                         ),
-                        code: ({ node, inline, className = '', children, ...props }) => {
-                          const language = className.replace('language-', '');
-                          const code = String(children).replace(/\n$/, '');
-                          if (!inline) {
-                            return (
-                              <div className="code-block-wrapper">
-                                <button
-                                  className="copy-code-button"
-                                  onClick={() => handleCopy(code)}
-                                >
-                                  {copiedCode === code ? 'Copied!' : 'Copy Code'}
-                                </button>
-                                <pre className={`code-block language-${language} `} {...props}>
-                                  <code>{children}</code>
-                                </pre>
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <code className={`inline-code overflow-x-auto`} {...props}>
-                                {children}
-                              </code>
-                            );
-                          }
-                        },
+
                       }}
                     >
                       {message?.content}

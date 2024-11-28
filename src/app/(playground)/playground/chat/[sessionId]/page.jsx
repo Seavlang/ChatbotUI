@@ -7,14 +7,7 @@ import { getLM } from '@/actions/modelAction';
 import { usePathname } from 'next/navigation';
 import Loading from '../../loading';
 import { getAllDocumentAction } from '@/actions/fileAction';
-// Dynamically import components to disable SSR
-// const DefaultFileComponent = dynamic(() => import('../../../components/DefaultFileComponent'), {
-//     ssr: false,
-// });
 
-// const DefaultPlaceHolderComponent = dynamic(() => import('@/app/components/DefaultPlaceHolderComponent'), {
-//     ssr: false,
-// });
 
 export default function Page({ params }) {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
