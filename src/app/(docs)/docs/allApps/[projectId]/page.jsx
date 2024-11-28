@@ -178,6 +178,17 @@ export default function Page({ params }) {
     setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
   };
 
+  const handleShowModal = (id) => {
+    try {
+      document
+        .getElementById(`my_modal_${id}`)
+        .showModal()
+    }
+    catch (error) {
+      console.error("Error showing modal", error);
+    }
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -226,11 +237,10 @@ export default function Page({ params }) {
                 onChange={handleDescriptionChange}
                 onBlur={handleDescriptionSave} // Trigger save on blur
                 rows={4}
-                placeholder={`${
-                  projectData?.project_id?.description
+                placeholder={`${projectData?.project_id?.description
                     ? projectData?.project_id.description
                     : "No description"
-                }`}
+                  }`}
               />
             </div>
           </div>
@@ -402,11 +412,10 @@ export default function Page({ params }) {
                           >
                             <span>{endpoint.Controller}</span>
                             <ChevronDown
-                              className={`my-auto h-6 w-6 transition-transform ${
-                                activeCollapse === idx
+                              className={`my-auto h-6 w-6 transition-transform ${activeCollapse === idx
                                   ? "transform rotate-180"
                                   : "rotate-0"
-                              }`}
+                                }`}
                             />
                           </div>
                         </Collapsible.Trigger>
@@ -422,9 +431,10 @@ export default function Page({ params }) {
                           <div
                             className="my-2.5 rounded grid grid-cols-7 p-2.5 cursor-pointer"
                             onClick={() =>
-                              document
-                                .getElementById(`my_modal_${endpoint?.id}`)
-                                .showModal()
+                              handleShowModal(endpoint?.id)
+                              // document
+                              //   .getElementById(`my_modal_${endpoint?.id}`)
+                              //   .showModal()
                             }
                           >
                             <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold dark:text-gray-200">
@@ -433,13 +443,12 @@ export default function Page({ params }) {
                             <div className="col-span-5">
                               <div className="flex justify-start items-center h-full">
                                 <span
-                                  className={`text-xs rounded-md px-8 font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${
-                                    endpoint.method === "POST"
+                                  className={`text-xs rounded-md px-8 font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${endpoint.method === "POST"
                                       ? "bg-[#49CC90]"
                                       : endpoint.method === "GET"
-                                      ? "bg-[#61AFFE]"
-                                      : "bg-[#C9002B]"
-                                  }`}
+                                        ? "bg-[#61AFFE]"
+                                        : "bg-[#C9002B]"
+                                    }`}
                                 >
                                   {endpoint.method}
                                 </span>
@@ -514,7 +523,7 @@ export default function Page({ params }) {
             </div>
 
             <div className="mb-20">
-              <WidgetComponent projectId={project} apiKey = {projectData?.project_id?.api_key}/>
+              <WidgetComponent projectId={project} apiKey={projectData?.project_id?.api_key} />
             </div>
           </div>
         </div>

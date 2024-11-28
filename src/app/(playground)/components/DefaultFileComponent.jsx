@@ -9,8 +9,6 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import Loading from '../playground/loading';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css'; // Choose your theme
 
 export default function DefaultFileComponent({
   session,
@@ -259,6 +257,7 @@ export default function DefaultFileComponent({
                               fontWeight: 'bold',
                               lineHeight: '1.4',
                               marginBottom: '1em',
+                              marginTop: '1em',
                             }}
                             {...props}
                           >
@@ -272,6 +271,7 @@ export default function DefaultFileComponent({
                               fontWeight: 'bold',
                               lineHeight: '1.5',
                               marginBottom: '0.8em',
+                              marginTop: '0.8em',
                             }}
                             {...props}
                           >
@@ -285,24 +285,14 @@ export default function DefaultFileComponent({
                               fontWeight: 'bold',
                               lineHeight: '1.5',
                               marginBottom: '0.8em',
+                              marginTop: '0.8em',
                             }}
                             {...props}
                           >
                             {children}
                           </h3>
                         ),
-                        // li: ({ node, children, ...props }) => (
-                        //   <li
-                        //     style={{
-                        //       fontSize: '16px', // Consistent with paragraph text
-                        //       lineHeight: '1.8',
-                        //       marginBottom: '0.5em',
-                        //     }}
-                        //     {...props}
-                        //   >
-                        //     {children}
-                        //   </li>
-                        // ),
+
                         strong: ({ node, children, ...props }) => (
                           <strong style={{ fontWeight: 'bold' }} {...props}>
                             {children}
