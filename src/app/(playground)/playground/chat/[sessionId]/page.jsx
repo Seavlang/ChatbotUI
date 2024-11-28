@@ -13,7 +13,7 @@ export default function Page({ params }) {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [page, setPage] = useState(1); // Pagination page number
-
+    const [error, setError] = useState();
     const [resolvedParams, setResolvedParams] = useState(null);
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
@@ -43,6 +43,17 @@ export default function Page({ params }) {
         ws.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
+
+                if (message.type === "error") {
+                    setError(message.content); // Set error state
+                    // Append the error message to messages
+                    setMessages((prevMessages) => [
+                        ...prevMessages,
+                        { role: "error", content: `Error: ${message.content}` }
+                    ]);
+                    return;
+                }
+                console.log("message: ", message)
                 setIsResponding(true);
                 setMessages((prevMessages) => {
                     // Update the latest bot response with new token content
@@ -63,6 +74,11 @@ export default function Page({ params }) {
                 });
             } catch (error) {
                 console.error("Error parsing WebSocket message:", error);
+                // Handle unexpected errors
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { role: "error", content: "An unexpected error occurred while processing the message." }
+                ]);
             } finally {
                 setIsResponding(false);
             }
@@ -180,6 +196,7 @@ export default function Page({ params }) {
                                 isResponding={isResponding}
                                 isFileUploading={isFileUploading}
                                 setFiles={setFiles}
+                                error={error}
                             />
                         </div>
                         <div className="">

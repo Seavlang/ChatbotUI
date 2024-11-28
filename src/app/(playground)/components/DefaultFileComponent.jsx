@@ -20,7 +20,7 @@ export default function DefaultFileComponent({
   hasMoreMessages,
   isResponding,
   isFileUploading,
-  setFiles
+  setFiles, error
 }) {
   const messagesContainerRef = useRef(null);
 
@@ -71,7 +71,7 @@ export default function DefaultFileComponent({
     }, 100);
 
     return () => clearTimeout(timeout);
-  }, [isResponding]);
+  }, [messages]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -180,10 +180,13 @@ export default function DefaultFileComponent({
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.2 }}
-                        className={`py-2 rounded-3xl break-words ${message?.role === "user" ?
-                          "bg-[#90A1FE] px-5 max-w-xl text-white my-5" :
-                          ""
-                          }`}
+                        className={`py-2 rounded-3xl break-words ${
+                          message?.role === "user"
+                              ? "bg-[#90A1FE] px-5 max-w-2xl text-white my-5"
+                              : message?.role === "error"
+                              ? " text-red-500 px-5 max-w-3xl my-5 border border-red-500"
+                              : "max-w-3xl"
+                      }`}
                       >
                         <ReactMarkdown
                           rehypePlugins={[rehypeRaw, rehypeHighlight]}
