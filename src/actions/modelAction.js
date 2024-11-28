@@ -1,5 +1,5 @@
 'use server'
-import { getAllModelsService, getAllProvidersService, getLMService } from "@/services/model/model.service";
+import { getAllModelsService, getAllProvidersService, getLMService, updateLMService } from "@/services/model/model.service";
 import { revalidateTag } from "next/cache";
 
 export const getLM = async () => {
@@ -15,7 +15,14 @@ export const getModelsAction = async () => {
 }
 
 export const getProvidersAction = async () => {
-    const res =await getAllProvidersService();
+    const res = await getAllProvidersService();
     revalidateTag('providers')
+    return res;
+}
+
+export const updateModelsAction = async (request ) => {
+    console.log("request in action: ", request)
+    const res = await updateLMService(request)
+    revalidateTag('lm')
     return res;
 }

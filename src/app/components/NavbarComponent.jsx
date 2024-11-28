@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { getLM, getModelsAction, getProvidersAction } from "@/actions/modelAction";
+import { getLM, getModelsAction, getProvidersAction, updateModelsAction } from "@/actions/modelAction";
+import Loading from "../(playground)/playground/loading";
 
 export default function NavbarComponent() {
   const pathname = usePathname();
@@ -19,6 +20,11 @@ export default function NavbarComponent() {
     signOut({ redirect: false });
     router.push("/");
   };
+  const [apiKey, setApiKey] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState();
+  const [selectedModel, setSelectedModel] = useState();
+  const [selectedTemperature, setSelectedTemperature] = useState();
+  const [selectMaxToken, setSelectedToken] = useState()
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -45,12 +51,21 @@ export default function NavbarComponent() {
     }
   }, []);
 
+  const head = apiKey?.slice(0, 8); // First 8 characters
+  const tail = apiKey?.slice(-8);  // Last 8 characters
 
+  // Combine for display
+  const shortenedApiKey = `${head}**************************${tail}`;
   const fetchLM = async () => {
     try {
       const data = await getLM(); // Fetch data from the action
-      setLmData(data); // Store the data in state
-      console.log("Fetched LM Data:", data);
+      setLmData(data?.payload); // Store the data in state
+
+      setSelectedProvider(data?.payload?.provider_info?.provider_id)
+      setApiKey(data?.payload?.provider_api_key)
+      setSelectedTemperature(data?.payload?.temperature)
+      setSelectedToken(data?.payload?.max_token)
+      setSelectedModel(data?.payload?.model_id)
     } catch (error) {
       console.error("Error fetching LM data:", error);
     }
@@ -58,6 +73,7 @@ export default function NavbarComponent() {
 
   const [models, setModels] = useState()
   const [providers, setProviders] = useState()
+  const [isUpdating, setIsUpdating] = useState(false)
   const fetchModel = async () => {
     try {
       const data = await getModelsAction();
@@ -83,10 +99,52 @@ export default function NavbarComponent() {
     fetchProvider();
   }, []);
 
-  console.log("lmdata", lmData);
-  console.log("models", models);
-  console.log("providers", providers);
+  const handleSelectProvider = async (providerId) => {
+    setSelectedProvider(providerId);
+    const defaultModel = models?.find((model) => model.provider_id == providerId);
+    setSelectedModel(defaultModel?.id || "");
+  }
+  const handleSelectModel = async (modelId) => {
+    setSelectedModel(modelId);
+  }
 
+  const handleOnChangeTemperature = async (e) => {
+    setSelectedTemperature(e.target.value)
+  }
+  const handleOnChangeMaxToken = async (e) => {
+    setSelectedToken(e.target.value)
+  }
+  const handleOnChangeAPIKey = async (e) => {
+    setApiKey(e.target.value)
+  }
+
+  const handleSaveLM = async () => {
+    setIsUpdating(true)
+    try {
+      const apiKeyData = apiKey ? apiKey : null;
+      const temperatureData = selectedTemperature ? selectedTemperature : 0.7;
+      const maxTokenData = selectMaxToken ? selectMaxToken : 1040;
+      const request = {
+        model_id: selectedModel,
+        provider_api_key: apiKeyData,
+        temperature: temperatureData,
+        max_token: maxTokenData,
+      }
+      await updateModelsAction(request)
+      
+    } catch (err) {
+      console.error("Error saving LM data:", err);
+    } finally {
+      setIsUpdating(false)
+      setApiKey('')
+      setIsModalOpen(false);
+    }
+  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    document.getElementById("my_modal_3")?.showModal()
+    setIsModalOpen(true);
+  }
   return (
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
@@ -189,119 +247,157 @@ export default function NavbarComponent() {
                       <button
                         className="text-left "
                         onClick={() =>
-                          document.getElementById("my_modal_3").showModal()
+                          // document.getElementById("my_modal_3").showModal()
+                          // setIsModalOpen(true)
+                          handleOpenModal()
                         }
                       >
                         Settings
                       </button>
-                      <dialog id="my_modal_3" className="modal">
-                        <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
-                          {/* Close Button */}
-                          <form method="dialog">
-                            <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
-                              <Image
-                                src={"/asset/images/cross.png"}
-                                alt="close"
-                                width={30}
-                                height={30}
-                              />
-                            </button>
-                          </form>
+                      {
+                        isModalOpen && (
+                          <dialog id="my_modal_3" className="modal">
+                            <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                              {/* Close Button */}
+                              <form method="dialog">
+                                <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
+                                  <Image
+                                    src={"/asset/images/cross.png"}
+                                    alt="close"
+                                    width={30}
+                                    height={30}
+                                  />
+                                </button>
+                              </form>
 
-                          {/* Modal Header */}
-                          <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
-                            Settings
-                          </h3>
+                              {/* Modal Header */}
+                              <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
+                                Settings
+                              </h3>
 
-                          {/* Content Grid */}
-                          <div className="grid grid-cols-4">
-                            {/* Sidebar */}
-                            <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
-                              Custom Model
-                            </div>
-
-                            {/* Main Content */}
-                            <div className="col-span-3 p-4">
-                              <div className="flex justify-between mb-5">
-                                <div>
-                                  <h1 className="text-lg font-bold text-primary dark:text-white">
-                                    Model Configuration
-                                  </h1>
+                              {/* Content Grid */}
+                              <div className="grid grid-cols-4">
+                                {/* Sidebar */}
+                                <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
+                                  Custom Model
                                 </div>
-                                <div className="flex justify-end space-x-3">
-                                  <button className="px-4 py-2 border border-primary text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800">
-                                    Secrets & API keys
-                                  </button>
-                                  <button className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700">
-                                    Save
-                                  </button>
-                                </div>
-                              </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Access tokens authenticate your identity to the
-                                Hugging Face Hub and allow applications to
-                                perform actions based on token permissions.
-                              </p>
 
-                              {/* Configuration Fields */}
-                              <div className="gap-4 ">
-                                <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Provider
-                                </label>
-                                <select
-                                  id="providerDropdown"
-                                  className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                // onChange={(e) => handleSelectProvider(e.target.value)}
-                                >
-                                  {providers?.map((provider) => (
-                                    <option key={provider?.id} value={provider?.id}>
-                                      {provider?.provider_name}
-                                    </option>
-                                  ))}
-                                </select>
-                                <div>
-                                  <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Model
-                                  </label>
-                                  <select
-                                    id="providerDropdown"
-                                    className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  // onChange={(e) => handleSelectProvider(e.target.value)}
-                                  >
-                                    {models?.map((model) => (
-                                      <option key={model?.id} value={model?.id}>
-                                        {model?.model_name}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                      Temperature
-                                    </label>
-                                    <input
-                                      type="number"
-                                      placeholder={lmData?.payload?.temperature}
-                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                    />
+                                {/* Main Content */}
+                                <div className="col-span-3 p-4">
+                                  <div className="flex justify-between mb-5">
+                                    <div>
+                                      <h1 className="text-lg font-bold text-primary dark:text-white">
+                                        Model Configuration
+                                      </h1>
+                                    </div>
+                                    {/* <div className="flex justify-end space-x-3">
+              <button className="px-4 py-2 border border-primary text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800">
+                Secrets & API keys
+              </button>
+              <button className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700">
+                Save
+              </button>
+            </div> */}
                                   </div>
-                                  <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                      Max Length
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    Access tokens authenticate your identity to the
+                                    Hugging Face Hub and allow applications to
+                                    perform actions based on token permissions.
+                                  </p>
+
+                                  {/* Configuration Fields */}
+                                  <div className="gap-4 ">
+                                    <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                      Provider
                                     </label>
-                                    <input
-                                      type="number"
-                                      placeholder={lmData?.payload?.max_token}
-                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                    />
+                                    <select
+                                      id="providerDropdown"
+                                      className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      value={selectedProvider}
+                                      onChange={(e) => handleSelectProvider(e.target.value)}
+                                    >
+                                      {providers?.map((provider) => (
+                                        <option key={provider?.id} value={provider?.id}>
+                                          {provider?.provider_name}
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <div>
+                                      <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Model
+                                      </label>
+                                      <select
+                                        id="providerDropdown"
+                                        className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onChange={(e) => handleSelectModel(e.target.value)}
+                                      >
+                                        {models?.map((model) => (
+                                          selectedProvider == model.provider_id ?
+                                            <option key={model?.id} value={model?.id}>
+                                              {model?.model_name}
+                                            </option>
+                                            :
+                                            ('')
+                                        ))}
+                                      </select>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                          Temperature
+                                        </label>
+                                        <input
+                                          type="number"
+                                          placeholder={lmData?.temperature}
+                                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                          onChange={(e) => handleOnChangeTemperature(e)}
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                          Max Length
+                                        </label>
+                                        <input
+                                          type="number"
+                                          placeholder={lmData?.max_token}
+                                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                          onChange={(e) => handleOnChangeMaxToken(e)}
+                                        />
+                                      </div>
+                                    </div>
+                                    {
+                                      selectedProvider == 2 ?
+                                        <div>
+                                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Secrets & API Keys
+                                          </label>
+                                          <input
+                                            type="text"
+                                            placeholder={shortenedApiKey}
+                                            className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                            onChange={(e) => handleOnChangeAPIKey(e)}
+                                          />
+                                        </div>
+                                        : ('')
+                                    }
+
+                                  </div>
+                                  <div className="flex justify-end space-x-3 mt-5">
+                                    <button
+                                      className={`px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 ${isUpdating ? 'disabled' : ''}`}
+                                      onClick={handleSaveLM}>
+                                      {
+                                        isUpdating ? <span className="loading loading-spinner loading-md text-white"></span> : 'Save'
+                                      }
+                                    </button>
                                   </div>
                                 </div>
+
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      </dialog>
+                          </dialog>
+                        )
+                      }
                     </a>
                   </li>
                   <li>
