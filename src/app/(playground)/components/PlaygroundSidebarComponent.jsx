@@ -24,11 +24,10 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
-import { SessionsProvider } from './SessionProvider';
 
 
 
-export default function PlaygroundSidebarComponent({ children, sessionID,params }) {
+export default function PlaygroundSidebarComponent({ children, sessionID, params }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
@@ -50,12 +49,12 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
     //       const result = await params;
     //       setResolvedParams(result);
     //     };
-    
+
     //     fetchParams();
     //   }, [params]);
     //   console.log("sidebar param", params);
-    console.log("is loading in sidebar: ",id);
-    console.log("ses loading in sidebar: ",sessionID);
+    console.log("is loading in sidebar: ", id);
+    console.log("ses loading in sidebar: ", sessionID);
 
     useEffect(() => {
         const fetchAllSessions = async () => {
@@ -71,7 +70,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
     }, [id]);
     useEffect(() => {
         const fetchAllSessions = async () => {
-                setIsLoading(true);
+            setIsLoading(true);
             try {
                 const response = await getAllSessionsAction();
                 setAllSessions(response?.payload);
@@ -79,12 +78,12 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                 console.error(error);
             }
             finally {
-                    setIsLoading(false)
+                setIsLoading(false)
             }
         }
         fetchAllSessions();
 
-    }, [sessionID,id]);
+    }, [sessionID, id]);
 
 
     const handleDeleteChat = (sessionId) => {
@@ -279,7 +278,9 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
                                 </Button>
                                 <Button variant="delete" onClick={confirmDeleteChat} >
                                     {
-                                        isDelLoading ? <div className="disabled">Loading...</div> : <div>DELETE</div>
+                                        isDelLoading ? <div className="disabled">
+                                            <span className="loading loading-spinner loading-md text-primary"></span>
+                                        </div> : <div>DELETE</div>
                                     }
 
                                 </Button>

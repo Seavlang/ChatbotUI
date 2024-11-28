@@ -88,7 +88,7 @@ export const FileUploadPlayground = ({ session, isFileUploading, fileOnChange })
   console.log("setIsFileUploading(false): ", isFileUploading)
   return (
     <>
-      {isLoading || isFileUploading ? <Loading></Loading>
+      {isLoading || isFileUploading ? <div className="flex justify-center"><Loading /></div>
         :
         <div>
           {/* display uploaded file  */}

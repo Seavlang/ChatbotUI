@@ -30,7 +30,7 @@ export default function Page({ params }) {
         file_name: "All Documents"
     }]);
     const [selectedDocument, setSelectedDocument] = useState(null);
-
+    const [lmData, setLmData] = useState(null);
 
     // Response from web socket
     useEffect(() => {
@@ -175,7 +175,17 @@ export default function Page({ params }) {
         console.log("handleSelectDocument", id)
         setSelectedDocument(id)
     }
-
+    const fetchLM = async () => {
+        try {
+            const data = await getLM();
+            setLmData(data?.payload);
+        } catch (error) {
+            console.error("Error fetching LM data:", error);
+        }
+    };
+    useEffect(() => {
+        fetchLM();
+    }, []);
     console.log("files: ", files)
     return (
         <>
@@ -196,7 +206,7 @@ export default function Page({ params }) {
                                 isResponding={isResponding}
                                 isFileUploading={isFileUploading}
                                 setFiles={setFiles}
-                                error={error}
+                                lmData={lmData}
                             />
                         </div>
                         <div className="">

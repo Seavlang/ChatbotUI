@@ -20,7 +20,7 @@ export default function DefaultFileComponent({
   hasMoreMessages,
   isResponding,
   isFileUploading,
-  setFiles, error
+  setFiles, lmData
 }) {
   const messagesContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -32,6 +32,8 @@ export default function DefaultFileComponent({
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+
 
   // Infinite scroll handler for older messages
   const handleInfiniteScroll = () => {
@@ -162,8 +164,8 @@ export default function DefaultFileComponent({
     <div className="">
       <div className="flex">
         <div className="ml-5 inline-flex items-center border border-primary rounded-md px-3 py-2 text-md ">
-          <span className="font-bold text-primary mr-2">Default</span>
-          <span className="font-normal text-black">Llama3.1</span>
+          <span className="font-bold text-primary mr-2">{lmData?.provider_info?.model_name}</span>
+          <span className="font-normal text-black">{lmData?.provider_info?.provider_name}</span>
         </div>
         <div>
           {files?.length > 0 ? (
@@ -208,142 +210,142 @@ export default function DefaultFileComponent({
       </div>
 
       <div className="flex mx-auto w-full">
-        {
-          isFileUploading ? <Loading />
-            :
-            <div
-              ref={messagesContainerRef}
-              className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
-              {isLoadingMore && <div className='flex justify-center'><Loading></Loading></div>}
-              <div className='mx-96 '>
-                {messages?.length > 0 ? (
-                  messages?.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${message?.role === "user" ? "justify-end" : "justify-start"
-                        }`}
+        {/* {
+          isFileUploading ? <div className='flex justify-center bg-red-300'><Loading />llooaododod</div>
+            : */}
+        <div
+          ref={messagesContainerRef}
+          className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
+          {isLoadingMore && <div className='flex justify-center'><Loading></Loading></div>}
+          <div className='mx-96 '>
+            {messages?.length > 0 ? (
+              messages?.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${message?.role === "user" ? "justify-end" : "justify-start"
+                    }`}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`py-2 rounded-3xl break-words ${message?.role === "user"
+                      ? "bg-[#90A1FE] px-5 max-w-2xl text-white my-5"
+                      : message?.role === "error"
+                        ? " text-red-500 px-5 max-w-3xl my-5 border border-red-500"
+                        : "max-w-3xl"
+                      }`}
+                  >
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                      components={{
+                        p: ({ node, children, ...props }) => (
+                          <p
+                            style={{
+                              fontSize: '16px', // Adjust font size
+                              fontWeight: 'medium',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </p>
+                        ),
+                        h1: ({ node, children, ...props }) => (
+                          <h1
+                            style={{
+                              fontSize: '2rem', // Large and bold for main headings
+                              fontWeight: 'bold',
+                              lineHeight: '1.4',
+                              marginBottom: '1em',
+                              marginTop: '1em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ node, children, ...props }) => (
+                          <h2
+                            style={{
+                              fontSize: '1.75rem', // Subheadings slightly smaller than h1
+                              fontWeight: 'bold',
+                              lineHeight: '1.5',
+                              marginBottom: '0.8em',
+                              marginTop: '0.8em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ node, children, ...props }) => (
+                          <h3
+                            style={{
+                              fontSize: '1.5rem',
+                              fontWeight: 'bold',
+                              lineHeight: '1.5',
+                              marginBottom: '0.8em',
+                              marginTop: '0.8em',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </h3>
+                        ),
+
+                        strong: ({ node, children, ...props }) => (
+                          <strong style={{ fontWeight: 'bold' }} {...props}>
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ node, children, ...props }) => (
+                          <em style={{ fontStyle: 'italic' }} {...props}>
+                            {children}
+                          </em>
+                        ),
+                        code: ({ node, inline, className = '', children, ...props }) => {
+                          const language = className.replace('language-', '');
+                          const code = String(children).replace(/\n$/, '');
+                          if (!inline) {
+                            return (
+                              <div className="code-block-wrapper">
+                                <button
+                                  className="copy-code-button"
+                                  onClick={() => handleCopy(code)}
+                                >
+                                  {copiedCode === code ? 'Copied!' : 'Copy Code'}
+                                </button>
+                                <pre className={`code-block language-${language} `} {...props}>
+                                  <code>{children}</code>
+                                </pre>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <code className={`inline-code overflow-x-auto`} {...props}>
+                                {children}
+                              </code>
+                            );
+                          }
+                        },
+                      }}
                     >
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className={`py-2 rounded-3xl break-words ${message?.role === "user"
-                          ? "bg-[#90A1FE] px-5 max-w-2xl text-white my-5"
-                          : message?.role === "error"
-                            ? " text-red-500 px-5 max-w-3xl my-5 border border-red-500"
-                            : "max-w-3xl"
-                          }`}
-                      >
-                        <ReactMarkdown
-                          rehypePlugins={[rehypeRaw, rehypeHighlight]}
-                          components={{
-                            p: ({ node, children, ...props }) => (
-                              <p
-                                style={{
-                                  fontSize: '16px', // Adjust font size
-                                  fontWeight: 'medium',
-                                }}
-                                {...props}
-                              >
-                                {children}
-                              </p>
-                            ),
-                            h1: ({ node, children, ...props }) => (
-                              <h1
-                                style={{
-                                  fontSize: '2rem', // Large and bold for main headings
-                                  fontWeight: 'bold',
-                                  lineHeight: '1.4',
-                                  marginBottom: '1em',
-                                  marginTop: '1em',
-                                }}
-                                {...props}
-                              >
-                                {children}
-                              </h1>
-                            ),
-                            h2: ({ node, children, ...props }) => (
-                              <h2
-                                style={{
-                                  fontSize: '1.75rem', // Subheadings slightly smaller than h1
-                                  fontWeight: 'bold',
-                                  lineHeight: '1.5',
-                                  marginBottom: '0.8em',
-                                  marginTop: '0.8em',
-                                }}
-                                {...props}
-                              >
-                                {children}
-                              </h2>
-                            ),
-                            h3: ({ node, children, ...props }) => (
-                              <h3
-                                style={{
-                                  fontSize: '1.5rem',
-                                  fontWeight: 'bold',
-                                  lineHeight: '1.5',
-                                  marginBottom: '0.8em',
-                                  marginTop: '0.8em',
-                                }}
-                                {...props}
-                              >
-                                {children}
-                              </h3>
-                            ),
-
-                            strong: ({ node, children, ...props }) => (
-                              <strong style={{ fontWeight: 'bold' }} {...props}>
-                                {children}
-                              </strong>
-                            ),
-                            em: ({ node, children, ...props }) => (
-                              <em style={{ fontStyle: 'italic' }} {...props}>
-                                {children}
-                              </em>
-                            ),
-                            code: ({ node, inline, className = '', children, ...props }) => {
-                              const language = className.replace('language-', '');
-                              const code = String(children).replace(/\n$/, '');
-                              if (!inline) {
-                                return (
-                                  <div className="code-block-wrapper">
-                                    <button
-                                      className="copy-code-button"
-                                      onClick={() => handleCopy(code)}
-                                    >
-                                      {copiedCode === code ? 'Copied!' : 'Copy Code'}
-                                    </button>
-                                    <pre className={`code-block language-${language} `} {...props}>
-                                      <code>{children}</code>
-                                    </pre>
-                                  </div>
-                                );
-                              } else {
-                                return (
-                                  <code className={`inline-code overflow-x-auto`} {...props}>
-                                    {children}
-                                  </code>
-                                );
-                              }
-                            },
-                          }}
-                        >
-                          {message?.content}
-                        </ReactMarkdown>
-                      </motion.div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex flex-row items-center justify-center mt-20 bg-yellow-200">
-                    <FileComponentPlayground session={session} isFileUploading={isFileUploading} setFiles={setFiles} />
-                  </div>
-                )}
+                      {message?.content}
+                    </ReactMarkdown>
+                  </motion.div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-row items-center justify-center mt-20 bg-yellow-200">
+                <FileComponentPlayground session={session} isFileUploading={isFileUploading} setFiles={setFiles} />
               </div>
+            )}
+          </div>
 
-              {/* This div is used as the reference to scroll to */}
-              <div ref={messagesEndRef} />
-            </div>
-        }
+          {/* This div is used as the reference to scroll to */}
+          <div ref={messagesEndRef} />
+        </div>
+        {/* } */}
         {showScrollButton && (
           <button
             onClick={scrollToBottom}

@@ -62,7 +62,7 @@ export default function NavbarComponent() {
       setLmData(data?.payload); // Store the data in state
 
       setSelectedProvider(data?.payload?.provider_info?.provider_id)
-      setApiKey(data?.payload?.provider_api_key)
+      setApiKey(data?.payload?.provider_api_key || '')
       setSelectedTemperature(data?.payload?.temperature)
       setSelectedToken(data?.payload?.max_token)
       setSelectedModel(data?.payload?.model_id)
@@ -77,7 +77,6 @@ export default function NavbarComponent() {
   const fetchModel = async () => {
     try {
       const data = await getModelsAction();
-      console.log("model fetched:", data)
       setModels(data?.models);
     } catch (error) {
 
@@ -85,9 +84,7 @@ export default function NavbarComponent() {
   }
   const fetchProvider = async () => {
     try {
-      console.log("checking provider")
       const data = await getProvidersAction();
-      console.log("fetchProvider fetched:", data)
       setProviders(data?.models);
     } catch (error) {
 
@@ -131,7 +128,7 @@ export default function NavbarComponent() {
         max_token: maxTokenData,
       }
       await updateModelsAction(request)
-      
+
     } catch (err) {
       console.error("Error saving LM data:", err);
     } finally {
@@ -142,9 +139,12 @@ export default function NavbarComponent() {
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => {
-    document.getElementById("my_modal_3")?.showModal()
+    console.log("check if modal is open")
     setIsModalOpen(true);
+    document.getElementById("my_modal_3")?.showModal()
+
   }
+  console.log("is modal open", isModalOpen)
   return (
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
@@ -247,26 +247,28 @@ export default function NavbarComponent() {
                       <button
                         className="text-left "
                         onClick={() =>
-                          // document.getElementById("my_modal_3").showModal()
-                          // setIsModalOpen(true)
-                          handleOpenModal()
+                          // handleOpenModal()
+                          document.getElementById("my_modal_3")?.showModal()
                         }
                       >
                         Settings
                       </button>
-                      {
-                        isModalOpen && (
+                      {/* {
+                        isModalOpen && ( */}
                           <dialog id="my_modal_3" className="modal">
                             <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                               {/* Close Button */}
                               <form method="dialog">
-                                <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
+                                <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
+                                // onClick={setIsModalOpen(false)}
+                                >
                                   <Image
                                     src={"/asset/images/cross.png"}
                                     alt="close"
                                     width={30}
                                     height={30}
                                   />
+
                                 </button>
                               </form>
 
@@ -290,14 +292,7 @@ export default function NavbarComponent() {
                                         Model Configuration
                                       </h1>
                                     </div>
-                                    {/* <div className="flex justify-end space-x-3">
-              <button className="px-4 py-2 border border-primary text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800">
-                Secrets & API keys
-              </button>
-              <button className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700">
-                Save
-              </button>
-            </div> */}
+
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                     Access tokens authenticate your identity to the
@@ -396,8 +391,8 @@ export default function NavbarComponent() {
                               </div>
                             </div>
                           </dialog>
-                        )
-                      }
+                        {/* )
+                      } */}
                     </a>
                   </li>
                   <li>
