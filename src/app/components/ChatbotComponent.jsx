@@ -1,89 +1,105 @@
 "use client";
-import { questionAnswerPair } from "../data/conversation";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import askMe from "../../../public/asset/images/ask-me-arrow.svg";
 import leftArrow from "../../../public/asset/images/scribble 1.svg";
+import { chatbotLandingService } from "@/services/auth/user.service";
 
 export default function ChatbotComponent() {
-  const quesAnsPair = questionAnswerPair;
-
   const [userInput, setUserInput] = useState("");
-  const [submittedQuestions, setSubmittedQuestions] = useState([]); // Stores all question-answer pairs
+  const [submittedQuestions, setSubmittedQuestions] = useState([]); 
   const [loading, setLoading] = useState(false);
 
-  // Function to get value from input
-  const  handleInputChange = (e) => {
+  useEffect(() => {
+    // Create a session ID when the tab opens
+    const sessionId = crypto.randomUUID();
+    sessionStorage.setItem("sessionIDLanding", sessionId);
+    console.log("Session created:", sessionId);
+
+    // Remove session ID when leaving the tab
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem("sessionIDLanding");
+      console.log("Session removed");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup event listener when the component unmounts
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      sessionStorage.removeItem("sessionIDLanding");
+    };
+  }, []);
+
+  const handleInputChange = (e) => {
     setUserInput(e.target.value);
   };
 
-  // Handle submit function
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (userInput.trim() === "") return;
 
-    const matchedQA = quesAnsPair.find(
-      (qa) =>
-        userInput.toLocaleLowerCase() === qa?.question?.toLocaleLowerCase()
-    );
-
-    // Append new question-answer pair to the conversation
+    const currentQuestion = userInput;
     setSubmittedQuestions((prev) => [
       ...prev,
-      {
-        question: userInput,
-        answer: matchedQA
-          ? matchedQA.answer
-          : "Sorry, I don't have an answer for that.",
-      },
+      { question: currentQuestion, answer: "Processing..." },
     ]);
-
-    setUserInput(""); // Clear input
+    setUserInput(""); 
     setLoading(true);
-  };
 
-  useEffect(() => {
-    if (loading) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+    try {
+      const sessionId = sessionStorage.getItem("sessionIDLanding"); 
+      const chatbotResponse = await chatbotLandingService(
+        currentQuestion,
+        sessionId
+      );
+      const responseText =
+        chatbotResponse?.output || "Sorry, no response from the chatbot.";
+      console.log("chatbot response: " , chatbotResponse, responseText);
+      setSubmittedQuestions((prev) => {
+        const updatedQuestions = [...prev];
+        updatedQuestions[updatedQuestions.length - 1].answer = responseText;
+        return updatedQuestions;
+      });
+    } catch (error) {
+      console.error("Error fetching chatbot response:", error);
+      setSubmittedQuestions((prev) => {
+        const updatedQuestions = [...prev];
+        updatedQuestions[updatedQuestions.length - 1].answer =
+          "Error fetching chatbot response.";
+        return updatedQuestions;
+      });
+    } finally {
+      setLoading(false);
     }
-  }, [loading]);
+  };
 
   return (
     <div className="relative ">
-      <div className="h-screen flex justify-end items-center text-justify  ">
-        {/* Chat conversation content */}
-        <form className=" bg-white rounded-2xl text-black w-2/3 h-2/3 flex flex-col z-10 shadow-2xl shadow-purple-100">
-          {/* gradient header */}
+      <div className="h-screen flex justify-end items-center text-justify">
+        <form className="bg-white rounded-2xl text-black w-2/3 h-2/3 flex flex-col z-10 shadow-2xl shadow-purple-100">
+
           <div className="p-10 bg-gradient-to-r from-white to-[#C3EAFF] rounded-t-2xl">
             <p className="text-[#004B93] font-bold text-2xl">Good Morning!</p>
             <p>How can I help you today?</p>
           </div>
 
-          {/* Chat messages container */}
           <div className="flex-grow overflow-auto mb-4 no-scrollbar p-6">
             {submittedQuestions.map((qa, index) => (
               <div key={index}>
-                {/* User's question */}
+
                 <div className="bg-gray-100 w-3/4 ml-auto p-3 rounded-xl">
                   <p>{qa?.question}</p>
                 </div>
 
                 {/* AI response */}
                 <div className="flex items-start py-4 gap-3">
-                  <Image
-                    src={
-                      "https://i.pinimg.com/736x/16/ad/53/16ad53d782ae7f59b7ea4c605c34def4.jpg"
-                    }
-                    alt="ai agent logo"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+              
                   <span className="p-3 rounded-xl bg-blue-100">
                     {loading && index === submittedQuestions.length - 1
-                      ? "is processing ..."
+                      ? "Processing..."
                       : qa?.answer}
                   </span>
                 </div>
@@ -91,7 +107,7 @@ export default function ChatbotComponent() {
             ))}
           </div>
 
-          {/* User input question */}
+       
           <div className="mt-auto sticky bottom-0 p-6">
             <div className="relative w-4/5 mx-auto">
               <input
@@ -104,10 +120,10 @@ export default function ChatbotComponent() {
                 onChange={handleInputChange}
               />
 
-              {/* Icon send */}
               <button
                 className="p-1.5 rounded-full absolute top-0.5 right-0"
                 onClick={handleSubmit}
+                disabled={loading}
               >
                 <svg
                   width="24"
@@ -136,12 +152,11 @@ export default function ChatbotComponent() {
           </div>
         </form>
 
-        {/* arrow image */}
+
         <div className="absolute -left-[90px] bottom-32">
           <Image src={askMe} alt="ask me with arrow" width={500} height={500} />
         </div>
 
-        {/* left arrow */}
         <div className="absolute left-[150px] bottom-[154px] z-20">
           <Image
             src={leftArrow}
