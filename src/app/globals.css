@@ -59,7 +59,7 @@ textarea::-webkit-scrollbar {
   /* Inline code */
   code.inline-code {
     background-color: rgba(175, 184, 193, 0.2);
-    padding: 5px 6px;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 85%;
     color: #24292e;
@@ -84,6 +84,14 @@ textarea::-webkit-scrollbar {
   .copy-code-button:hover {
     background-color: #eaecef;
   }
-  
 
-  
+
+/* Lists */
+ul, ol {
+  padding-left: 1.5em; /* Indent lists for better readability */
+}
+
+/* Code blocks */
+pre.code-block {
+  margin-bottom: 1.5em; /* Space below code blocks */
+}

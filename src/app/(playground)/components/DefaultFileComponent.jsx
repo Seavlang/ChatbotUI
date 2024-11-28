@@ -23,20 +23,26 @@ export default function DefaultFileComponent({
   setFiles, error
 }) {
   const messagesContainerRef = useRef(null);
-
-  const handleInfiniteScroll = () => {
-    const container = messagesContainerRef.current;
-    if (container.scrollTop === 0 && hasMoreMessages) {
-      fetchOlderMessages();
-    }
-  };
   const messagesEndRef = useRef(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [loadingOlderMessages, setLoadingOlderMessages] = useState(false); // Track loading of older messages
+  const [isAddingNewMessages, setIsAddingNewMessages] = useState(false); // Track if new messages are being added
 
+  // Scroll to the bottom of the container
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Infinite scroll handler for older messages
+  const handleInfiniteScroll = () => {
+    const container = messagesContainerRef.current;
+    if (container.scrollTop === 0 && hasMoreMessages && !isLoadingMore) {
+      setLoadingOlderMessages(true); // Set flag when loading older messages
+      fetchOlderMessages();
+    }
+  };
+
+  // Show/Hide Scroll Down button on scroll
   const handleScroll = (e) => {
     const element = e.target;
     if (element.scrollTop + element.clientHeight >= element.scrollHeight - 10) {
@@ -48,43 +54,84 @@ export default function DefaultFileComponent({
 
   // Attach scroll listener to the container
   useEffect(() => {
-    const container = document.querySelector('.messages-container');
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const scrollToBottom = () => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    // Trigger after the DOM update
-    const timeout = setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, [messages]);
-
-  useEffect(() => {
     const container = messagesContainerRef.current;
     if (container) {
+      container.addEventListener("scroll", handleScroll);
       container.addEventListener("scroll", handleInfiniteScroll);
     }
 
     return () => {
       if (container) {
+        container.removeEventListener("scroll", handleScroll);
         container.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [hasMoreMessages]);
+  }, [hasMoreMessages, isLoadingMore]);
+
+  // Preserve scroll position when fetching older messages
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+
+    if (loadingOlderMessages && container) {
+      // Save current scroll height
+      const previousScrollHeight = container.scrollHeight;
+
+      // Adjust scroll position after fetching older messages
+      const interval = setInterval(() => {
+        if (!isLoadingMore) {
+          const newScrollHeight = container.scrollHeight;
+          container.scrollTop = newScrollHeight - previousScrollHeight;
+
+          setLoadingOlderMessages(false); // Reset flag
+          clearInterval(interval);
+        }
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  }, [loadingOlderMessages, isLoadingMore]);
+
+  // Automatically scroll to the bottom for new messages
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+
+    // Only scroll to bottom if new messages are added
+    if (container && !isLoadingMore && isAddingNewMessages) {
+      const timeout = setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+
+      setIsAddingNewMessages(false); // Reset flag after scrolling
+      return () => clearTimeout(timeout);
+    }
+  }, [messages, isLoadingMore, isAddingNewMessages]);
+
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+
+    // Detect if new messages are added to the bottom
+    if (messages?.length > 0) {
+      const lastMessage = messages[messages.length - 1]; // Get the last message
+      const isLastMessageNew = lastMessage?.role === "assistant" || lastMessage?.role === "user";
+
+      if (isLastMessageNew && !loadingOlderMessages && container) {
+        // Only scroll to bottom when the last message is new
+        const timeout = setTimeout(() => {
+          scrollToBottom();
+        }, 100);
+
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [messages, loadingOlderMessages]);
+
+  // Detect if new messages are added
+  useEffect(() => {
+    // Only set this flag if messages are added at the bottom
+    setIsAddingNewMessages(true);
+  }, [messages]);
+
 
   // Function to copy code to clipboard
   const copyToClipboard = (code) => {
@@ -180,13 +227,12 @@ export default function DefaultFileComponent({
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.2 }}
-                        className={`py-2 rounded-3xl break-words ${
-                          message?.role === "user"
-                              ? "bg-[#90A1FE] px-5 max-w-2xl text-white my-5"
-                              : message?.role === "error"
-                              ? " text-red-500 px-5 max-w-3xl my-5 border border-red-500"
-                              : "max-w-3xl"
-                      }`}
+                        className={`py-2 rounded-3xl break-words ${message?.role === "user"
+                          ? "bg-[#90A1FE] px-5 max-w-2xl text-white my-5"
+                          : message?.role === "error"
+                            ? " text-red-500 px-5 max-w-3xl my-5 border border-red-500"
+                            : "max-w-3xl"
+                          }`}
                       >
                         <ReactMarkdown
                           rehypePlugins={[rehypeRaw, rehypeHighlight]}
@@ -209,6 +255,7 @@ export default function DefaultFileComponent({
                                   fontWeight: 'bold',
                                   lineHeight: '1.4',
                                   marginBottom: '1em',
+                                  marginTop: '1em',
                                 }}
                                 {...props}
                               >
@@ -222,6 +269,7 @@ export default function DefaultFileComponent({
                                   fontWeight: 'bold',
                                   lineHeight: '1.5',
                                   marginBottom: '0.8em',
+                                  marginTop: '0.8em',
                                 }}
                                 {...props}
                               >
@@ -235,24 +283,14 @@ export default function DefaultFileComponent({
                                   fontWeight: 'bold',
                                   lineHeight: '1.5',
                                   marginBottom: '0.8em',
+                                  marginTop: '0.8em',
                                 }}
                                 {...props}
                               >
                                 {children}
                               </h3>
                             ),
-                            // li: ({ node, children, ...props }) => (
-                            //   <li
-                            //     style={{
-                            //       fontSize: '16px', // Consistent with paragraph text
-                            //       lineHeight: '1.8',
-                            //       marginBottom: '0.5em',
-                            //     }}
-                            //     {...props}
-                            //   >
-                            //     {children}
-                            //   </li>
-                            // ),
+
                             strong: ({ node, children, ...props }) => (
                               <strong style={{ fontWeight: 'bold' }} {...props}>
                                 {children}
