@@ -32,7 +32,7 @@ export default function Home() {
               </p>
             </div>
             <div className=" mt-10">
-              <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
+              <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl tracking-wider">
                 <a href="/login">Get Started</a>
               </button>
             </div>
@@ -42,8 +42,8 @@ export default function Home() {
           </div>
         </div>
         <div className="text-center mt-[-40px]">
-          <h1 className="font-semibold text-3xl">
-            Innovative Features for Even <br /> More Efficiency and Accuratcy
+          <h1 className="font-semibold text-5xl my-32 tracking-wide">
+            <p className="mb-10">Innovative Features for Even</p><p>More Efficiency and Accuratcy</p>
           </h1>
         </div>
         <div className="flex mt-20 -ms-60">
@@ -57,22 +57,29 @@ export default function Home() {
           </div>
           <div className="-ms-52 mt-24">
             <div>
-              <h1 className="font-semibold text-2xl leading-relaxed">
-                RealTime Collaborative <br /> With Documents
+              <h1 className="font-semibold text-3xl leading-relaxed tracking-wider">
+                <p>RealTime Collaborative</p>
+                <p>With Documents</p>
               </h1>
             </div>
             <div>
               <div className=" text-lg mt-6">
-                <p>
-                  No more waiting—get instant responses as you and your team{" "}
-                  <br />
-                  work together to find the answers hidden within your <br />
-                  documents. <br /> Create your own custom widget today to start
-                  collaborating <br /> and retrieving information instantly.
-                </p>
+                <div>
+                  <p>
+                    No more waiting—get instant responses as you and your team
+                  </p>
+                  <p className="mb-4">
+                    work together to find the answers hidden within your <br />
+                    documents.
+                  </p>
+
+                  <p>Create your own custom widget today to start
+                    collaborating
+                  </p>and retrieving information instantly.
+                </div>
               </div>
               <div className=" mt-10">
-                <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl">
+                <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl tracking-wider">
                   Generate your widget
                 </button>
               </div>
@@ -87,16 +94,16 @@ export default function Home() {
             height={800}
           />
         </div>
-        <div className="mt-20 text-center p-10 border-2 mx-60 rounded-xl">
+        <div className="my-32 text-center p-10 border-2 mx-60 rounded-xl">
           <h1 className="font-bold text-3xl leading-relaxed">
             Instant answers. Greater <br /> productivity. Endless inspiration.
           </h1>
-          <button className="bg-primary mt-5 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl">
-          <Link href="/playground">Let&apos;s Try</Link>
+          <button className="bg-primary mt-5 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl tracking-wider">
+            <Link href="/playground">Let&apos;s Try</Link>
           </button>
         </div>
       </div>
-      <div className="mx-40">
+      <div className="mx-40 mb-20">
         <FooterComponent />
       </div>
     </div>

@@ -87,7 +87,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID,params 
     }, [sessionID,id]);
 
 
-
     const handleDeleteChat = (sessionId) => {
         console.log("id to delete: ", sessionId);
         setChatToDelete(sessionId);

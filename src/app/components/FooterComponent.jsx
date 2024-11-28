@@ -4,18 +4,18 @@ import React from "react";
 export default function FooterComponent() {
   return (
     <div>
-      <footer className="footer text-base-content py-10 mt-10 flex justify-between items-start bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
+      <footer className="footer text-base-content py-10 mt-10 flex justify-between items-start  dark:bg-gray-900 dark:text-gray-300">
         {/* Left Section */}
         <div>
           <aside className="flex items-center">
             <Image
-              src="/asset/images/logo.png"
-              alt="GPT_LOGO"
+              src="/asset/images/logo2.png"
+              alt="TexBot logo"
               width={40}
               height={40}
             />
             <span className="ml-5 text-lg font-semibold text-primary dark:text-white">
-              Docs AI
+              TexBot
             </span>
           </aside>
           <p className="mt-2 font-semibold dark:text-gray-400">

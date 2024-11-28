@@ -204,8 +204,8 @@ export const getAllFilesService = async (projectId) => {
   }
 };
 // create Session
-export const createSessionService = async (apiKey) => {
-  const headers = await reqHeader();
+export const createProjectSessionService = async (apiKey) => {
+  console.log("createssesionapi",apiKey);
   try {
     const res = await fetch(
       `${authUrl}/api_generation/session/create_session`,
@@ -228,3 +228,58 @@ export const createSessionService = async (apiKey) => {
     return null;
   }
 };
+// test chat
+export const chatbotService = async (input, externalSessionId, projectId, apiKey) => {
+  console.log("service", input, externalSessionId);
+  const response = await fetch('http://110.74.194.123:1234/external_chain/invoke', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'REST-API-KEY': apiKey, // Use the dynamic API key
+    },
+    body: JSON.stringify({
+      input: {
+        input,
+        external_session_id: externalSessionId,
+        project_id: projectId
+      }
+    })
+  });
+
+  console.log('Response Status:', response.status); // Log the status for debugging
+
+  if (!response.ok) {
+    throw new Error(`Failed to invoke external chain: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  console.log("output", data.output);
+  return data;
+};
+// get session in project
+export const getAllSessionService = async (apiKey) => {
+  try {
+    const response = await fetch(
+      `${authUrl}/api_generation/session/get_all_sessions`,
+      {
+        method: "GET",
+        headers: {
+          "accept": "application/json",
+          "REST-API-KEY": apiKey,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data; // Return the sessions data
+  } catch (error) {
+    console.error("Error fetching sessions:", error.message);
+    return null;
+  }
+};
+

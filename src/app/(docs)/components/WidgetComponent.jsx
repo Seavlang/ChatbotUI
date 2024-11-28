@@ -4,7 +4,7 @@ import ChatWidget from './ChatWidget';
 import TestComponent from './TestComponent';
 import CodeComponent from './CodeComponent';
 
-function WidgetComponent({ projectId }) {
+function WidgetComponent({ projectId,apiKey }) {
     const tabs = [
         {
             title: "Preview",
@@ -29,7 +29,7 @@ function WidgetComponent({ projectId }) {
             value: "playground",
             content: (
                 <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold bg-gradient-to-br bg-white dark:bg-gray-900 dark:text-gray-200">
-                    <TestComponent />
+                    <TestComponent projectId={projectId} apiKey={apiKey}/>
                 </div>
             ),
         },

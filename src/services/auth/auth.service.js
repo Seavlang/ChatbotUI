@@ -21,23 +21,21 @@ export const registerService = async (req) => {
 
 
 export const resendService = async (email) => {
-  console.log("resendService", email);
-  console.log("auth", authUrl);
-  try {
-    const res = await fetch(
-      `${authUrl}/auth/resend_code?email=${email}`,
-      {
-        method: "POST",
-      }
-    )
-      .then((r) => r?.json())
-      .catch((e) => console.log(e));
-    console.log("resendServiceRese", res);
-    return res;
-  } catch (e) {
-    console.log("Error: ", e);
-  }
-};
+    try {
+      const res = await fetch(
+        `${authUrl}/auth/resend_code?email=${email}`,
+        {
+          method: "POST",
+        }
+      )
+        .then((r) => r?.json())
+        .catch((e) => console.log(e));
+        console.log("resendServiceRese",res);
+      return res;
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
 
 export const resetPasswordService = async (email, password) => {
   try {
