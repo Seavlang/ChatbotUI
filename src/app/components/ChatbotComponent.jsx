@@ -5,6 +5,7 @@ import Image from "next/image";
 import askMe from "../../../public/asset/images/ask-me-arrow.svg";
 import leftArrow from "../../../public/asset/images/scribble 1.svg";
 import { chatbotLandingService } from "@/services/auth/user.service";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ChatbotComponent() {
   const [userInput, setUserInput] = useState("");
@@ -13,7 +14,8 @@ export default function ChatbotComponent() {
 
   useEffect(() => {
     // Create a session ID when the tab opens
-    const sessionId = crypto.randomUUID();
+    // const sessionId = crypto.randomUUID();
+    const sessionId = uuidv4();
     sessionStorage.setItem("sessionIDLanding", sessionId);
     console.log("Session created:", sessionId);
 
