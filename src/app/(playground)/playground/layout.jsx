@@ -18,7 +18,6 @@ export default function layout({ children, params }) {
     fetchParams();
   }, [params]);
   
-  console.log("sessionIDSidebar: " + resolvedParams?.projectId);
   return (
     <div>
       <div className="bg-white mx-40">

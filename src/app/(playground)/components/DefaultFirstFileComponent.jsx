@@ -34,7 +34,7 @@ const secondaryVariant = {
         opacity: 1,
     },
 };
-export default function DefaultFirstFileComponent({ setIsLoading }) {
+export default function DefaultFirstFileComponent() {
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
     const [error, setError] = useState(""); // Track error state for invalid files
@@ -42,58 +42,43 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
     const handleClick = () => {
         fileInputRef.current?.click();
     };
-    const [allSessions, setAllSessions] = useState()
-    const [gettingSession, setGettingSession] = useState(true)
-    // const { allSessions, isLoading, fetchAllSessions } = useSessions();
+    const [isLoading, setIsLoading] = useState(false)
 
-    // console.log("session in firstt", allSessions)
-    // useEffect(() => {
-    //     fetchAllSessions()
-    // }, [])
-
-    // const [allSessions, setAllSessions] = useState([])
     const dismissError = () => {
         setError(""); // Remove the error when clicking the dismiss button
     };
-
-    const fetchAllSessions = async () => {
-        try {
-            const response = await getAllSessionsAction();
-            setAllSessions(response?.payload || []);
-        } catch (error) {
-            console.error("Failed to fetch sessions:", error);
-        } finally {
-            setGettingSession(false); // Ensure loading state is properly set
-        }
-    };
-
-    // Fetch sessions initially
     useEffect(() => {
-        fetchAllSessions();
-    }, []);
+        updateSessions();
+    }, [])
 
-
-  const handleFileChange = async (newFiles) => {
-    const file = newFiles[0];
-    if (!file) return;
-    setIsLoading(true);
+    const { addSession, allSessions, updateSessions } = useSessions();
+    const handleFileChange = async (newFiles) => {
+        setIsLoading(true);
+        const file = newFiles[0];
+        if (!file) return;
 
         try {
-            // await fetchAllSessions ()
-            // const session = await getAllSessionsAction();
-            // setAllSessions(session);
             if (allSessions.length >= 3) {
                 setError("Maximum number of sessions reached. Cannot upload more files.");
                 return;
             }
             const sessionResult = await createSessionAction();
             const sessionId = sessionResult.session_id;
-            await createDocumentAction(sessionId, file);
+            const docResult = await createDocumentAction(sessionId, file);
+            const displayName = docResult?.payload?.file_name.replace(/\.[^/.]+$/, "");
+            const newSession = {
+                id: docResult?.payload.session_id,
+                user_id: "",
+                session: sessionId,
+                session_name: displayName,
+                created_at: docResult?.payload?.created_at
+            }
+            addSession(newSession);
             router.push(`/playground/chat/${sessionId}`)
         } catch (e) {
             setError("File upload error: " + e.message);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     };
 
@@ -123,16 +108,16 @@ export default function DefaultFirstFileComponent({ setIsLoading }) {
     return (
         <>
             {
-                gettingSession ?
-                    <div className="flex justify-center">
-                        <Loading />
+                isLoading ?
+                    <div className="flex justify-center items-center">
+                        <Loading />llllll
                     </div>
                     :
                     <div className="">
                         <div className='flex'>
                             <div className="ml-5 inline-flex items-center border border-gray-300 rounded-md px-3 py-2 text-md">
-                                <span className="font-bold text-primary mr-2">Default</span>
-                                <span className="font-normal text-black">Llama3.1</span>
+                                <span className="font-bold text-primary mr-2">DEFAULT</span>
+                                <span className="font-normal text-black">LLAMA3.1</span>
                             </div>
                         </div>
 

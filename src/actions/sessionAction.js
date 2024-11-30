@@ -4,13 +4,13 @@ import { revalidateTag } from "next/cache";
 
 export const getAllSessionsAction = async () => {
     const res = await getAllSessionService();
-    // revalidateTag("sessions")
+    revalidateTag("sessions")
     return res;
 }
 
 export const createSessionAction = async () => {
     const res = await createSessionService();
-    // revalidateTag("sessions")
+    revalidateTag("sessions")
     return res;
 }
 

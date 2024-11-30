@@ -137,14 +137,6 @@ export default function NavbarComponent() {
       setIsModalOpen(false);
     }
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => {
-    console.log("check if modal is open")
-    setIsModalOpen(true);
-    document.getElementById("my_modal_3")?.showModal()
-
-  }
-  console.log("is modal open", isModalOpen)
   return (
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
@@ -207,10 +199,11 @@ export default function NavbarComponent() {
                     />
                   ) : (
                     <Image
-                      src={"/asset/images/profile.png"}
+                      src={"/asset/images/memoji.png"}
                       alt="profile"
                       width={50}
                       height={50}
+                      // className="border border-primary rounded-full"
                     />
                   )}
                 </div>
@@ -387,7 +380,6 @@ export default function NavbarComponent() {
                                     </button>
                                   </div>
                                 </div>
-
                               </div>
                             </div>
                           </dialog>

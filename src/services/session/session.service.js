@@ -5,19 +5,18 @@ import { revalidateTag } from 'next/cache'
 
 export const getAllSessionService = async () => {
     const headers = await reqHeader();
+    console.log("get session service", headers)
     try {
         const res = await fetch(`${authUrl}/session/all_sessions`, {
             method: "GET",
             headers,
-            next: {
-                tags: ["sessions"],
-            },
+            next: { tags: ["sessions"] }
         });
         if (!res.ok) {
             console.error("Failed to get all sessions", res.statusText);
             return null;
         }
-        const response = await res?.json();
+        const response = await res.json();
         console.log("response: session ", response)
         return response
     } catch (e) {
@@ -38,9 +37,9 @@ export const createSessionService = async () => {
         }
         const response = await res?.json();
         console.log("responsecreatesession",res);
-        if(res.ok === true){
-            revalidateTag('sessions');
-        }
+        // if(res.ok === true){
+            // revalidateTag('sessions');
+        // }
         return response
     } catch (e) {
         console.log("Error: ", e);

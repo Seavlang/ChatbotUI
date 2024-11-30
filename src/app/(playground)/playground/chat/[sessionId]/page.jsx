@@ -96,6 +96,7 @@ export default function Page({ params }) {
     }, []);
 
     useEffect(() => {
+        setIsLoading(true);
         const resolveParams = async () => {
             if (!params) {
                 setResolvedParams({ sessionId: id });
@@ -140,7 +141,6 @@ export default function Page({ params }) {
         if (!resolvedParams) return; // Wait until `resolvedParams` is set
 
         const fetchData = async () => {
-            // setIsLoading(true);
 
             try {
                 const documentResult = await getAllDocumentAction(resolvedParams);
@@ -153,7 +153,6 @@ export default function Page({ params }) {
                 setMessages(historyResult?.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                // setIsLoading(false);
             } finally {
                 setIsLoading(false); // End loading after all fetches complete
             }
@@ -171,8 +170,6 @@ export default function Page({ params }) {
     };
 
     const handleSelectDocument = (id) => {
-        // handle file selection and upload
-        console.log("handleSelectDocument", id)
         setSelectedDocument(id)
     }
     const fetchLM = async () => {
@@ -186,11 +183,10 @@ export default function Page({ params }) {
     useEffect(() => {
         fetchLM();
     }, []);
-    console.log("files: ", files)
     return (
         <>
             {
-                isLoading ? <div className='h-full w-full flex justify-center'><Loading /></div>
+                isLoading ? <div className='h-full w-full flex justify-center items-center'><Loading /></div>
                     :
                     <div className='h-full w-full '>
                         <div className='h-4/5'>

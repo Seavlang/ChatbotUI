@@ -84,8 +84,6 @@ export const FileUploadPlayground = ({ session, isFileUploading, fileOnChange })
       setError("Invalid file type. Please upload a .pdf or .txt file.");
     },
   });
-
-  console.log("setIsFileUploading(false): ", isFileUploading)
   return (
     <>
       {isLoading || isFileUploading ? <div className="flex justify-center"><Loading /></div>

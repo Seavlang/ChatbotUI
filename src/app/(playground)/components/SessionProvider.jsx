@@ -1,34 +1,45 @@
-import { getAllSessionsAction } from '@/actions/sessionAction';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { deleteSessionAction, getAllSessionsAction } from "@/actions/sessionAction";
+import { createContext, useState, useContext } from "react";
 
-const SessionsContext = createContext();
+// Create Context
+const SessionContext = createContext();
 
 export const SessionsProvider = ({ children }) => {
     const [allSessions, setAllSessions] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
-    const fetchAllSessions = async () => {
-        setIsLoading(true); // Set loading to true when refetching
+    const updateSessions = async () => {
         try {
-            const response = await getAllSessionsAction();
+            const response = await getAllSessionsAction(); // Fetch all sessions
             setAllSessions(response?.payload || []);
         } catch (error) {
-            console.error("Failed to fetch sessions:", error);
-        } finally {
-            setIsLoading(false); // Ensure loading state is properly set
+            console.error("Error updating sessions:", error);
         }
     };
 
-    // Fetch sessions initially
-    useEffect(() => {
-        fetchAllSessions();
-    }, []);
+    const addSession = (newSession) => {
+        setAllSessions((prev) => [...prev, newSession]);
+    };
+    const deleteSession = async (sessionId) => {
+        try {
+            const response = await deleteSessionAction(sessionId);
+            if (response?.success) {
+                // Update the local state
+                setAllSessions((prev) => prev.filter((session) => session.id !== sessionId));
+            } else {
+                console.error("Failed to delete session:", response?.message || "Unknown error");
+            }
+        } catch (error) {
+            console.error("Error deleting session:", error);
+        }
+    };
 
+    console.log("session provider: ", allSessions)
     return (
-        <SessionsContext.Provider value={{ allSessions, isLoading, fetchAllSessions }}>
+        <SessionContext.Provider value={{ allSessions, setAllSessions, updateSessions, addSession, deleteSession }}>
             {children}
-        </SessionsContext.Provider>
+        </SessionContext.Provider>
     );
 };
 
-export const useSessions = () => useContext(SessionsContext);
+// Custom Hook for using the context
+export const useSessions = () => useContext(SessionContext);

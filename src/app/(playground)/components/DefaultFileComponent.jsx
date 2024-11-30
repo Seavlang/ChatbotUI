@@ -164,8 +164,10 @@ export default function DefaultFileComponent({
     <div className="">
       <div className="flex">
         <div className="ml-5 inline-flex items-center border border-primary rounded-md px-3 py-2 text-md ">
-          <span className="font-bold text-primary mr-2">{lmData?.provider_info?.model_name}</span>
-          <span className="font-normal text-black">{lmData?.provider_info?.provider_name}</span>
+          <span className="font-bold text-primary mr-2">{
+            lmData?.provider_info?.provider_name?.toUpperCase() || ''}
+          </span>
+          <span className="font-normal text-black">{lmData?.provider_info?.model_name?.toUpperCase() || ''}</span>
         </div>
         <div>
           {files?.length > 0 ? (
@@ -210,9 +212,6 @@ export default function DefaultFileComponent({
       </div>
 
       <div className="flex mx-auto w-full">
-        {/* {
-          isFileUploading ? <div className='flex justify-center bg-red-300'><Loading />llooaododod</div>
-            : */}
         <div
           ref={messagesContainerRef}
           className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
@@ -345,7 +344,6 @@ export default function DefaultFileComponent({
           {/* This div is used as the reference to scroll to */}
           <div ref={messagesEndRef} />
         </div>
-        {/* } */}
         {showScrollButton && (
           <button
             onClick={scrollToBottom}
