@@ -71,7 +71,7 @@ export default function LoginForm() {
                     type="email"
                     placeholder="Email Address"
                     {...field}
-                    className="h-12 text-base px-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className="h-12 text-base px-4 placeholder:text-gray-500 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </FormControl>
                 <FormMessage className="text-red-500" />
@@ -90,7 +90,7 @@ export default function LoginForm() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...field}
-                      className="h-12 text-base px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      className="h-12 text-base px-4 pr-10 rounded-md placeholder:text-gray-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     />
                     <button
                       type="button"

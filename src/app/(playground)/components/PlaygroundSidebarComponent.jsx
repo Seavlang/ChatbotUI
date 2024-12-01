@@ -125,7 +125,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
                     )}
                 >
                     <Sidebar open={open} setOpen={setOpen}>
-                        <SidebarBody className="justify-between gap-10">
+                        <SidebarBody className="justify-between gap-10 dark:background-black">
 
                             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                                 <div className="flex flex-col gap-2">
@@ -177,7 +177,6 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
                                                     <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
                                                 </svg>
                                             </div>
-
                                         </div>
                                     </motion.span>
                                     <motion.span

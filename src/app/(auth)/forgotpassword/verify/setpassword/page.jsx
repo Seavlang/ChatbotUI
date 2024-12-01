@@ -103,7 +103,7 @@ export default function ResetPasswordForm() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Create Password"
                       {...field}
-                      className="h-12 text-base px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                      className="h-12 text-base placeholder:text-gray-500 px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                     />
                     <button
                       type="button"
@@ -135,7 +135,7 @@ export default function ResetPasswordForm() {
                       type={showConPassword ? "text" : "password"}
                       placeholder="Re-enter Password"
                       {...field}
-                      className="h-12 text-base px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                      className="h-12 text-base px-4 placeholder:text-gray-500 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                     />
                     <button
                       type="button"

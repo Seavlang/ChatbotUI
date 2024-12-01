@@ -95,7 +95,7 @@ export default function SignUpForm() {
                   <Input
                     placeholder="Username"
                     {...field}
-                    className="h-12 text-base px-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className="h-12 text-base placeholder:text-gray-500 px-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </FormControl>
                 <FormMessage className="text-red-500" />
@@ -113,7 +113,7 @@ export default function SignUpForm() {
                     type="email"
                     placeholder="Email Address"
                     {...field}
-                    className="h-12 text-base px-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className="h-12 text-base px-4 placeholder:text-gray-500 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </FormControl>
                 <FormMessage className="text-red-500" />
@@ -132,7 +132,7 @@ export default function SignUpForm() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...field}
-                      className="h-12 text-base px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      className="h-12 text-base placeholder:text-gray-500 px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     />
                     <button
                       type="button"
@@ -163,7 +163,7 @@ export default function SignUpForm() {
                       type={showConPassword ? "text" : "password"}
                       placeholder="Confirm Password"
                       {...field}
-                      className="h-12 text-base px-4 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      className="h-12 text-base px-4 placeholder:text-gray-500 pr-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     />
                     <button
                       type="button"

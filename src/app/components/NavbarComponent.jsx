@@ -248,14 +248,14 @@ export default function NavbarComponent() {
                         className="text-left "
                         onClick={() =>
                           // handleOpenModal()
-                          document.getElementById("my_modal_3")?.showModal()
+                          document.getElementById("model_setting")?.showModal()
                         }
                       >
                         Settings
                       </button>
                       {/* {
                         isModalOpen && ( */}
-                          <dialog id="my_modal_3" className="modal">
+                          <dialog id="model_setting" className="modal">
                             <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                               {/* Close Button */}
                               <form method="dialog">

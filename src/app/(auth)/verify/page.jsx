@@ -85,7 +85,7 @@ export default function CodeVerificationForm() {
                     <Input
                       placeholder="Code"
                       {...field}
-                      className="h-12 text-base px-4 rounded-md border-gray-300"
+                      className="h-12 text-base placeholder:text-gray-500 px-4 rounded-md border-gray-300"
                     />
                   </FormControl>
                   <FormMessage className="text-red-500"/>

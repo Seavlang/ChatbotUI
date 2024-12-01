@@ -69,5 +69,8 @@ module.exports = {
       },
     },
   },
+  daisyui: {
+    darkTheme: false, // Disable dark theme for DaisyUI
+  },
   plugins: [require("tailwindcss-animate"), require('daisyui')],
 }
