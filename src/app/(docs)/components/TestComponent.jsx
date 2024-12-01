@@ -19,7 +19,7 @@ function TestComponent({ projectId, apiKey }) {
       }
     };
 
-    fetchSession();
+    fetchSession();       
   }, [apiKey]);
 
   const earliestSession = session?.payload?.reduce((prev, current) =>

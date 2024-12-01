@@ -5,15 +5,16 @@ import Image from "next/image";
 import askMe from "../../../public/asset/images/ask-me-arrow.svg";
 import leftArrow from "../../../public/asset/images/scribble 1.svg";
 import { chatbotLandingService } from "@/services/auth/user.service";
+import { v4 } from "uuid";
 
 export default function ChatbotComponent() {
   const [userInput, setUserInput] = useState("");
-  const [submittedQuestions, setSubmittedQuestions] = useState([]); 
+  const [submittedQuestions, setSubmittedQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Create a session ID when the tab opens
-    const sessionId = crypto.randomUUID();
+    const sessionId = v4();
     sessionStorage.setItem("sessionIDLanding", sessionId);
     console.log("Session created:", sessionId);
 
@@ -32,10 +33,16 @@ export default function ChatbotComponent() {
     };
   }, []);
 
+  useEffect(() => {
+    const chatContainer = document.getElementById("chat-container");
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, [submittedQuestions]); // Scroll to the bottom when new messages are added
+
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,18 +53,18 @@ export default function ChatbotComponent() {
       ...prev,
       { question: currentQuestion, answer: "Processing..." },
     ]);
-    setUserInput(""); 
+    setUserInput("");
     setLoading(true);
 
     try {
-      const sessionId = sessionStorage.getItem("sessionIDLanding"); 
+      const sessionId = sessionStorage.getItem("sessionIDLanding");
       const chatbotResponse = await chatbotLandingService(
         currentQuestion,
         sessionId
       );
       const responseText =
         chatbotResponse?.output || "Sorry, no response from the chatbot.";
-      console.log("chatbot response: " , chatbotResponse, responseText);
+      console.log("chatbot response: ", chatbotResponse, responseText);
       setSubmittedQuestions((prev) => {
         const updatedQuestions = [...prev];
         updatedQuestions[updatedQuestions.length - 1].answer = responseText;
@@ -80,23 +87,28 @@ export default function ChatbotComponent() {
     <div className="relative ">
       <div className="h-screen flex justify-end items-center text-justify">
         <form className="bg-white rounded-2xl text-black w-2/3 h-2/3 flex flex-col z-10 shadow-2xl shadow-purple-100">
-
           <div className="p-10 bg-gradient-to-r from-white to-[#C3EAFF] rounded-t-2xl">
-            <p className="text-[#004B93] font-bold text-2xl tracking-wider mb-3">Good Morning!</p>
+            <p className="text-[#004B93] font-bold text-2xl tracking-wider mb-3">
+              Good Morning!
+            </p>
             <p>How can I help you today?</p>
           </div>
 
-          <div className="flex-grow overflow-auto mb-4 no-scrollbar p-6">
+          <div
+            className="flex-grow overflow-y-auto mb-4 no-scrollbar p-6"
+            id="chat-container"
+          >
             {submittedQuestions.map((qa, index) => (
               <div key={index}>
-
-                <div className="bg-gray-100 w-3/4 ml-auto p-3 rounded-xl">
+                <div className="flex justify-end">
+                 <div className="bg-gray-100 inline-block  ml-auto p-3 rounded-xl">
                   <p>{qa?.question}</p>
+                </div>  
                 </div>
+               
 
-                {/* AI response */}
+               
                 <div className="flex items-start py-4 gap-3">
-              
                   <span className="p-3 rounded-xl bg-blue-100">
                     {loading && index === submittedQuestions.length - 1
                       ? "Processing..."
@@ -107,7 +119,6 @@ export default function ChatbotComponent() {
             ))}
           </div>
 
-       
           <div className="mt-auto sticky bottom-0 p-6">
             <div className="relative w-4/5 mx-auto">
               <input
@@ -151,7 +162,6 @@ export default function ChatbotComponent() {
             </div>
           </div>
         </form>
-
 
         <div className="absolute -left-[90px] bottom-32">
           <Image src={askMe} alt="ask me with arrow" width={500} height={500} />

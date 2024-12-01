@@ -12,13 +12,13 @@ function APIEndpointModal({ idx }) {
     dialogRef.current.close();
   };
   const postCurl =
-    "curl -X 'POST' \\ \n  'http://110.74.194.123:8085/api/v1/chatbot/create_new_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’";
+    "curl -X 'POST' \\ \n  'http://110.74.194.123:1234/api/v1/api_generation/session/create_session' \\ \n    -H 'accept: application/json' \\ \n    -H 'Authorization: Bearer REST_API_KEY’";
 
   const getCurl =
-    "curl -X 'GET' \\ \n 'http://110.74.194.123:8085/api/v1/api_generation/session/get_all_sessions' \\ \n -H 'accept: application/json'";
+    "curl -X 'GET' \\ \n 'http://110.74.194.123:1234/api/v1/api_generation/session/create_session' \\ \n -H 'accept: application/json'";
 
   const deleteCurl =
-    "curl -X 'DELETE' \\ \n 'http://110.74.194.123:8085/api/v1/api_generation/session/delete/your_session_id' \\ \n -H 'accept: application/json'";
+    "curl -X 'DELETE' \\ \n 'http://110.74.194.123:1234/api/v1/api_generation/session/delete/your_session_id' \\ \n -H 'accept: application/json'";
 
   const json201Response = `{  
   "message": "File uploaded successfully",
