@@ -47,11 +47,8 @@ export default function DefaultFirstFileComponent() {
     const dismissError = () => {
         setError(""); // Remove the error when clicking the dismiss button
     };
-    useEffect(() => {
-        updateSessions();
-    }, [])
 
-    const { addSession, allSessions, updateSessions } = useSessions();
+    const { addSession, allSessions } = useSessions();
     const handleFileChange = async (newFiles) => {
         setIsLoading(true);
         const file = newFiles[0];

@@ -79,7 +79,6 @@ export default function Page({ params }) {
     projectData?.project_id?.description || ""
   );
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  console.log("uploaded files fetch", uploadedFiles);
 
   useEffect(() => {
     // Resolve the params Promise

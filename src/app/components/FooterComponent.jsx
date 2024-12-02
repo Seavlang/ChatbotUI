@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-
+import Link from "next/link";
 export default function FooterComponent() {
   return (
     <div>
@@ -28,8 +28,16 @@ export default function FooterComponent() {
           <h6 className="text-black font-semibold dark:text-white">
             GETTING STARTED
           </h6>
-          <a className="link link-hover dark:text-gray-400">Playground</a>
-          <a className="link link-hover dark:text-gray-400">API Documentation</a>
+          <div className="link link-hover dark:text-gray-400">
+            <Link href="/playground">
+              Playground
+            </Link>
+          </div>
+          <div className="link link-hover dark:text-gray-400">
+            <Link href="/docs/allApps">
+              API Documentation
+            </Link>
+          </div>
         </div>
 
         {/* Contact Us Section */}

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { getSessionDetailAction } from "@/actions/sessionAction";
 import { usePathname } from "next/navigation";
 import { getCurrentUserAction } from "@/actions/userAction";
+import { useSessions } from "@/app/(playground)/components/SessionProvider";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -22,23 +23,23 @@ export function PlaceholdersAndVanishInput({
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
   const pathname = usePathname()
-  const [userId, setUserId] = useState();
-
+  // const [userId, setUserId] = useState();
+  const { userId } = useSessions()
   useEffect(() => {
 
     const id = pathname.split('/').pop();
     const session = {
       sessionId: id
     }
-    const fetchUser = async () => {
-      const result = await getCurrentUserAction();
-      setUserId(result?.payload?.id);
-    }
+    // const fetchUser = async () => {
+    //   const result = await getCurrentUserAction();
+    //   setUserId(result?.payload?.id);
+    // }
     const fetchSessionDetail = async () => {
       const sessionData = await getSessionDetailAction(session)
       setActiveSession(sessionData?.payload)
     }
-    fetchUser()
+    // fetchUser()
     fetchSessionDetail();
   }, [])
 
@@ -62,7 +63,7 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (socket && value) {
-      console.log("file_id ",selectedDocument)
+      console.log("file_id ", selectedDocument)
       const file_id = selectedDocument == 0 ? null : selectedDocument
       socket.send(JSON.stringify(
         {
