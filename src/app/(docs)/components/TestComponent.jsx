@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAllSessionAction } from "@/actions/docAction";
-
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 function TestComponent({ projectId, apiKey }) {
   const [input, setInput] = useState("");
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [output, setOutput] = useState("");
   const wsRef = useRef(null);
-
   // Fetch session data on component mount
   useEffect(() => {
     const fetchSession = async () => {
@@ -19,16 +22,16 @@ function TestComponent({ projectId, apiKey }) {
       }
     };
 
-    fetchSession();       
+    fetchSession();
   }, [apiKey]);
 
   const earliestSession = session?.payload?.reduce((prev, current) =>
     new Date(prev.created_at) < new Date(current.created_at) ? prev : current
   );
 
-  
+
   useEffect(() => {
-    wsRef.current = new WebSocket("ws://110.74.194.123:1234/ws/generate-response");
+    wsRef.current = new WebSocket("ws://110.74.194.123:1234/ws/generate-response-playground-widget");
 
     wsRef.current.onopen = () => {
       console.log("WebSocket connection established.");
@@ -38,18 +41,12 @@ function TestComponent({ projectId, apiKey }) {
       try {
         const data = JSON.parse(event.data);
 
-        if (data.type === "error") {
-          setOutput(`Error: ${data.content}`);
-        } else if (data.type === "paragraph" && data.content?.trim()) {
-          setOutput((prevOutput) => prevOutput + " " + data.content.trim()); 
-        } else {
-          console.warn("Unexpected or empty content received:", data);
-        }
+        setOutput((prevOutput) => prevOutput + data.content);
       } catch (error) {
         console.error("Error parsing WebSocket response:", error);
         setOutput("Error parsing server response.");
       }
-      setIsLoading(false); 
+      setIsLoading(false);
     }
 
     wsRef.current.onclose = () => {
@@ -65,13 +62,13 @@ function TestComponent({ projectId, apiKey }) {
     if (input.trim() === "") return;
 
     setIsLoading(true);
-    setOutput(""); 
+    setOutput("");
 
     const payload = {
       input: {
-        input, 
-        external_session_id: earliestSession?.id, 
-        project_id: projectId, 
+        input,
+        external_session_id: earliestSession?.id,
+        project_id: projectId,
       },
     };
 
@@ -107,7 +104,33 @@ function TestComponent({ projectId, apiKey }) {
 
       <div className="text-sm font-medium">Output</div>
       <div className="w-full my-5 h-auto max-h-80 overflow-y-auto text-sm font-normal rounded-xl border py-3 px-5 bg-white dark:bg-gray-800 dark:border-gray-700 text-black dark:text-gray-200">
-        {output ? <p className="text-gray-800 dark:text-gray-300">{output}</p> : <p>No response yet.</p>}
+        {output ? <div className="text-gray-800 dark:text-gray-300">
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeHighlight]}
+            components={{
+              code: ({ node, inline, className = '', children, ...props }) => {
+                const language = className.replace('language-', '');
+                if (!inline) {
+                  return (
+                    <div className="code-block-wrapper">
+                      <pre className={`code-block language-${language} `} {...props}>
+                        <code>{children}</code>
+                      </pre>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <code className={`inline-code overflow-x-auto`} {...props}>
+                      {children}
+                    </code>
+                  );
+                }
+              },
+            }}
+          >
+            {output}
+          </ReactMarkdown>
+        </div> : <p>No response yet.</p>}
       </div>
     </div>
   );

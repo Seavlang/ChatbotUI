@@ -6,7 +6,8 @@ import { getAllProjectAction } from "@/actions/docAction";
 import DeleteProjectModal from "../../components/DeleteProjectModal";
 
 export default async function Page({ searchParams }) {
-  const searchTerm = searchParams?.search || "";
+  const params = await searchParams;
+  const searchTerm = params?.search || "";
   const data = await getAllProjectAction();
   const tableData = data?.payload || [];
 

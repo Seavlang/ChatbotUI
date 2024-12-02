@@ -31,7 +31,7 @@ export const getAllModelsService = async () => {
       method: "GET",
       headers,
       next: {
-        tag: ["model"],
+        tag: ["models"],
       },
     });
     if (!res.ok) {
@@ -53,7 +53,7 @@ export const getAllProvidersService = async () => {
       method: "GET",
       headers,
       next: {
-        tag: ["provider"],
+        tag: ["providers"],
       },
     });
     console.log("res: ", res);

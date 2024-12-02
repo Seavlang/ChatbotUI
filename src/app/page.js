@@ -5,8 +5,11 @@ import { Button } from "@nextui-org/react";
 import FooterComponent from "./components/FooterComponent";
 import Link from "next/link";
 import ChatbotComponent from "./components/ChatbotComponent";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
   return (
     <div>
       <div className="bg-white mx-40">
@@ -33,7 +36,15 @@ export default function Home() {
             </div>
             <div className=" mt-10">
               <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl tracking-wider">
-                <a href="/login">Get Started</a>
+                {
+                  isLoggedIn ?
+                    <Link href="/playground">
+                      Get Started
+                    </Link>
+                    :
+                    <Link href="/login">Get Started</Link>
+                }
+
               </button>
             </div>
           </div>
@@ -80,7 +91,10 @@ export default function Home() {
               </div>
               <div className=" mt-10">
                 <button className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl tracking-wider">
-                  Generate your widget
+                  <Link href="/docs/allApps">
+                    Generate your widget
+                  </Link>
+
                 </button>
               </div>
             </div>
@@ -103,7 +117,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <div className="mx-40 mb-20">
+      <div className="mx-40">
         <FooterComponent />
       </div>
     </div>

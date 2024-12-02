@@ -60,13 +60,42 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.access_token = user.access_token;
-        token.name = user.name;
-        token.email = user.email;
-        token.image = user.image;
+    async jwt({ token, user, account }) {
+
+      if (user && account?.provider === "google") {
+        const googleUser = {
+          username: token.name,
+          email: token.email,
+          image: token.picture,
+          sub: token.sub
+        }
+        try {
+          const response = await fetch(
+            `${process.env.AUTH_URL}/auth/third_party_login`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "Accept": "application/json",
+              },
+              body: JSON.stringify(googleUser),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to authenticate with third party login");
+          }
+          const data = await response.json();
+          console.log("data: ", data)
+          token.id = data.payload.sub;
+          token.name = data.payload.username;
+          token.email = data.payload.email;
+          token.image = data.payload.profile_img;
+          token.access_token = data?.access_token
+        } catch (error) {
+          throw new Error("Error sending Google login to server: ", error)
+        }
+
       }
       return token;
     },
