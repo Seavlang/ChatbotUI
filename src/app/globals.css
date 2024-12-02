@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.no-scrollbar {
+    overflow-y: scroll;
+    /* Allows scrolling */
+    scrollbar-width: none;
+    /* Hides scrollbar in Firefox */
+    -ms-overflow-style: none;
+    /* Hides scrollbar in IE and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Hides scrollbar in Chrome, Safari, and Opera */
+}
+
+textarea::-webkit-scrollbar {
+    width: 0px;
+}
+
+.no-visible-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.no-visible-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Wrapper for code blocks to position the copy button */
+.code-block-wrapper {
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  /* Code blocks */
+  pre.code-block {
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    width: 100%;
+    line-height: 1.6; /* Increased line height for readability */
+  }
+  
+  /* Remove default margin from pre element inside the wrapper */
+  .code-block-wrapper pre.code-block {
+    margin: 0;
+  }
+  
+  /* Inline code */
+  code.inline-code {
+    background-color: rgba(175, 184, 193, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 85%;
+    color: #24292e;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    line-height: 3; /* Increased line height for inline code */
+  }
+  
+  /* Copy Code Button */
+  .copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #f6f8fa;
+    border: none;
+    color: #586069;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .copy-code-button:hover {
+    background-color: #eaecef;
+  }
+
+
+/* Lists */
+ul, ol {
+  padding-left: 1.5em; /* Indent lists for better readability */
+}
+
+/* Code blocks */
+pre.code-block {
+  margin-bottom: 1.5em; /* Space below code blocks */
+}

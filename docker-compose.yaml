@@ -1,0 +1,18 @@
+version: '3.8'  # Specify docker-compose version
+
+services:
+  app:
+    build:
+      context: .  # Use the current directory for the build context
+      dockerfile: Dockerfile  # Use the specified Dockerfile
+    ports:
+      - "3000:3000"  # Map the container's port 3000 to the host's port 3000
+    volumes:
+      - .:/app  # Bind mount the project directory so changes are reflected in the container
+      - /app/node_modules  # Ensure node_modules is not overwritten by the volume
+    environment:
+      NODE_ENV: production  # Set environment variable, change as needed
+    command: ["npm", "start"]  # Start the Next.js application
+
+    # Optional restart policy in case the container crashes
+    restart: unless-stopped
