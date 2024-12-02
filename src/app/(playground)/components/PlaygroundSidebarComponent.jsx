@@ -24,70 +24,29 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import { deleteSessionAction, getAllSessionsAction } from '@/actions/sessionAction';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../playground/loading';
+import { useSessions } from './SessionProvider';
 
-
-
-export default function PlaygroundSidebarComponent({ children, sessionID, params }) {
+export default function PlaygroundSidebarComponent({ children }) {
     const [activeChat, setActiveChat] = useState(0); // Track active chat index
     const [chatToDelete, setChatToDelete] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(null);
     const [open, setOpen] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isDelLoading, setIsDelLoading] = useState(false);
-
-    const [messages, setMessages] = useState([]);
-    // const [resolvedParams, setResolvedParams] = useState(null);
-    const messagesEndRef = useRef(null);
-    const [resolvedParams, setResolvedParams] = useState(null);
-    const [allSessions, setAllSessions] = useState([])
+    // const [allSessions, setAllSessions] = useState([])
     const pathname = usePathname()
     const router = useRouter()
     const id = pathname.split('/').pop();
-    // useEffect(() => {
-    //     // Resolve the params Promise
-    //     const fetchParams = async () => {
-    //       const result = await params;
-    //       setResolvedParams(result);
-    //     };
-
-    //     fetchParams();
-    //   }, [params]);
-    //   console.log("sidebar param", params);
-    console.log("is loading in sidebar: ", id);
-    console.log("ses loading in sidebar: ", sessionID);
-
+    const { allSessions, updateSessions, deleteSession } = useSessions();
     useEffect(() => {
-        const fetchAllSessions = async () => {
-            try {
-                const response = await getAllSessionsAction();
-
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchAllSessions();
-    }, [id]);
-    useEffect(() => {
-        const fetchAllSessions = async () => {
-            setIsLoading(true);
-            try {
-                const response = await getAllSessionsAction();
-                setAllSessions(response?.payload);
-            } catch (error) {
-                console.error(error);
-            }
-            finally {
-                setIsLoading(false)
-            }
-        }
-        fetchAllSessions();
-
-    }, [sessionID, id]);
-
+        setIsLoading(true)
+        updateSessions();
+        setIsLoading(false)
+    }, []);
+    console.log("all sessions: ", allSessions)
+    console.log("all sessions updated: ", allSessions)
 
     const handleDeleteChat = (sessionId) => {
-        console.log("id to delete: ", sessionId);
         setChatToDelete(sessionId);
         setIsDeleteDialogOpen(true);
     };
@@ -95,13 +54,11 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
     const confirmDeleteChat = async () => {
         try {
             setIsDelLoading(true);
-            const response = await deleteSessionAction(chatToDelete);
-            if (response?.success == true) {
-                setIsDelLoading(false);
-                router.push(`/playground`)
-            }
+            deleteSession(chatToDelete)
+            router.push(`/playground`)
         } catch (err) {
             console.error("Error fetching data:", err);
+        } finally {
             setIsDelLoading(false);
         }
         if (activeChat && activeChat.id === chatToDelete) {
@@ -125,7 +82,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
                     )}
                 >
                     <Sidebar open={open} setOpen={setOpen}>
-                        <SidebarBody className="justify-between gap-10 dark:background-black">
+                        <SidebarBody className="justify-between gap-10">
 
                             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                                 <div className="flex flex-col gap-2">
@@ -177,6 +134,7 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
                                                     <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
                                                 </svg>
                                             </div>
+
                                         </div>
                                     </motion.span>
                                     <motion.span
@@ -277,8 +235,8 @@ export default function PlaygroundSidebarComponent({ children, sessionID, params
                                 </Button>
                                 <Button variant="delete" onClick={confirmDeleteChat} >
                                     {
-                                        isDelLoading ? <div className="disabled">
-                                            <span className="loading loading-spinner loading-md text-primary"></span>
+                                        isDelLoading ? <div className="disabled flex justify-center w-5 item-center">
+                                            <span className="loading loading-spinner loading-md text-white"></span>
                                         </div> : <div>DELETE</div>
                                     }
 
