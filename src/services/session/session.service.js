@@ -13,6 +13,7 @@ export const getAllSessionService = async () => {
                 tags: ["sessions"],
             },
         });
+        console.log("getallsessionservice",res);
         if (!res.ok) {
             console.error("Failed to get all sessions", res.statusText);
             return null;

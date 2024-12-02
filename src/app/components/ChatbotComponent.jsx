@@ -101,7 +101,7 @@ export default function ChatbotComponent() {
             {submittedQuestions.map((qa, index) => (
               <div key={index}>
                 <div className="flex justify-end">
-                 <div className="bg-gray-100 inline-block  ml-auto p-3 rounded-xl">
+                 <div className="bg-gray-100 inline-block  ml-20 p-3 rounded-xl">
                   <p>{qa?.question}</p>
                 </div>  
                 </div>
@@ -109,7 +109,7 @@ export default function ChatbotComponent() {
 
                
                 <div className="flex items-start py-4 gap-3">
-                  <span className="p-3 rounded-xl bg-blue-100">
+                  <span className="p-3 rounded-xl mr-20 bg-blue-100">
                     {loading && index === submittedQuestions.length - 1
                       ? "Processing..."
                       : qa?.answer}
@@ -124,7 +124,7 @@ export default function ChatbotComponent() {
               <input
                 type="text"
                 id="user-input"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 focus:outline-none"
+                className="bg-gray-50 border pr-10 border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 focus:outline-none"
                 placeholder="Enter question here"
                 required
                 value={userInput}
