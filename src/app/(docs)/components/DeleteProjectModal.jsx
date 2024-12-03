@@ -21,9 +21,9 @@ const DeleteProjectModal = ({ projectId }) => {
     setError(null);
     try {
       const res = await deleteProjectAction(projectId); // Directly use projectId
-      if(res?.success == true) {
+      if (res?.success === true) {
         toast.success(res.message);
-      closeModal(); // Close the modal on success
+        closeModal(); // Close the modal on success
       }
     } catch (error) {
       setError("Failed to delete project. Please try again.");
@@ -50,24 +50,34 @@ const DeleteProjectModal = ({ projectId }) => {
       </button>
 
       {/* Modal component */}
-      <dialog id={`delete_modal_${projectId}`} className="modal">
-        <div className="modal-box">
+      <dialog
+        id={`delete_modal_${projectId}`}
+        className="modal bg-white dark:bg-white dark:bg-opacity-5 text-black dark:text-gray-200"
+      >
+        <div className="modal-box bg-white dark:bg-gray-900 rounded-lg shadow-lg">
           {/* Modal Header */}
-          <h2 className="text-lg text-left font-bold text-red-600 mb-4">Delete Project</h2>
+          <h2 className="text-lg text-left font-bold text-red-600 dark:text-red-600 mb-4">
+            Delete Project
+          </h2>
 
           {/* Confirmation Text */}
-          <p className="text-left text-gray-700 mb-4">
-            Are you sure you want to delete this project? This action cannot be undone.
+          <p className="text-left text-gray-700 dark:text-gray-400 mb-4">
+            Are you sure you want to delete this project? This action cannot be
+            undone.
           </p>
 
           {/* Error Message */}
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && (
+            <p className="text-red-500 dark:text-red-400 text-sm mb-4">{error}</p>
+          )}
 
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
-          <button
-              className={`border text-primary py-2 px-4 rounded-lg ${
-                loading ? "bg-gray-400 text-white cursor-not-allowed" : "border-primary"
+            <button
+              className={`border text-primary dark:text-blue-400 py-2 px-4 rounded-lg ${
+                loading
+                  ? "bg-gray-400 dark:bg-gray-700 text-white cursor-not-allowed"
+                  : "border-primary dark:border-blue-400"
               }`}
               onClick={closeModal}
               disabled={loading}
@@ -75,9 +85,9 @@ const DeleteProjectModal = ({ projectId }) => {
               Cancel
             </button>
             <button
-              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              className="bg-red-600 dark:bg-red-800 text-white py-2 px-4 rounded-lg hover:bg-red-700 dark:hover:bg-red-600"
               onClick={handleDeleteProject}
-              disabled={loading} 
+              disabled={loading}
             >
               {loading ? "Deleting..." : "Delete"}
             </button>

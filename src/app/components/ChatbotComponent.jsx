@@ -13,12 +13,10 @@ export default function ChatbotComponent() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Create a session ID when the tab opens
     const sessionId = v4();
     sessionStorage.setItem("sessionIDLanding", sessionId);
     console.log("Session created:", sessionId);
 
-    // Remove session ID when leaving the tab
     const handleBeforeUnload = () => {
       sessionStorage.removeItem("sessionIDLanding");
       console.log("Session removed");
@@ -26,7 +24,6 @@ export default function ChatbotComponent() {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // Cleanup event listener when the component unmounts
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       sessionStorage.removeItem("sessionIDLanding");
@@ -38,7 +35,7 @@ export default function ChatbotComponent() {
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-  }, [submittedQuestions]); // Scroll to the bottom when new messages are added
+  }, [submittedQuestions]);
 
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
@@ -86,9 +83,9 @@ export default function ChatbotComponent() {
   return (
     <div className="relative ">
       <div className="h-screen flex justify-end items-center text-justify">
-        <form className="bg-white rounded-2xl text-black w-2/3 h-2/3 flex flex-col z-10 shadow-2xl shadow-purple-100">
-          <div className="p-10 bg-gradient-to-r from-white to-[#C3EAFF] rounded-t-2xl">
-            <p className="text-[#004B93] font-bold text-2xl tracking-wider mb-3">
+        <form className="bg-white dark:bg-gray-800 text-black dark:text-gray-200 rounded-2xl w-2/3 h-2/3 flex flex-col z-10 shadow-2xl shadow-purple-100">
+          <div className="p-10 bg-gradient-to-r from-white to-[#C3EAFF] dark:from-primary dark:to-gray-800 rounded-t-2xl">
+            <p className="text-[#004B93] dark:text-[#C3EAFF] font-bold text-2xl tracking-wider mb-3">
               Good Morning!
             </p>
             <p>How can I help you today?</p>
@@ -101,15 +98,12 @@ export default function ChatbotComponent() {
             {submittedQuestions.map((qa, index) => (
               <div key={index}>
                 <div className="flex justify-end">
-                 <div className="bg-gray-100 inline-block  ml-20 p-3 rounded-xl">
-                  <p>{qa?.question}</p>
-                </div>  
+                  <div className="bg-gray-100 dark:bg-gray-700 inline-block ml-20 p-3 rounded-xl">
+                    <p>{qa?.question}</p>
+                  </div>
                 </div>
-               
-
-               
                 <div className="flex items-start py-4 gap-3">
-                  <span className="p-3 rounded-xl mr-20 bg-blue-100">
+                  <span className="p-3 rounded-xl mr-20 bg-blue-100 dark:bg-blue-800">
                     {loading && index === submittedQuestions.length - 1
                       ? "Processing..."
                       : qa?.answer}
@@ -124,13 +118,12 @@ export default function ChatbotComponent() {
               <input
                 type="text"
                 id="user-input"
-                className="bg-gray-50 border pr-10 border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 focus:outline-none"
+                className="bg-gray-50 dark:bg-gray-700 border pr-10 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 focus:outline-none"
                 placeholder="Enter question here"
                 required
                 value={userInput}
                 onChange={handleInputChange}
               />
-
               <button
                 className="p-1.5 rounded-full absolute top-0.5 right-0"
                 onClick={handleSubmit}

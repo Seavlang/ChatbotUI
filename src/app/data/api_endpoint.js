@@ -5,9 +5,9 @@ export const api_document = [
         description: 'Create Chat Session using POST session endpoint.',
         overview: 'This endpoint allows you to create a new chat session. A session ID is required to use other endpoints that rely on active sessions, such as document uploads or chat interactions. By creating a session first, you can link your interactions with documents and queries under a single session.',
         method: 'POST',
-        path: 'http://110.74.194.123:1234/api/v1/api_generation/session/create_session',
+        path: 'https://api-texbot.kshrd.app/api/v1/api_generation/session/create_session',
         request: "curl -X 'POST' \
-  'http://110.74.194.123:1234/api/v1/api_generation/session/create_session' \
+  'https://api-texbot.kshrd.app/api/v1/api_generation/session/create_session' \
   -H 'accept: application/json' \
   -d ''",
         code200: {

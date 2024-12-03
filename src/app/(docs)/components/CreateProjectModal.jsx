@@ -16,6 +16,7 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
     setProjectName("");
     setError(null);
   };
+
   const handleCreateProject = async () => {
     setLoading(true);
     setError(null);
@@ -23,14 +24,14 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
       const create = await createProjectAction(projectName);
       console.log("create", create);
       if (create.success === true) {
-        const   session = await createProjectSessionAction(
+        const session = await createProjectSessionAction(
           create.project_id.api_key
         );
-        if(session.success === true) {
-          console.log("sessionP",session);
-        closeModal();
+        if (session.success === true) {
+          console.log("sessionP", session);
+          closeModal();
         }
-      } 
+      }
     } catch (error) {
       setError("Failed to create project. Please try again.");
     } finally {
@@ -49,10 +50,13 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
       </button>
 
       {/* Modal component */}
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
+      <dialog
+        id="my_modal_1"
+        className="modal bg-white dark:bg-white dark:bg-opacity-5 text-black dark:text-gray-200"
+      >
+        <div className="modal-box bg-white dark:bg-gray-900 rounded-lg shadow-lg">
           {/* Modal Header */}
-          <h2 className="text-lg text-left font-bold text-primary mb-4">
+          <h2 className="text-lg text-left font-bold text-primary dark:text-blue-400 mb-4">
             Create Project
           </h2>
 
@@ -62,19 +66,23 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
             placeholder="Project Name"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)} // Update project name state
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-black dark:text-gray-200 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
           />
 
           {/* Error Message */}
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && (
+            <p className="text-red-500 dark:text-red-400 text-sm mb-4">
+              {error}
+            </p>
+          )}
 
           {/* Buttons */}
           <div className="flex justify-end space-x-4">
             <button
-              className={`border text-primary py-2 px-4 rounded-lg ${
+              className={`border text-primary dark:text-blue-400 py-2 px-4 rounded-lg ${
                 loading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "border-primary"
+                  ? "bg-gray-400 dark:bg-gray-700 text-white cursor-not-allowed"
+                  : "border-primary dark:border-blue-400"
               }`}
               onClick={closeModal}
               disabled={loading}
@@ -82,7 +90,7 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
               Cancel
             </button>
             <button
-              className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              className={`bg-primary dark:bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600`}
               onClick={handleCreateProject}
               disabled={loading || !projectName} // Disable button if loading or input is empty
             >
