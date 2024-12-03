@@ -38,12 +38,12 @@ export default function PlaygroundSidebarComponent({ children }) {
     const router = useRouter()
     const id = pathname.split('/').pop();
     const { allSessions, updateSessions, deleteSession } = useSessions();
+
     useEffect(() => {
-        // setIsLoading(true)
-        updateSessions();
-        // setIsLoading(false)
+        if (allSessions.length == 0) {
+            updateSessions();
+        }
     }, []);
-    console.log("all sessions: ", allSessions)
 
     const handleDeleteChat = (sessionId) => {
         setChatToDelete(sessionId);

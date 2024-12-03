@@ -71,29 +71,48 @@ export default function NavbarComponent() {
     }
   };
 
-  const [models, setModels] = useState()
-  const [providers, setProviders] = useState()
+  const models = [
+    {
+      "id": 1,
+      "provider_id": 1,
+      "model_name": "llama3.1",
+      "provider_info": {
+        "provider_id": 1,
+        "provider_name": "default"
+      }
+    },
+    {
+      "id": 2,
+      "provider_id": 1,
+      "model_name": "llama3.2",
+      "provider_info": {
+        "provider_id": 1,
+        "provider_name": "default"
+      }
+    },
+    {
+      "id": 3,
+      "provider_id": 2,
+      "model_name": "gpt-4o-mini",
+      "provider_info": {
+        "provider_id": 2,
+        "provider_name": "openai"
+      }
+    }
+  ]
+  const providers= [
+    {
+      "id": 1,
+      "provider_name": "default"
+    },
+    {
+      "id": 2,
+      "provider_name": "openai"
+    }
+  ]
   const [isUpdating, setIsUpdating] = useState(false)
-  const fetchModel = async () => {
-    try {
-      const data = await getModelsAction();
-      setModels(data?.models);
-    } catch (error) {
-
-    }
-  }
-  const fetchProvider = async () => {
-    try {
-      const data = await getProvidersAction();
-      setProviders(data?.models);
-    } catch (error) {
-
-    }
-  }
   useEffect(() => {
-    fetchModel();
     fetchLM();
-    fetchProvider();
   }, []);
 
   const handleSelectProvider = async (providerId) => {
@@ -137,14 +156,6 @@ export default function NavbarComponent() {
       setIsModalOpen(false);
     }
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => {
-    console.log("check if modal is open")
-    setIsModalOpen(true);
-    document.getElementById("my_modal_3")?.showModal()
-
-  }
-  console.log("is modal open", isModalOpen)
   return (
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
@@ -200,7 +211,7 @@ export default function NavbarComponent() {
                 <div tabIndex="0" role="button" className="m-1">
                   {session?.user?.image ? (
                     <Image
-                    className="rounded-[50%]"
+                      className="rounded-[50%]"
                       src={session?.user?.image}
                       alt="profile"
                       width={50}
@@ -256,143 +267,143 @@ export default function NavbarComponent() {
                       </button>
                       {/* {
                         isModalOpen && ( */}
-                          <dialog id="model_setting" className="modal">
-                            <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
-                              {/* Close Button */}
-                              <form method="dialog">
-                                <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
-                                // onClick={setIsModalOpen(false)}
-                                >
-                                  <Image
-                                    src={"/asset/images/cross.png"}
-                                    alt="close"
-                                    width={30}
-                                    height={30}
-                                  />
+                      <dialog id="model_setting" className="modal">
+                        <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                          {/* Close Button */}
+                          <form method="dialog">
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
+                            // onClick={setIsModalOpen(false)}
+                            >
+                              <Image
+                                src={"/asset/images/cross.png"}
+                                alt="close"
+                                width={30}
+                                height={30}
+                              />
 
-                                </button>
-                              </form>
+                            </button>
+                          </form>
 
-                              {/* Modal Header */}
-                              <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
-                                Settings
-                              </h3>
+                          {/* Modal Header */}
+                          <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
+                            Settings
+                          </h3>
 
-                              {/* Content Grid */}
-                              <div className="grid grid-cols-4">
-                                {/* Sidebar */}
-                                <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
-                                  Custom Model
-                                </div>
+                          {/* Content Grid */}
+                          <div className="grid grid-cols-4">
+                            {/* Sidebar */}
+                            <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
+                              Custom Model
+                            </div>
 
-                                {/* Main Content */}
-                                <div className="col-span-3 p-4">
-                                  <div className="flex justify-between mb-5">
-                                    <div>
-                                      <h1 className="text-lg font-bold text-primary dark:text-white">
-                                        Model Configuration
-                                      </h1>
-                                    </div>
-
-                                  </div>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                    Access tokens authenticate your identity to the
-                                    Hugging Face Hub and allow applications to
-                                    perform actions based on token permissions.
-                                  </p>
-
-                                  {/* Configuration Fields */}
-                                  <div className="gap-4 ">
-                                    <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                      Provider
-                                    </label>
-                                    <select
-                                      id="providerDropdown"
-                                      className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                      value={selectedProvider}
-                                      onChange={(e) => handleSelectProvider(e.target.value)}
-                                    >
-                                      {providers?.map((provider) => (
-                                        <option key={provider?.id} value={provider?.id}>
-                                          {provider?.provider_name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <div>
-                                      <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Model
-                                      </label>
-                                      <select
-                                        id="providerDropdown"
-                                        className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => handleSelectModel(e.target.value)}
-                                      >
-                                        {models?.map((model) => (
-                                          selectedProvider == model.provider_id ?
-                                            <option key={model?.id} value={model?.id}>
-                                              {model?.model_name}
-                                            </option>
-                                            :
-                                            ('')
-                                        ))}
-                                      </select>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                      <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                          Temperature
-                                        </label>
-                                        <input
-                                          type="number"
-                                          placeholder={lmData?.temperature}
-                                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                          onChange={(e) => handleOnChangeTemperature(e)}
-                                        />
-                                      </div>
-                                      <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                          Max Length
-                                        </label>
-                                        <input
-                                          type="number"
-                                          placeholder={lmData?.max_token}
-                                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                          onChange={(e) => handleOnChangeMaxToken(e)}
-                                        />
-                                      </div>
-                                    </div>
-                                    {
-                                      selectedProvider == 2 ?
-                                        <div>
-                                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Secrets & API Keys
-                                          </label>
-                                          <input
-                                            type="text"
-                                            placeholder={shortenedApiKey}
-                                            className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                            onChange={(e) => handleOnChangeAPIKey(e)}
-                                          />
-                                        </div>
-                                        : ('')
-                                    }
-
-                                  </div>
-                                  <div className="flex justify-end space-x-3 mt-5">
-                                    <button
-                                      className={`px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 ${isUpdating ? 'disabled' : ''}`}
-                                      onClick={handleSaveLM}>
-                                      {
-                                        isUpdating ? <span className="loading loading-spinner loading-md text-white"></span> : 'Save'
-                                      }
-                                    </button>
-                                  </div>
+                            {/* Main Content */}
+                            <div className="col-span-3 p-4">
+                              <div className="flex justify-between mb-5">
+                                <div>
+                                  <h1 className="text-lg font-bold text-primary dark:text-white">
+                                    Model Configuration
+                                  </h1>
                                 </div>
 
                               </div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                Access tokens authenticate your identity to the
+                                Hugging Face Hub and allow applications to
+                                perform actions based on token permissions.
+                              </p>
+
+                              {/* Configuration Fields */}
+                              <div className="gap-4 ">
+                                <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                  Provider
+                                </label>
+                                <select
+                                  id="providerDropdown"
+                                  className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  value={selectedProvider}
+                                  onChange={(e) => handleSelectProvider(e.target.value)}
+                                >
+                                  {providers?.map((provider) => (
+                                    <option key={provider?.id} value={provider?.id}>
+                                      {provider?.provider_name.toUpperCase()}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div>
+                                  <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Model
+                                  </label>
+                                  <select
+                                    id="providerDropdown"
+                                    className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    onChange={(e) => handleSelectModel(e.target.value)}
+                                  >
+                                    {models?.map((model) => (
+                                      selectedProvider == model.provider_id ?
+                                        <option key={model?.id} value={model?.id}>
+                                          {model?.model_name.toUpperCase()}
+                                        </option>
+                                        :
+                                        ('')
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                      Temperature
+                                    </label>
+                                    <input
+                                      type="number"
+                                      placeholder={lmData?.temperature}
+                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                      onChange={(e) => handleOnChangeTemperature(e)}
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                      Max Length
+                                    </label>
+                                    <input
+                                      type="number"
+                                      placeholder={lmData?.max_token}
+                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                      onChange={(e) => handleOnChangeMaxToken(e)}
+                                    />
+                                  </div>
+                                </div>
+                                {
+                                  selectedProvider == 2 ?
+                                    <div>
+                                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Secrets & API Keys
+                                      </label>
+                                      <input
+                                        type="text"
+                                        placeholder={shortenedApiKey}
+                                        className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                                        onChange={(e) => handleOnChangeAPIKey(e)}
+                                      />
+                                    </div>
+                                    : ('')
+                                }
+
+                              </div>
+                              <div className="flex justify-end space-x-3 mt-5">
+                                <button
+                                  className={`px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 ${isUpdating ? 'disabled' : ''}`}
+                                  onClick={handleSaveLM}>
+                                  {
+                                    isUpdating ? <span className="loading loading-spinner loading-md text-white"></span> : 'Save'
+                                  }
+                                </button>
+                              </div>
                             </div>
-                          </dialog>
-                        {/* )
+
+                          </div>
+                        </div>
+                      </dialog>
+                      {/* )
                       } */}
                     </a>
                   </li>

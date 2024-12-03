@@ -8,10 +8,7 @@ export const getAllSessionService = async () => {
     try {
         const res = await fetch(`${authUrl}/session/all_sessions`, {
             method: "GET",
-            headers,
-            next: {
-                tags: ["sessions"],
-            },
+            headers
         });
         console.log("getallsessionservice",res);
         if (!res.ok) {
