@@ -17,6 +17,7 @@ export default function NavbarComponent() {
   const [lmData, setLmData] = useState(null); // State to store fetched data
   const [darkMode, setDarkMode] = useState(false);
   const handleLogout = () => {
+    setIsLogoutModalOpen(false)
     signOut({ redirect: false });
     router.push("/");
   };
@@ -100,7 +101,7 @@ export default function NavbarComponent() {
       }
     }
   ]
-  const providers= [
+  const providers = [
     {
       "id": 1,
       "provider_name": "default"
@@ -156,6 +157,18 @@ export default function NavbarComponent() {
       setIsModalOpen(false);
     }
   }
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const handleLogoutModal = () => {
+    setIsLogoutModalOpen(true)
+    document.getElementById("logout_modal")?.showModal()
+  }
+  const [isSettingModalOpen, setIsSettingModalOpen] = useState(false)
+  const handleSettingModal = () => {
+    setIsSettingModalOpen(true)
+    document.getElementById("model_setting")?.showModal()
+  }
+
   return (
     <div>
       <div className="navbar bg-base-100 font-semibold text-primary dark:bg-gray-900 dark:text-white">
@@ -233,7 +246,7 @@ export default function NavbarComponent() {
                   className="dropdown-content  dark:bg-gray-900 menu bg-base-100 rounded-box z-[1] w-64 p-4 shadow absolute left-1/2 transform -translate-x-1/2 mt-2"
                 >
                   <li>
-                    <a>
+                    <div>
                       <Image
                         src={"/asset/images/user.png"}
                         alt="user"
@@ -245,10 +258,11 @@ export default function NavbarComponent() {
                           ? session?.user?.name
                           : session?.user?.email}
                       </span>
-                    </a>
+                    </div>
                   </li>
                   <li>
-                    <a>
+                    <div onClick={handleSettingModal
+                    }>
                       <Image
                         src={"/asset/images/setting.png"}
                         alt="setting"
@@ -256,159 +270,16 @@ export default function NavbarComponent() {
                         height={18}
                       />
                       {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                      <button
+                      <div
                         className="text-left "
-                        onClick={() =>
-                          // handleOpenModal()
-                          document.getElementById("model_setting")?.showModal()
-                        }
+
                       >
                         Settings
-                      </button>
-                      {/* {
-                        isModalOpen && ( */}
-                      <dialog id="model_setting" className="modal">
-                        <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
-                          {/* Close Button */}
-                          <form method="dialog">
-                            <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
-                            // onClick={setIsModalOpen(false)}
-                            >
-                              <Image
-                                src={"/asset/images/cross.png"}
-                                alt="close"
-                                width={30}
-                                height={30}
-                              />
-
-                            </button>
-                          </form>
-
-                          {/* Modal Header */}
-                          <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
-                            Settings
-                          </h3>
-
-                          {/* Content Grid */}
-                          <div className="grid grid-cols-4">
-                            {/* Sidebar */}
-                            <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
-                              Custom Model
-                            </div>
-
-                            {/* Main Content */}
-                            <div className="col-span-3 p-4">
-                              <div className="flex justify-between mb-5">
-                                <div>
-                                  <h1 className="text-lg font-bold text-primary dark:text-white">
-                                    Model Configuration
-                                  </h1>
-                                </div>
-
-                              </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Access tokens authenticate your identity to the
-                                Hugging Face Hub and allow applications to
-                                perform actions based on token permissions.
-                              </p>
-
-                              {/* Configuration Fields */}
-                              <div className="gap-4 ">
-                                <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Provider
-                                </label>
-                                <select
-                                  id="providerDropdown"
-                                  className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  value={selectedProvider}
-                                  onChange={(e) => handleSelectProvider(e.target.value)}
-                                >
-                                  {providers?.map((provider) => (
-                                    <option key={provider?.id} value={provider?.id}>
-                                      {provider?.provider_name.toUpperCase()}
-                                    </option>
-                                  ))}
-                                </select>
-                                <div>
-                                  <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Model
-                                  </label>
-                                  <select
-                                    id="providerDropdown"
-                                    className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) => handleSelectModel(e.target.value)}
-                                  >
-                                    {models?.map((model) => (
-                                      selectedProvider == model.provider_id ?
-                                        <option key={model?.id} value={model?.id}>
-                                          {model?.model_name.toUpperCase()}
-                                        </option>
-                                        :
-                                        ('')
-                                    ))}
-                                  </select>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                      Temperature
-                                    </label>
-                                    <input
-                                      type="number"
-                                      placeholder={lmData?.temperature}
-                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                      onChange={(e) => handleOnChangeTemperature(e)}
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                      Max Length
-                                    </label>
-                                    <input
-                                      type="number"
-                                      placeholder={lmData?.max_token}
-                                      className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                      onChange={(e) => handleOnChangeMaxToken(e)}
-                                    />
-                                  </div>
-                                </div>
-                                {
-                                  selectedProvider == 2 ?
-                                    <div>
-                                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Secrets & API Keys
-                                      </label>
-                                      <input
-                                        type="text"
-                                        placeholder={shortenedApiKey}
-                                        className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
-                                        onChange={(e) => handleOnChangeAPIKey(e)}
-                                      />
-                                    </div>
-                                    : ('')
-                                }
-
-                              </div>
-                              <div className="flex justify-end space-x-3 mt-5">
-                                <button
-                                  className={`px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 ${isUpdating ? 'disabled' : ''}`}
-                                  onClick={handleSaveLM}>
-                                  {
-                                    isUpdating ? <span className="loading loading-spinner loading-md text-white"></span> : 'Save'
-                                  }
-                                </button>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </dialog>
-                      {/* )
-                      } */}
-                    </a>
+                      </div>
+                    </div>
                   </li>
                   <li>
-                    <a>
+                    <div>
                       <Image
                         src={"/asset/images/theme.png"}
                         alt="theme"
@@ -418,10 +289,13 @@ export default function NavbarComponent() {
                       <span className="cursor-pointer" onClick={toggleTheme}>
                         {darkMode ? "Dark Mode" : "Light Mode"}
                       </span>
-                    </a>
+                    </div>
                   </li>
                   <li>
-                    <a onClick={handleLogout}>
+                    <button onClick={(e) => {
+                      e.stopPropagation();
+                      handleLogoutModal();
+                    }}>
                       <Image
                         src={"/asset/images/logout.png"}
                         alt="logout"
@@ -429,7 +303,7 @@ export default function NavbarComponent() {
                         height={18}
                       />
                       <span className="text-red-500">Log Out</span>
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -440,7 +314,170 @@ export default function NavbarComponent() {
             </Link>
           )}
         </div>
+
       </div>
+      {
+        isSettingModalOpen && (
+
+          <dialog id="model_setting" className="modal">
+            <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+              {/* Close Button */}
+              <form method="dialog">
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
+                // onClick={setIsModalOpen(false)}
+                >
+                  <Image
+                    src={"/asset/images/cross.png"}
+                    alt="close"
+                    width={30}
+                    height={30}
+                  />
+
+                </button>
+              </form>
+
+              {/* Modal Header */}
+              <h3 className="font-bold pb-3 text-primary dark:text-white border-b border-primary dark:border-gray-700 text-2xl">
+                Settings
+              </h3>
+
+              {/* Content Grid */}
+              <div className="grid grid-cols-4">
+                {/* Sidebar */}
+                <div className="col-span-1 border-r p-4 text-lg text-primary dark:text-gray-300 border-primary dark:border-gray-700">
+                  Custom Model
+                </div>
+
+                {/* Main Content */}
+                <div className="col-span-3 p-4">
+                  <div className="flex justify-between mb-5">
+                    <div>
+                      <h1 className="text-lg font-bold text-primary dark:text-white">
+                        Model Configuration
+                      </h1>
+                    </div>
+
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Access tokens authenticate your identity to the
+                    Hugging Face Hub and allow applications to
+                    perform actions based on token permissions.
+                  </p>
+
+                  {/* Configuration Fields */}
+                  <div className="gap-4 ">
+                    <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Provider
+                    </label>
+                    <select
+                      id="providerDropdown"
+                      className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={selectedProvider}
+                      onChange={(e) => handleSelectProvider(e.target.value)}
+                    >
+                      {providers?.map((provider) => (
+                        <option key={provider?.id} value={provider?.id}>
+                          {provider?.provider_name.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    <div>
+                      <label className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Model
+                      </label>
+                      <select
+                        id="providerDropdown"
+                        className="mb-3 appearance-none w-full border border-primary rounded-md px-4 py-2 pr-10 text-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => handleSelectModel(e.target.value)}
+                      >
+                        {models?.map((model) => (
+                          selectedProvider == model.provider_id ?
+                            <option key={model?.id} value={model?.id}>
+                              {model?.model_name.toUpperCase()}
+                            </option>
+                            :
+                            ('')
+                        ))}
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Temperature
+                        </label>
+                        <input
+                          type="number"
+                          placeholder={lmData?.temperature}
+                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                          onChange={(e) => handleOnChangeTemperature(e)}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Max Length
+                        </label>
+                        <input
+                          type="number"
+                          placeholder={lmData?.max_token}
+                          className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                          onChange={(e) => handleOnChangeMaxToken(e)}
+                        />
+                      </div>
+                    </div>
+                    {
+                      selectedProvider == 2 ?
+                        <div>
+                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Secrets & API Keys
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={shortenedApiKey}
+                            className="w-full p-3 my-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 dark:focus:ring-gray-600"
+                            onChange={(e) => handleOnChangeAPIKey(e)}
+                          />
+                        </div>
+                        : ('')
+                    }
+
+                  </div>
+                  <div className="flex justify-end space-x-3 mt-5">
+                    <button
+                      className={`px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 ${isUpdating ? 'disabled' : ''}`}
+                      onClick={handleSaveLM}>
+                      {
+                        isUpdating ? <span className="loading loading-spinner loading-md text-white"></span> : 'Save'
+                      }
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </dialog>
+        )
+      }
+      {
+        isLogoutModalOpen && (
+          <dialog id="logout_modal" className="modal flex justify-center items-center">
+            <div className="">
+              <div className="modal-box w-[400px] p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+                <div className="text-lg mb-8 text-primary font-medium">Do you want to logout ?</div>
+                <div className="flex justify-end text-base" >
+                  <form method="dialog">
+                    <button className="btn" onClick={() => setIsLogoutModalOpen(false)}>Cancel</button>
+                  </form>
+                  <button className="btn bg-red-500 text-white ml-5" onClick={handleLogout}>
+                    Logout
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+          </dialog>
+        )
+      }
     </div>
   );
 }
