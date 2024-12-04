@@ -61,14 +61,16 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      console.log("account", account)
 
-      if (user && account?.provider === "google") {
+      if (user && (account?.provider === "google" || account?.provider === "github")) {
         const googleUser = {
           username: token.name,
           email: token.email,
           image: token.picture,
           sub: token.sub
         }
+        console.log("googleUser", googleUser)
         try {
           const response = await fetch(
             `${process.env.AUTH_URL}/auth/third_party_login`,
@@ -85,8 +87,10 @@ export const authOptions = {
           if (!response.ok) {
             throw new Error("Failed to authenticate with third party login");
           }
-          const data = await response.json();
-          console.log("data: ", data)
+          const data = await response.json(); 
+
+          console.log("data created: ",data)
+          
           token.id = data.payload.sub;
           token.name = data.payload.username;
           token.email = data.payload.email;
@@ -97,6 +101,14 @@ export const authOptions = {
         }
 
       }
+      else if (user) {
+        token.id = user.id;
+        token.access_token = user.access_token;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
+      }
+      console.log("token created", token)
       return token;
     },
     async session({ session, token }) {

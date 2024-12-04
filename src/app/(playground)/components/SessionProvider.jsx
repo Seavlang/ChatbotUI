@@ -1,24 +1,30 @@
 import { deleteSessionAction, getAllSessionsAction } from "@/actions/sessionAction";
 import { getCurrentUserAction } from "@/actions/userAction";
+import { user } from "@nextui-org/theme";
+import { usePathname } from "next/navigation";
 import { createContext, useState, useContext, useEffect } from "react";
 
 // Create Context
 const SessionContext = createContext();
 
 export const SessionsProvider = ({ children }) => {
+
     const [allSessions, setAllSessions] = useState([]);
     const [isSessionError, setSessionError] = useState(false);
     const [userId, setUserId] = useState();
-
     const fetchUser = async () => {
         const result = await getCurrentUserAction();
         setUserId(result?.payload?.id);
     }
-    useEffect(()=>{
-        console.log("fetching user...");
-        fetchUser()
-    },[])
-    console.log("user id", userId)
+
+    useEffect(() => {
+        if (!userId) {
+            console.log("fetching user...");
+            fetchUser()
+        }
+
+        // updateSessions()
+    }, [])
 
     const updateSessions = async () => {
         try {
