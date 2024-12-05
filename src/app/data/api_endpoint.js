@@ -31,7 +31,7 @@ export const api_document = [
         method: 'GET',
         path: 'https://chatbot.kshrd.com.kh/api/v1/chatbot/create_new_session',
         request: "curl -X 'GET' \
-  'http://110.74.194.123:8085/api/v1/api_generation/session/get_all_sessions' \
+  'https://api-texbot.kshrd.app/api/v1/api_generation/session/get_all_sessions' \
   -H 'accept: application/json'",
         code200: {
             message: "File uploaded successfully",
@@ -54,7 +54,7 @@ export const api_document = [
         method: 'DELETE',
         path: 'https://chatbot.kshrd.com.kh/api/v1/chatbot/create_new_session',
         request: "curl -X 'DELETE' \
-  'http://110.74.194.123:8085/api/v1/api_generation/session/delete/222' \
+  'https://api-texbot.kshrd.app/api/v1/api_generation/session/delete/222' \
   -H 'accept: application/json'",
         code200: {
             message: "File uploaded successfully",
