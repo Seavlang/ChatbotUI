@@ -63,7 +63,7 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (socket && value) {
-      console.log("file_id ", selectedDocument)
+      console.log("userId ", userId)
       const file_id = selectedDocument == 0 ? null : selectedDocument
       socket.send(JSON.stringify(
         {

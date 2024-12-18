@@ -14,6 +14,7 @@ export const SessionsProvider = ({ children }) => {
     const [userId, setUserId] = useState();
     const fetchUser = async () => {
         const result = await getCurrentUserAction();
+        console.log("result: ",result)
         setUserId(result?.payload?.id);
     }
 
