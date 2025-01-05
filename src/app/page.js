@@ -6,6 +6,7 @@ import FooterComponent from "./components/FooterComponent";
 import Link from "next/link";
 import ChatbotComponent from "./components/ChatbotComponent";
 import { useSession } from "next-auth/react";
+import ResponsiveNavbar from "@/components/ui/responsive-navbar";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -13,7 +14,8 @@ export default function Home() {
   return (
     <div>
       <div className="bg-white mx-40">
-        <NavbarComponent />
+        {/* <NavbarComponent /> */}
+        <ResponsiveNavbar/>
       </div>
       <hr />
       <div className="mx-60 font-poppin">

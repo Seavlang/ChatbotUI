@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PlaygroundSidebarComponent from "../components/PlaygroundSidebarComponent";
 import NavbarComponent from "@/app/components/NavbarComponent";
+import ResponsiveNavbar from "@/components/ui/responsive-navbar";
 
 export default function layout({ children, params }) {
 
@@ -22,6 +23,7 @@ export default function layout({ children, params }) {
     <div>
       <div className="bg-white mx-40">
         <NavbarComponent />
+        <ResponsiveNavbar/>
       </div>
 
       <hr />

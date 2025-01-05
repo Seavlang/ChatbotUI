@@ -2,6 +2,7 @@
 import React from 'react';
 import SidebarComponent from '../components/SidebarComponent';
 import NavbarComponent from '@/app/components/NavbarComponent';
+import ResponsiveNavbar from '@/components/ui/responsive-navbar';
 
 
 export default function layout({ children }) {
@@ -9,6 +10,7 @@ export default function layout({ children }) {
     <div>
       <div className="bg-white mx-40">
         <NavbarComponent />
+        <ResponsiveNavbar/>
       </div>
       <hr />
       <div className="grid grid-cols-10 min-h-screen">

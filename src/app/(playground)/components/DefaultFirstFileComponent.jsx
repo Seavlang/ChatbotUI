@@ -107,7 +107,7 @@ export default function DefaultFirstFileComponent() {
             {
                 isLoading ?
                     <div className="flex justify-center items-center">
-                        <Loading />llllll
+                        <Loading />
                     </div>
                     :
                     <div className="">

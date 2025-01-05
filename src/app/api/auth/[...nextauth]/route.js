@@ -9,6 +9,7 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials) {
+        console.log("created credentials: ",credentials);
         const requestBody = new URLSearchParams({
           grant_type: "password",
           username: credentials.email,
@@ -26,8 +27,9 @@ export const authOptions = {
           },
           body: requestBody.toString(),
         });
-
+        console.log("response in route", response);
         const data = await response.json();
+        console.log("data in route", data);
 
         if (!response.ok) {
           throw new Error(data.detail || data.message || "Login failed");
@@ -62,6 +64,8 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user, account }) {
       console.log("account", account)
+      console.log("user", user)
+      console.log("token", token) 
 
       if (user && (account?.provider === "google" || account?.provider === "github")) {
         const googleUser = {

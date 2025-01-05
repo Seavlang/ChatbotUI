@@ -261,8 +261,7 @@ export default function NavbarComponent() {
                     </div>
                   </li>
                   <li>
-                    <div onClick={handleSettingModal
-                    }>
+                    <div onClick={handleSettingModal}>
                       <Image
                         src={"/asset/images/setting.png"}
                         alt="setting"
