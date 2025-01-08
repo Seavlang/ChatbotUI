@@ -14,11 +14,11 @@ export default function layout({ children }) {
       </div>
       <hr />
       <div className="grid grid-cols-10 min-h-screen">
-      <div className="col-span-2 border-r hidden xs:block sm:block">
+      <div className="col-span-1 md:col-span-2 lg:border-r">
         <SidebarComponent />
       </div>
 
-        <div className="col-span-10 md:col-span-8 lg:col-span-7 flex justify-center">
+        <div className="col-span-9 md:col-span-8 lg:col-span-7 flex justify-center">
           {children}
         </div>
       </div>
