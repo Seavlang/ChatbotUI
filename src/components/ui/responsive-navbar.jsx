@@ -266,7 +266,7 @@ export default function ResponsiveNavbar() {
                             >
                                 <MenuItem>
                                     <div className="flex mx-5 text-base  data-[focus]:bg-gray-100 data-[focus]:outline-none p-2 rounded-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" stroke-width="2"><path d="M19.727 20.447c-.455-1.276-1.46-2.403-2.857-3.207S13.761 16 12 16s-3.473.436-4.87 1.24s-2.402 1.931-2.857 3.207" /><circle cx="12" cy="8" r="4" /></g></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2"><path d="M19.727 20.447c-.455-1.276-1.46-2.403-2.857-3.207S13.761 16 12 16s-3.473.436-4.87 1.24s-2.402 1.931-2.857 3.207" /><circle cx="12" cy="8" r="4" /></g></svg>
                                         <span className="ml-3">
                                             {session?.user?.name ?
                                                 session?.user?.name

@@ -42,7 +42,7 @@ const CreateProjectModal = ({ handleGetSessionId }) => {
     <>
       {/* Button to open the modal */}
       <button
-        className="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+        className="bg-primary text-sm md:text-lg hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
         onClick={() => document.getElementById("my_modal_1").showModal()}
       >
         New App

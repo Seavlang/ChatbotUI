@@ -52,7 +52,7 @@ const DeleteProjectModal = ({ projectId }) => {
       {/* Modal component */}
       <dialog
         id={`delete_modal_${projectId}`}
-        className="modal bg-white dark:bg-white dark:bg-opacity-5 text-black dark:text-gray-200"
+        className="modal bg-white bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-black dark:text-gray-200"
       >
         <div className="modal-box bg-white dark:bg-gray-900 rounded-lg shadow-lg">
           {/* Modal Header */}
