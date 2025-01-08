@@ -22,25 +22,25 @@ export default function Page() {
   return (
     <div className="grid grid-cols-12 bg-white dark:bg-gray-900 dark:text-gray-300 min-h-screen">
       {/* Main Content */}
-      <div className="col-span-9">
+      <div className="col-span-12 md:col-span-9 ">
         <div className="flex justify-center">
           <div className="w-4/5">
-            <h1 className="mx-10 mt-10 mb-5 text-4xl font-medium text-primary dark:text-white">
+            <h1 className="-ml-5 md:mx-10 mt-10 mb-3 md:mb-5 text-xl md:text-4xl font-medium text-primary dark:text-white">
               Quick Start
             </h1>
-            <hr className="w-[80%] mb-5 ml-10 border-gray-300 dark:border-gray-700" />
-            <p className="ml-10 mr-20">
+            <hr className="-ml-5 md:w-[80%] mb-5 md:ml-10 border-gray-300 dark:border-gray-700" />
+            <p className="-ml-5 md:ml-10 md:mr-20 text-sm md:text-lg">
               Welcome to our API service! This guide will help you get started
               and integrate our API into your application quickly and
               efficiently. You can interact with our API through HTTP requests
               from any programming language or environment.
             </p>
             <section id="apiKey">
-              <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
+              <h1 className="-ml-5 md:ml-10 my-5 text-lg font-medium dark:text-white">
                 Get Your API Key
               </h1>
-              <div className="ml-10 mr-20">
-                <p className="text-gray-700 dark:text-gray-400 mb-4">
+              <div className="-ml-5 md:ml-10 md:mr-20">
+                <p className="text-gray-700 dark:text-gray-400 mb-4 text-sm md:text-lg">
                   To authenticate and interact with the API, you will need an API
                   key. Follow these steps to get started:
                 </p>
@@ -50,7 +50,7 @@ export default function Page() {
                     <h2 className="font-semibold mb-2 dark:text-white">
                       Generate Your API Key:
                     </h2>
-                    <ul className="list-disc pl-6 space-y-2">
+                    <ul className="list-disc pl-6 space-y-2 text-sm md:text-lg">
                       <li>
                         You can create an API key at the user account level.
                       </li>
@@ -73,7 +73,7 @@ export default function Page() {
                     <h2 className="font-semibold mb-2 dark:text-white">
                       Keep Your Key Secure:
                     </h2>
-                    <ul className="list-disc pl-6 space-y-2">
+                    <ul className="list-disc pl-6 space-y-2 text-sm md:text-lg">
                       <li>
                         Your API key is confidential. Do not share it with others
                         or expose it in public repositories.
@@ -89,15 +89,15 @@ export default function Page() {
             </section>
 
             <section id="firstRequest">
-              <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
+              <h1 className="-ml-5 md:ml-10 my-5 text-lg font-medium dark:text-white">
                 Making Your First Request
               </h1>
-              <p className="ml-10 mr-20">
+              <p className="-ml-5 md:ml-10 md:mr-20 text-sm md:text-lg">
                 To interact with our API, send an HTTP request to one of the
                 available endpoints. Here is an example of how to use a GET
                 request:
               </p>
-              <div className="mt-5 ml-10 mr-10">
+              <div className="mt-5 -ml-5 md:ml-10 md:mr-10">
                 <div className="bg-[#004655] dark:bg-gray-800 rounded-lg overflow-hidden">
                   {/* Title Section */}
                   <div className="bg-[#004655] dark:bg-gray-700 text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
@@ -136,7 +136,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <p className="ml-10 mt-5 mr-20">
+              <p className="-ml-5 md:ml-10 mt-5 md:mr-20 text-sm md:text-lg">
                 This request will return a JSON response from the server. Make
                 sure to replace <span className="font-bold">YOUR_API_KEY</span>{" "}
                 with the actual key from your account.
@@ -145,11 +145,11 @@ export default function Page() {
 
 
             <section id="document">
-              <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
+              <h1 className="-ml-5 md:ml-10 my-5 text-lg font-medium dark:text-white">
                 API Documentation
               </h1>
-              <div className="ml-10 my-5 mr-20">
-                <p className="text-gray-700 dark:text-gray-400 mb-4">
+              <div className="-ml-5 md:ml-10 my-5 md:mr-20 text-sm md:text-lg">
+                <p className="text-gray-700 dark:text-gray-400 mb-4 ">
                   Refer to our{" "}
                   <Link
                     href="/docs/overview/quickStart"
@@ -177,10 +177,10 @@ export default function Page() {
             </section>
 
             <section>
-              <h1 className="ml-10 my-5 text-lg font-medium dark:text-white">
+              <h1 className="-ml-5 md:ml-10 my-5 text-lg font-medium dark:text-white">
                 Troubleshooting
               </h1>
-              <div className="ml-10 my-5 mr-20">
+              <div className="-ml-5 md:ml-10 my-5 md:mr-20 text-sm md:text-lg">
                 <p className="text-gray-700 dark:text-gray-400 mb-4">
                   If something goes wrong, our API returns standard HTTP response codes. For example:
                 </p>
@@ -197,7 +197,7 @@ export default function Page() {
       </div>
 
       {/* Sidebar Content */}
-      <div className="col-span-3 border-l border-gray-300 dark:border-gray-700">
+      <div className="col-span-3 border-l border-gray-300 hidden md:block dark:border-gray-700">
         <h1 className="ml-5 mt-5 text-md mb-3 font-semibold dark:text-white">
           Contents
         </h1>
