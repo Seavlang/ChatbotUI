@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    .sm {width: 300px;}
+    /* .col-s-2 {width: 450px;} */
+  }
+  @media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .md {width: 450px;}
+  }

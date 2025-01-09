@@ -1,6 +1,6 @@
 export const chatbotService = async (input, externalSessionId, projectId, apiKey) => {
   console.log("service", input, externalSessionId);
-  const response = await fetch('http://110.74.194.123:8085/external_chain/invoke', {
+  const response = await fetch('http://203.255.78.58:9000/hrd_chain/invoke', {
     method: 'POST',
     headers: {
       'accept': 'application/json',
@@ -10,8 +10,7 @@ export const chatbotService = async (input, externalSessionId, projectId, apiKey
     body: JSON.stringify({
       input: {
         input,
-        external_session_id: externalSessionId,
-        project_id: projectId
+        session_id
       }
     })
   });

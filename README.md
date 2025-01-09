@@ -23,21 +23,17 @@ export default function Chat() {
   <div>
     <Chatbot 
         defaultText="Your_welcome_text"
-        SessionId="Your_session_id" 
+        sessionId="Your_session_id" 
         projectId="Your_project_id"  
-        apiKey="Your_api_key"
     />
   </div>;
 }
 
-#Testing Project 
-In this example I have uploaded the file that contains the final project of 11th Gen Student, which includes groups (LMS, EasyCart,FinTrack,TradeWise,AutoPilot,e-certify,DataVue)
 
 You can test the package with this: 
   defaultText = "Hello" 
-  session id =  "14", 
-  project id =  "8", 
-  api key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJzZWF2bGFuZyIsImVtYWlsIjoic2lldmxhbmd2ZXlAZ21haWwuY29tIn0.BYKAF4dQl34kppfrH_SS29ef4se5Qpr3cQ-1iNaolX0"
+  session id =  "2", 
+  project id =  "2", 
 
 #please note that the defaultText is optional
 

@@ -24,7 +24,7 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
 
   // Establish WebSocket connection
   useEffect(() => {
-    wsRef.current = new WebSocket('ws://110.74.194.123:8085/ws/generate-response');
+    wsRef.current = new WebSocket('ws://203.255.78.58:9000/ws/generate-response');
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established.');
@@ -91,8 +91,8 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
     const payload = {
       input: {
         input: input, // User's input message
-        external_session_id: "14", // Session ID
-        project_id: "8",         // Project ID
+        external_session_id: sessionId, // Session ID
+        project_id: projectId,         // Project ID
       },
     };
 
@@ -106,15 +106,34 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
     }
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Function to check screen width and set isMobile
+    const checkScreenWidth = () => {
+      setIsMobile(window.innerWidth <= 400);
+    };
+
+    // Initial check
+    checkScreenWidth();
+
+    // Add event listener to update on window resize
+    window.addEventListener('resize', checkScreenWidth);
+
+    // Cleanup event listener on unmount
+    return () => window.removeEventListener('resize', checkScreenWidth);
+  }, []);
+
   return (
     <div
       style={{
         position: 'fixed',
         bottom: '30px',
         right: '30px',
+        zIndex: '1000',
         transition: 'transform 0.3s ease',
-        width: isExpanded ? '450px' : '80px',
-        height: isExpanded ? '550px' : '80px',
+        width: isMobile ? (isExpanded ? '315px' : '80px') : (isExpanded ? '450px' : '80px'),
+        height: isMobile ? (isExpanded ? '550px' : '80px') : (isExpanded ? '650px' : '80px'),
         borderRadius: isExpanded ? '20px' : '50%',
         overflow: 'hidden',
         backgroundColor: isExpanded ? 'transparent' : 'white',
@@ -149,7 +168,7 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
               borderBottom: '1px solid #004B93',
             }}
           >
-            <span style={{ fontWeight: 'bold' }}>AI Assistant</span>
+            <span style={{ fontWeight: 'bold' , fontSize: isMobile ? "18px" : "23px"}}>AI Assistant</span>
             <button
               onClick={() => setIsExpanded(false)}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
@@ -181,7 +200,7 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
                 <li
                   style={{
                     padding: '12px',
-                    fontSize: '14px',
+                    fontSize: isMobile ? "14px" : "16px",
                     backgroundColor: message.type === 'user' ? '#004B93' : 'white',
                     color: message.type === 'user' ? 'white' : '#4a4a4a',
                     borderRadius: message.type === 'user' ? '16px 16px 0px 16px' : '16px 16px 16px 0px',
