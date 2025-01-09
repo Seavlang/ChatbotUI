@@ -119,10 +119,10 @@ export default function DefaultFirstFileComponent() {
                         </div>
 
                         <div className="flex w-full flex-row items-center justify-center">
-                            <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[550px] mt-5 mx-80">
+                            <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[550px] mt-5 md:mx-80">
                                 <div className="">
                                     <div className="flex flex-row items-center justify-center mt-20">
-                                        <div className="w-full max-w-full min-h-32 flex justify-center bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
+                                        <div className="w-full  bg-white border  md:max-w-full md:min-h-32 flex justify-center  dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
                                             <div>
                                                 {/* display uploaded file  */}
 
@@ -131,7 +131,7 @@ export default function DefaultFirstFileComponent() {
                                                         onClick={handleClick}
                                                         whileHover="animate"
                                                         className="p-10 group/file border-none block rounded-lg cursor-pointer relative overflow-hidden"
-                                                        style={{ height: '220px' }}
+                                                        style={{ height: '220px'}}
                                                     >
                                                         <input
                                                             ref={fileInputRef}
@@ -207,10 +207,10 @@ export default function DefaultFirstFileComponent() {
                                                                     ></motion.div>
                                                                 )}
                                                             </div>
-                                                            <p className="relative z-20 font-sans font-bold text-primary dark:text-neutral-300 text-xl">
+                                                            <p className="relative z-20 font-sans font-bold text-primary dark:text-neutral-300 text-sm md:text-xl">
                                                                 Drop TXT or PDF file
                                                             </p>
-                                                            <p className="relative z-20 font-sans font-normal text-primary dark:text-neutral-400 text-md mt-2">
+                                                            <p className="relative z-20 font-sans font-normal text-primary dark:text-neutral-400 text-center text-xs md:text-md mt-2">
                                                                 Add any file here to create your a new conversation session
                                                             </p>
                                                         </div>

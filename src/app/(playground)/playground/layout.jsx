@@ -22,7 +22,7 @@ export default function layout({ children, params }) {
   return (
     <div>
       <div className="bg-white mx-40">
-        <NavbarComponent />
+        {/* <NavbarComponent /> */}
         <ResponsiveNavbar/>
       </div>
 

@@ -81,18 +81,18 @@ export default function PlaygroundSidebarComponent({ children }) {
                     )}
                 >
                     <Sidebar open={open} setOpen={setOpen}>
-                        <SidebarBody className="justify-between gap-10">
+                        <SidebarBody className="justify-between gap-10 " >
 
                             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2 ">
                                     {/* New Chat Button */}
                                     <motion.span
+                                       
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         className="font-medium text-black dark:text-white whitespace-pre"
-
                                     >
-                                        <div className="flex justify-between my-10">
+                                        <div className="flex justify-between my-10 ">
                                             <Link href={`${allSessions?.length >= 3 ? '#' : '/playground'}`}>
                                                 <button className={`flex items-center px-5 py-2  rounded-md ${allSessions?.length >= 3 ? 'disabled bg-gray-300 ' : ' bg-blue-100'}`}>
                                                     {
@@ -245,7 +245,7 @@ export default function PlaygroundSidebarComponent({ children }) {
                     </Dialog>
 
                     <div className="w-full">
-                        <div className="p-2 md:p-10 h-screen flex flex-row gap-2 flex-1 ">
+                        <div className="p-5 -ml-52  md:ml-10 md:p-10 h-screen flex flex-row gap-2 flex-1 ">
                             <div className="">
                                 <div className='flex '>
                                     {
@@ -253,8 +253,8 @@ export default function PlaygroundSidebarComponent({ children }) {
                                             ''
                                         )
                                             :
-                                            (<div className="my-auto cursor-pointer" onClick={handleSetOpen}>
-                                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            (<div className="my-auto cursor-pointer " onClick={handleSetOpen}>
+                                                <svg width="30" height="30" className='mt-1.5 ' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M9 9.5L7 12M7 12L9 14.5M7 12H12.5" stroke="#004B93" />
                                                     <path d="M3.5 18.5V5.5C3.5 4.39543 4.39543 3.5 5.5 3.5H18.5C19.6046 3.5 20.5 4.39543 20.5 5.5V18.5C20.5 19.6046 19.6046 20.5 18.5 20.5H5.5C4.39543 20.5 3.5 19.6046 3.5 18.5Z" stroke="#004B93" strokeLinecap="round" />
                                                     <path d="M15.5 3.5V20.5" stroke="#004B93" strokeLinecap="round" />
