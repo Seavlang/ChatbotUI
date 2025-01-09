@@ -436,13 +436,13 @@ export default function Page({ params }) {
                               //   .showModal()
                             }
                           >
-                            <span className="col-span-2 pl-2 w-full py-2 text-xl font-semibold dark:text-gray-200">
+                            <span className="col-span-2 pl-2 w-full py-2 text-sm md:text-xl font-semibold dark:text-gray-200">
                               {endpoint.path}
                             </span>
                             <div className="col-span-5">
                               <div className="flex justify-start items-center h-full">
                                 <span
-                                  className={`text-xs rounded-md px-8 font-semibold w-12 h-5 text-white ml-10 flex justify-center items-center ${endpoint.method === "POST"
+                                  className={`text-xs md:text-sm rounded-md px-8 font-semibold w-12 h-5  text-white ml-20 md:ml-10  flex justify-center items-center ${endpoint.method === "POST"
                                       ? "bg-[#49CC90]"
                                       : endpoint.method === "GET"
                                         ? "bg-[#61AFFE]"
@@ -451,7 +451,7 @@ export default function Page({ params }) {
                                 >
                                   {endpoint.method}
                                 </span>
-                                <span className="w-auto text-base font-normal text-[#878787] dark:text-gray-400 ml-10">
+                                <span className="w-auto text-sm md:text-base hidden md:block font-normal text-[#878787] dark:text-gray-400 ml-10">
                                   {endpoint.description}
                                 </span>
                               </div>

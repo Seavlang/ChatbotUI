@@ -48,7 +48,7 @@ function WidgetComponent({ projectId,apiKey}) {
             title: "Playground",
             value: "playground",
             content: (
-                <div className="w-full overflow-hidden relative h-full rounded-2xl px-10 text-xl md:text-4xl font-bold bg-gradient-to-br bg-white dark:bg-gray-900 dark:text-gray-200">
+                <div className="w-full overflow-hidden relative h-full rounded-2xl pt-3 px-10 md:p-10 text-xl md:text-4xl font-bold bg-gradient-to-br bg-white dark:bg-gray-900 dark:text-gray-200">
                     <TestComponent projectId={projectId} apiKey={apiKey}/>
                 </div>
             ),
