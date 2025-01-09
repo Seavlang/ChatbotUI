@@ -39,7 +39,7 @@ export default function Page({ params }) {
         }
         fetchLM();
         // const ws = new WebSocket("wss://api-texbot.kshrd.app/ws/playground_generate-response");
-        const ws = new WebSocket("ws://110.74.194.123:1234/ws/playground_generate-response");
+        const ws = new WebSocket("ws://203.255.78.58:9000/ws/playground_generate-response");
 
         ws.onmessage = (event) => {
             try {

@@ -231,7 +231,7 @@ export const createProjectSessionService = async (apiKey) => {
 // test chat
 export const chatbotService = async (input, externalSessionId, projectId, apiKey) => {
   console.log("service", input, externalSessionId);
-  const response = await fetch('https://api-texbot.kshrd.app/external_chain/invoke', {
+  const response = await fetch('http://203.255.78.58:9000/external_chain/invoke', {
     method: 'POST',
     headers: {
       'accept': 'application/json',

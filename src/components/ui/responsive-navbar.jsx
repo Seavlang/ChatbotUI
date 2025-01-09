@@ -180,7 +180,7 @@ export default function ResponsiveNavbar() {
 
     return (
         <Disclosure as="nav" className="bg-white">
-            <div className="mx-auto max-w-full sm:px-6 lg:px-8">
+            <div className="xl:mx-auto sm:mx-0 max-w-full sm:px-0 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         {/* Mobile menu button*/}
@@ -209,8 +209,8 @@ export default function ResponsiveNavbar() {
                                         href={item.href}
                                         aria-current={isActive ? 'page' : undefined}
                                         className={classNames(
-                                            isActive ? 'bg-primary text-white' : 'text-primary hover:bg-[#b6ddff] hover:text-white',
-                                            'rounded-md px-3 py-2 text-sm font-medium',
+                                            isActive ? 'font-bold ' : 'hover:bg-primary hover:text-white font-medium',
+                                            'rounded-md px-3 py-2 2xl:text-lg lg:text-base text-primary',
                                         )}
                                     >
                                         {item.name}
@@ -219,11 +219,11 @@ export default function ResponsiveNavbar() {
                             </div>
                         </div>
                     </div>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    <div className="absolute inset-y-0 right-0 flex items-center xl:pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
 
                         {/* Profile dropdown */}
-                        <Menu as="div" className="relative ml-3">
+                        <Menu as="div" className="relative xl:ml-3 sm:ml-0">
                             <div>
                                 <MenuButton className="relative flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                                     <span className="absolute" />
