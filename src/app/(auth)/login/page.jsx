@@ -136,14 +136,14 @@ export default function LoginForm() {
         </a>
       </div>
   
-      <div className="flex items-center my-4">
+      {/* <div className="flex items-center my-4">
         <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">OR</span>
         <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-      </div>
+      </div> */}
   
       <div className="w-full">
-        <button
+        {/* <button
           className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           onClick={() => signIn("google")}
         >
@@ -154,7 +154,7 @@ export default function LoginForm() {
           onClick={() => signIn("github")}
         >
           <FaGithub className="mr-2" /> Github
-        </button>
+        </button> */}
       </div>
     </div>
   </div>

@@ -200,19 +200,19 @@ export default function SignUpForm() {
         </a>
       </div>
   
-      <div className="flex items-center my-4">
+      {/* <div className="flex items-center my-4">
         <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">OR</span>
         <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-      </div>
+      </div> */}
   
       <div className="w-full">
-        <button className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+        {/* <button className="flex items-center w-full mb-5 justify-center p-2 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
           <FcGoogle className="mr-2" /> Google
         </button>
         <button className="flex items-center w-full justify-center p-2 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
           <FaGithub className="mr-2" /> Github
-        </button>
+        </button> */}
       </div>
     </div>
   </div>
