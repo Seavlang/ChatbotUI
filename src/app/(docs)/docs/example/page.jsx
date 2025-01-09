@@ -39,7 +39,6 @@ export default function Page() {
             LangChain supports many different language models that you can use
             interchangeably - select the one you want to use below!
           </p>
-
           <div className="mx-10 w-[75%] rounded-t-md bg-[#004655] dark:bg-gray-700 text-white border-b-[1px] border-white px-4 py-2 flex justify-between items-center">
             <span className="font-semibold">Code</span>
 

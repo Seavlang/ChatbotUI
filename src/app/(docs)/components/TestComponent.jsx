@@ -92,11 +92,11 @@ function TestComponent({ projectId, apiKey }) {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Send a message"
-        className="flex-1 w-[85%] mr-5 focus:outline-none border-2 dark:border-gray-700 my-5 py-3 px-5 rounded-xl text-sm font-normal focus:ring-none bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+        className="flex-1 w-full md:w-[85%] mr-5 focus:outline-none border-2 dark:border-gray-700 my-5 py-3 px-5 rounded-xl text-sm font-normal focus:ring-none bg-white dark:bg-gray-800 text-black dark:text-gray-200"
         disabled={isLoading} // Disable input box during loading
       />
       <button
-        className="w-[12%] bg-primary text-white rounded-lg text-sm py-3 cursor-pointer"
+        className="w-20 md:w-[12%] bg-primary items-end  mb-5 md:mb-0 text-white rounded-lg text-sm py-3 cursor-pointer"
         onClick={handleSend}
         disabled={isLoading}
       >

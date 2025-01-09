@@ -197,7 +197,7 @@ export default function Page({ params }) {
       ) : (
         <div>
           <div>
-            <div className="breadcrumbs mx-10 mt-10 mb-5 text-sm dark:text-gray-400">
+            <div className="breadcrumbs  mt-5 md:mt-10 mb-5 text-sm dark:text-gray-400">
               <ul>
                 <li>
                   <Link href="/docs/allApps">App</Link>
@@ -210,13 +210,13 @@ export default function Page({ params }) {
               </ul>
             </div>
           </div>
-          <h1 className="mx-10 text-4xl font-medium text-primary dark:text-white">
+          <h1 className="text-lg md:text-4xl ml-5 font-medium text-primary dark:text-white">
             {projectData?.project_id?.project_name}
           </h1>
           {/* textarea */}
-          <div className="w-[80%] ml-10 mr-20 mt-5 p-4 border border-primary dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+          <div className="w-[80%] ml-5 mr-20 mt-5 p-4 border border-primary dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
             <div className="mb-4">
-              <h2 className="ml-5 text-primary text-xl font-bold dark:text-white">
+              <h2 className="ml-5 text-primary text-sm md:text-md md:text-xl font-bold dark:text-white">
                 Description
                 <Image
                   src={"/asset/images/pen.png"}
@@ -231,7 +231,7 @@ export default function Page({ params }) {
               placeholder={`${projectData?.project_id?.description ? projectData?.project_id.description : "No description"}`}
             /> */}
               <textarea
-                className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder-medium dark:placeholder-gray-500 placeholder-black focus:outline-none resize-none overflow-hidden  dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600  rounded"
+                className="ml-5 mt-2 w-[95%] h-24 font-normal placeholder:text-base md:placeholder:text-lg dark:placeholder-gray-500 placeholder-black focus:outline-none resize-none overflow-hidden  dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600  rounded"
                 value={description}
                 onChange={handleDescriptionChange}
                 onBlur={handleDescriptionSave} // Trigger save on blur
@@ -244,7 +244,7 @@ export default function Page({ params }) {
             </div>
           </div>
           {/* api key */}
-          <div className="flex flex-col gap-2 mx-10 w-[80%] dark:text-gray-300">
+          <div className="flex flex-col gap-2 ml-5 w-[80%] dark:text-gray-300">
             <label className="flex items-center mt-5 mb-3 gap-2 text-gray-700">
               <svg
                 width="28"
@@ -267,7 +267,7 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold  dark:text-gray-200">
+              <span className="text-primary text-md md:text-xl font-bold  dark:text-gray-200">
                 API Key
               </span>
             </label>
@@ -320,7 +320,7 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold dark:text-gray-200">
+              <span className="text-primary text-md md:text-xl font-bold dark:text-gray-200">
                 Upload Document
               </span>
             </label>
@@ -389,7 +389,7 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold dark:text-gray-200">
+              <span className="text-primary text-md md:text-xl font-bold dark:text-gray-200">
                 API Service
               </span>
             </label>
@@ -406,7 +406,7 @@ export default function Page({ params }) {
                         >
                           <div
                             className={cn(
-                              "flex justify-between items-center pr-3 text-left transition-colors text-primary dark:text-gray-200 pl-2 pb-3 text-2xl border-b-[0.8px] border-primary dark:border-gray-700 font-bold"
+                              "flex justify-between items-center pr-3 text-left transition-colors text-primary dark:text-gray-200 pl-2 pb-3 text-lg md:text-2xl border-b-[0.8px] border-primary dark:border-gray-700 font-bold"
                             )}
                           >
                             <span>{endpoint.Controller}</span>
@@ -516,7 +516,7 @@ export default function Page({ params }) {
                 />
               </svg>
 
-              <span className="text-primary text-xl font-bold dark:text-gray-200">
+              <span className="text-primary text-md md:text-xl font-bold dark:text-gray-200">
                 Widget
               </span>
             </div>
