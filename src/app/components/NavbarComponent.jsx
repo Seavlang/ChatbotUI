@@ -82,17 +82,17 @@ export default function NavbarComponent() {
         "provider_name": "default"
       }
     },
+    // {
+    //   "id": 2,
+    //   "provider_id": 1,
+    //   "model_name": "llama3.2",
+    //   "provider_info": {
+    //     "provider_id": 1,
+    //     "provider_name": "default"
+    //   }
+    // },
     {
       "id": 2,
-      "provider_id": 1,
-      "model_name": "llama3.2",
-      "provider_info": {
-        "provider_id": 1,
-        "provider_name": "default"
-      }
-    },
-    {
-      "id": 3,
       "provider_id": 2,
       "model_name": "gpt-4o-mini",
       "provider_info": {

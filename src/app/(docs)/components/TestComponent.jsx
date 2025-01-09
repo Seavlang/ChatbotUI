@@ -31,7 +31,8 @@ function TestComponent({ projectId, apiKey }) {
 
 
   useEffect(() => {
-    wsRef.current = new WebSocket("wss://api-texbot.kshrd.app/ws/generate-response-playground-widget");
+    // wsRef.current = new WebSocket("wss://api-texbot.kshrd.app/ws/generate-response-playground-widget");
+    wsRef.current = new WebSocket("ws://203.255.78.58:9000/ws/generate-response-playground-widget");
 
     wsRef.current.onopen = () => {
       console.log("WebSocket connection established.");

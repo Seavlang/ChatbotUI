@@ -105,7 +105,7 @@ export default function ChatbotComponent() {
                 <div className="flex items-start py-4 gap-3">
                   <span className="p-3 rounded-xl mr-20 bg-blue-100 dark:bg-blue-800">
                     {loading && index === submittedQuestions.length - 1
-                      ? "Processing..."
+                      ? (<span className="loading loading-spinner loading-md text-primary"></span>)
                       : qa?.answer}
                   </span>
                 </div>
