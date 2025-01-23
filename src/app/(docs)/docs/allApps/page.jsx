@@ -47,7 +47,7 @@ export default async function Page({ searchParams }) {
               name="search"
               defaultValue={searchTerm}
               className="grow bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2"
-              placeholder="Search Project"
+              placeholder="Search App"
             />
             <button type="submit" className="p-2">
               <svg
@@ -71,11 +71,11 @@ export default async function Page({ searchParams }) {
       </div>
 
       {/* Responsive Table */}
-      <div className="overflow-x-auto text-xs md:text-lg mx-10 bg-red-600 mt-5 md:mt-10 rounded-lg border border-gray-200 dark:border-gray-700">
-        <table className="min-w-[640px] w-full bg-white dark:bg-gray-800 rounded-lg">
+      <div className="overflow-x-auto text-xs md:text-lg mx-10 mt-5 md:mt-10 rounded-lg border border-gray-200 dark:border-gray-700">
+        <table className="min-w-[640px] w-full bg-white dark:bg-gray-800">
           <thead>
             <tr className="bg-primary text-white dark:bg-gray-700">
-              <th className="px-3 py-2 md:py-3 md:px-6 w-[10%] md:w-auto text-left  font-semibold md:rounded-s-xl">
+              <th className="px-3 py-2 md:py-3 md:px-6 w-[10%] md:w-auto text-left font-semibold md:rounded-s-xl">
                 ID
               </th>
               <th className="px-3 md:py-3 md:px-6 text-left w-1/6 md:w-auto font-semibold">Project</th>

@@ -63,10 +63,6 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log("account", account)
-      console.log("user", user)
-      console.log("token", token) 
-
       if (user && (account?.provider === "google" || account?.provider === "github")) {
         const googleUser = {
           username: token.name,
@@ -92,8 +88,6 @@ export const authOptions = {
             throw new Error("Failed to authenticate with third party login");
           }
           const data = await response.json(); 
-
-          console.log("data created: ",data)
           
           token.id = data.payload.sub;
           token.name = data.payload.username;

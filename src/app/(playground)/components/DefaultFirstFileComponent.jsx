@@ -106,7 +106,7 @@ export default function DefaultFirstFileComponent() {
         <>
             {
                 isLoading ?
-                    <div className="flex justify-center items-center">
+                    <div className="h-screen flex justify-center items-center ">
                         <Loading />
                     </div>
                     :
@@ -114,7 +114,7 @@ export default function DefaultFirstFileComponent() {
                         <div className='flex'>
                             <div className="ml-5 inline-flex items-center border border-gray-300 rounded-md px-3 py-2 text-md">
                                 <span className="font-bold text-primary mr-2">DEFAULT</span>
-                                <span className="font-normal text-black">LLAMA3.1</span>
+                                <span className="font-normal text-black dark:text-white">LLAMA3.1</span>
                             </div>
                         </div>
 
@@ -122,7 +122,7 @@ export default function DefaultFirstFileComponent() {
                             <div className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[550px] mt-5 md:mx-80">
                                 <div className="">
                                     <div className="flex flex-row items-center justify-center mt-20">
-                                        <div className="w-full  bg-white border  md:max-w-full md:min-h-32 flex justify-center  dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
+                                        <div className="w-full md:max-w-full md:min-h-32 flex justify-center  dark:border-neutral-800 rounded-lg">
                                             <div>
                                                 {/* display uploaded file  */}
 

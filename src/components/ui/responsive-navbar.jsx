@@ -179,7 +179,7 @@ export default function ResponsiveNavbar() {
     ], []);
 
     return (
-        <Disclosure as="nav" className="bg-white">
+        <Disclosure as="nav" className="bg-white dark:bg-none">
             <div className="xl:mx-auto sm:mx-0 max-w-full sm:px-0 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
