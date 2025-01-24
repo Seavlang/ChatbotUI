@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import closeIcon from '../../public/cross.png';
 import catIcon from '../../public/cat.png';
 import sent from '../../public/sent.png';
+import { generateExternalSession } from '@/services/chatbot.services';
 
 export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,17 +25,26 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
 
   // Establish WebSocket connection
   useEffect(() => {
-    wsRef.current = new WebSocket('ws://203.255.78.58:9000/ws/generate-response');
+    const createSesion = async () => {
+      try {
+        const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJ0ZXhib3QiLCJlbWFpbCI6InN0cmluZ0BnbWFpbC5jb20iLCJwcm9qZWN0X2lkIjoxfQ.Rl2sl3KllysJslqAnr5QCqQf4n8b52OnFuNK0woYqAw"
+        const data = await generateExternalSession(api_key);
+        console.log("session_id: ", data?.session_id?.id)
+      } catch (e) { }
+    
+    }
+    wsRef.current = new WebSocket('ws://203.255.78.58:9002/ws/generate-response');
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established.');
+      createSesion();
     };
     wsRef.current.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
-    
+
       try {
         const data = JSON.parse(event.data);
-    
+
         if (data.type === 'error') {
           setMessages((prevMessages) => [
             ...prevMessages,
@@ -68,8 +78,8 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
       }
       setIsLoading(false); // Stop loading after processing the response
     };
-    
-    
+
+
 
     wsRef.current.onclose = () => {
       console.log('WebSocket connection closed.');
@@ -129,12 +139,12 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
       style={{
         position: 'fixed',
         bottom: '30px',
-        right: '30px',
+        right: '40px',
         zIndex: '1000',
         transition: 'transform 0.3s ease',
         width: isMobile ? (isExpanded ? '315px' : '80px') : (isExpanded ? '450px' : '80px'),
-        height: isMobile ? (isExpanded ? '550px' : '80px') : (isExpanded ? '650px' : '80px'),
-        borderRadius: isExpanded ? '20px' : '50%',
+        height: isMobile ? (isExpanded ? '550px' : '80px') : (isExpanded ? '550px' : '80px'),
+        borderRadius: isExpanded ? '20px' : '29%',
         overflow: 'hidden',
         backgroundColor: isExpanded ? 'transparent' : 'white',
         padding: '10px',
@@ -168,12 +178,12 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
               borderBottom: '1px solid #004B93',
             }}
           >
-            <span style={{ fontWeight: 'bold' , fontSize: isMobile ? "18px" : "23px"}}>AI Assistant</span>
+            <span style={{ fontWeight: 'bold', fontSize: isMobile ? "14px" : "20px" }}>AI Assistant</span>
             <button
               onClick={() => setIsExpanded(false)}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <Image src={closeIcon} width={30} height={30} alt="close" />
+              <Image src={closeIcon} width={20} height={20} alt="close" />
             </button>
           </div>
           <ul
@@ -218,17 +228,24 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'start',
+                  justifyContent: 'center',
                   padding: '12px',
                   fontSize: '14px',
                   backgroundColor: 'white',
                   color: '#4a4a4a',
                   borderRadius: '16px 16px 16px 0px',
-                  maxWidth: '80%',
+                  maxWidth: '15%',
+                  width: 'auto',
                   marginBottom: '8px',
                 }}
               >
-                Typing...
+                {/* Typing... */}
+                <div
+                  className="loader"
+                  style={{
+                    marginLeft: '5%',
+                  }}
+                ></div>
               </div>
             )}
           </ul>
@@ -270,7 +287,17 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
           </div>
         </div>
       ) : (
-        <Image src={catIcon} width={100} height={100} alt="chatbot" />
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          cursor: 'pointer',
+        }}>
+          <Image src={catIcon} width={50} height={50} alt="chatbot" />
+        </div>
+
       )}
     </div>
   );

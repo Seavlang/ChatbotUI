@@ -11,3 +11,16 @@
     /* For desktop: */
     .md {width: 450px;}
   }
+
+  .loader {
+    width: 5px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: l5 1s infinite linear alternate;
+  }
+  @keyframes l5 {
+      0%  {box-shadow: 10px 0 #004B93, -10px 0 #6ab6fc;background: #004B93 }
+      33% {box-shadow: 10px 0 #004B93, -10px 0 #6ab6fc;background: #6ab6fc}
+      66% {box-shadow: 10px 0 #6ab6fc,-10px 0 #004B93; background: #6ab6fc}
+      100%{box-shadow: 10px 0 #6ab6fc,-10px 0 #004B93; background: #004B93 }
+  }
