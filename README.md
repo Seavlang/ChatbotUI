@@ -23,17 +23,15 @@ export default function Chat() {
   <div>
     <Chatbot 
         defaultText="Your_welcome_text"
-        sessionId="Your_session_id" 
-        projectId="Your_project_id"  
+        apiKey="API_KEY"  
     />
   </div>;
 }
 
 
 You can test the package with this: 
-  defaultText = "Hello" 
-  session id =  "2", 
-  project id =  "2", 
+  defaultText = "Hello"
+  Api Key =  "<API KEY>", 
 
 #please note that the defaultText is optional
 
