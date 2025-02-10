@@ -22,18 +22,19 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
       chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: 'smooth' });
     }
   }, [messages, isExpanded]);
-
+  const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJ0ZXN0IiwiZW1haWwiOiJzdHJpbmdAZ21haWwuY29tIiwicHJvamVjdF9pZCI6MzB9.RCt87bN1Z0hrNdGIhwc3mWdV9jLGsUJg1HFDXbaIKrM"
+  const [exSessionId, setExSessionId] = useState(null);
   // Establish WebSocket connection
   useEffect(() => {
     const createSesion = async () => {
       try {
-        const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJ0ZXhib3QiLCJlbWFpbCI6InN0cmluZ0BnbWFpbC5jb20iLCJwcm9qZWN0X2lkIjoxfQ.Rl2sl3KllysJslqAnr5QCqQf4n8b52OnFuNK0woYqAw"
         const data = await generateExternalSession(api_key);
         console.log("session_id: ", data?.session_id?.id)
+        setExSessionId(data?.session_id?.id)
       } catch (e) { }
     
     }
-    wsRef.current = new WebSocket('ws://203.255.78.58:9002/ws/generate-response');
+    wsRef.current = new WebSocket("ws://203.255.78.58:9002/ws/generate-response");
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established.');
@@ -101,9 +102,16 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
     const payload = {
       input: {
         input: input, // User's input message
-        external_session_id: sessionId, // Session ID
-        project_id: projectId,         // Project ID
+        external_session_id: exSessionId, // Session ID
+        api_key: api_key,         // Project ID
       },
+
+
+      // input: {
+      //   input: input, // User's input message
+      //   external_session_id: sessionId, // Session ID
+      //   project_id: 26,         // Project ID
+      // },
     };
 
     wsRef.current?.send(JSON.stringify(payload));
