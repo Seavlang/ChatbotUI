@@ -22,19 +22,20 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
       chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: 'smooth' });
     }
   }, [messages, isExpanded]);
-  // const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJ0ZXN0IiwiZW1haWwiOiJzdHJpbmdAZ21haWwuY29tIiwicHJvamVjdF9pZCI6MzB9.RCt87bN1Z0hrNdGIhwc3mWdV9jLGsUJg1HFDXbaIKrM"
+  // const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X25hbWUiOiJuZXciLCJlbWFpbCI6InN0cmluZ0BnbWFpbC5jb20iLCJwcm9qZWN0X2lkIjozNX0.23ZeaJg-ACIOUDZTxxabuae4EJToATimUz4q2o4Yehg"
   const [exSessionId, setExSessionId] = useState(null);
   // Establish WebSocket connection
   useEffect(() => {
     const createSesion = async () => {
       try {
+        // const data = await generateExternalSession(api_key);
         const data = await generateExternalSession(apiKey);
         console.log("session_id: ", data?.session_id?.id)
         setExSessionId(data?.session_id?.id)
       } catch (e) { }
     
     }
-    wsRef.current = new WebSocket("ws://203.255.78.58:9002/ws/generate-response");
+    wsRef.current = new WebSocket("wss://api2.texbot.space/ws/generate-response");
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established.');
@@ -103,7 +104,8 @@ export default function Chat({ defaultText, apiKey, sessionId, projectId }) {
       input: {
         input: input, // User's input message
         external_session_id: exSessionId, // Session ID
-        api_key: apiKey,         // Project ID
+        // api_key: api_key,
+        api_key: apiKey,
       },
 
 

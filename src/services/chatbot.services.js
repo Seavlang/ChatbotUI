@@ -28,7 +28,7 @@ export const chatbotService = async (input, externalSessionId, projectId, apiKey
 
 
 export const generateExternalSession = async (apiKey) => {
-  const response = await fetch('http://203.255.78.58:9002/api/v1/api_generation/session/create_session', {
+  const response = await fetch('https://api2.texbot.space/api/v1/api_generation/session/create_session', {
     method: 'POST',
     headers: {
       'accept': 'application/json',
