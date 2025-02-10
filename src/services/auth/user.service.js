@@ -26,7 +26,7 @@ export const getCurrentUserService = async () => {
 }
 
 export const chatbotLandingService = async (inputMessage, sessionId) => {
-    const apiUrl = "http://203.255.78.58:9002/hrd_chain/invoke";
+    const apiUrl = "https://api2.texbot.space/hrd_chain/invoke";
   
     const requestBody = {
       input: {

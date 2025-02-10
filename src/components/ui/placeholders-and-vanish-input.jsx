@@ -49,27 +49,22 @@ export function PlaceholdersAndVanishInput({
     }
   };
 
-  // const vanishAndSubmit = () => {
-  //   setAnimating(true);
-  //   draw();
-
-  //   const value = inputRef.current?.value || "";
-  //   if (value && inputRef.current) {
-  //     const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
-  //     animate(maxX);
-  //   }
-  // };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (socket && value) {
       console.log("userId ", userId)
+      const id = null;
+      if (!userId)  {
+        const result = await getCurrentUserAction();
+        id = result?.payload?.id;
+      }   
+          
       const file_id = selectedDocument == 0 ? null : selectedDocument
       socket.send(JSON.stringify(
         {
           "input": {
             "input": value,
-            "user_id": userId,
+            "user_id": userId ? userId : id,
             "session_id": activeSession?.id,
             "file_id": file_id
           }
@@ -100,7 +95,7 @@ export function PlaceholdersAndVanishInput({
 
   return (
     (
-      <div className="relative w-full max-w-3xl dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200"> {/* Container with relative positioning */}
+      <div className="relative w-full max-w-3xl bg-white dark:bg-zinc-800 rounded-3xl shadow-[0px_10px_25px_rgba(0,0,0,0.2)] transition duration-200"> {/* Container with relative positioning */}
 
         <form
           className={cn(

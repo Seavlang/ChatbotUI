@@ -211,12 +211,12 @@ export default function DefaultFileComponent({
         </div>
       </div>
 
-      <div className="flex mx-auto w-full">
+      <div className="flex mx-auto  w-full">
         <div
           ref={messagesContainerRef}
-          className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px] mt-5 messages-container">
+          className="flex-grow overflow-y-auto mb-4 space-y-6 p-8 max-h-[610px]  mt-5 messages-container">
           {isLoadingMore && <div className='flex justify-center'><Loading></Loading></div>}
-          <div className='mx-96 '>
+          <div className='mx-52 '>
             {messages?.length > 0 ? (
               messages?.map((message, index) => (
                 <div

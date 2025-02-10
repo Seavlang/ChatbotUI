@@ -52,24 +52,24 @@ export default function Page({ params }) {
         },
       ],
     },
-    {
-      id: 2,
-      Controller: "Chat",
-      Endpoints: [
-        {
-          id: 4,
-          method: "POST",
-          path: "/api/v1/chat",
-          description: "Chat API endpoint",
-        },
-        {
-          id: 5,
-          method: "GET",
-          path: "/api/v1/chat",
-          description: "Get chat history by session id",
-        },
-      ],
-    },
+    // {
+    //   id: 2,
+    //   Controller: "Chat",
+    //   Endpoints: [
+    //     {
+    //       id: 4,
+    //       method: "POST",
+    //       path: "/api/v1/chat",
+    //       description: "Chat API endpoint",
+    //     },
+    //     {
+    //       id: 5,
+    //       method: "GET",
+    //       path: "/api/v1/chat",
+    //       description: "Get chat history by session id",
+    //     },
+    //   ],
+    // },
   ];
   const [resolvedParams, setResolvedParams] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

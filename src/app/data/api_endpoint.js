@@ -5,9 +5,9 @@ export const api_document = [
         description: 'Create Chat Session using POST session endpoint.',
         overview: 'This endpoint allows you to create a new chat session. A session ID is required to use other endpoints that rely on active sessions, such as document uploads or chat interactions. By creating a session first, you can link your interactions with documents and queries under a single session.',
         method: 'POST',
-        path: 'https://api-texbot.kshrd.app/api/v1/api_generation/session/create_session',
+        path: 'https://api2.texbot.space/api/v1/api_generation/session/create_session',
         request: "curl -X 'POST' \
-  'https://api-texbot.kshrd.app/api/v1/api_generation/session/create_session' \
+  'https://api2.texbot.space/api/v1/api_generation/session/create_session' \
   -H 'accept: application/json' \
   -d ''",
         code200: {
@@ -29,9 +29,9 @@ export const api_document = [
         description: 'Get all chat sessions using GET session endpoint.',
         overview: 'This endpoint allows you to retrieve all the session IDs associated with a specific project. Each session ID represents an individual chat session that has been created. You can use this information to view past interactions or manage ongoing sessions.',
         method: 'GET',
-        path: 'https://chatbot.kshrd.com.kh/api/v1/chatbot/create_new_session',
+        path: 'https://api2.texbot.space/api/v1/api_generation/session/get_all_sessions',
         request: "curl -X 'GET' \
-  'https://api-texbot.kshrd.app/api/v1/api_generation/session/get_all_sessions' \
+  'https://api2.texbot.space/api/v1/api_generation/session/get_all_sessions' \
   -H 'accept: application/json'",
         code200: {
             message: "File uploaded successfully",

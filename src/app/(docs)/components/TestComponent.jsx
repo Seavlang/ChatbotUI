@@ -32,7 +32,7 @@ function TestComponent({ projectId, apiKey }) {
 
   useEffect(() => {
     // wsRef.current = new WebSocket("wss://api-texbot.kshrd.app/ws/generate-response-playground-widget");
-    wsRef.current = new WebSocket("ws://203.255.78.58:9002/ws/generate-response-playground-widget");
+    wsRef.current = new WebSocket("wss://api2.texbot.space/ws/generate-response-playground-widget");
 
     wsRef.current.onopen = () => {
       console.log("WebSocket connection established.");
@@ -69,7 +69,7 @@ function TestComponent({ projectId, apiKey }) {
       input: {
         input,
         external_session_id: earliestSession?.id,
-        project_id: projectId,
+        api_key: apiKey,
       },
     };
 
