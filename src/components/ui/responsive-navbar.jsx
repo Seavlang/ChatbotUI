@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -30,6 +30,7 @@ export default function ResponsiveNavbar() {
     const [selectedModel, setSelectedModel] = useState();
     const [selectedTemperature, setSelectedTemperature] = useState();
     const [selectMaxToken, setSelectedToken] = useState()
+    const [isModelOpen, setIsModelOpen] = useState(false);
 
     const toggleTheme = () => {
         const html = document.documentElement;
@@ -70,7 +71,7 @@ export default function ResponsiveNavbar() {
             setApiKey(data?.payload?.provider_api_key || '')
             setSelectedTemperature(data?.payload?.temperature)
             setSelectedToken(data?.payload?.max_token)
-            setSelectedModel(data?.payload?.model_id)
+            setSelectedModel(data?.payload?.model_id ? data?.payload?.model_id : 1)
         } catch (error) {
             console.error("Error fetching LM data:", error);
         }
@@ -88,20 +89,20 @@ export default function ResponsiveNavbar() {
         },
         {
             "id": 2,
-            "provider_id": 1,
-            "model_name": "llama3.2",
+            "provider_id": 2,
+            "model_name": "gpt-4o",
             "provider_info": {
-                "provider_id": 1,
-                "provider_name": "default"
+                "provider_id": 2,
+                "provider_name": "openai"
             }
         },
         {
             "id": 3,
-            "provider_id": 2,
-            "model_name": "gpt-4o-mini",
+            "provider_id": 3,
+            "model_name": "mixtral:8x22b",
             "provider_info": {
-                "provider_id": 2,
-                "provider_name": "openai"
+                "provider_id": 3,
+                "provider_name": "mistral ai"
             }
         }
     ]
@@ -113,6 +114,10 @@ export default function ResponsiveNavbar() {
         {
             "id": 2,
             "provider_name": "openai"
+        },
+        {
+            "id": 3,
+            "provider_name": "mistral ai"
         }
     ]
     const [isUpdating, setIsUpdating] = useState(false)
@@ -139,6 +144,36 @@ export default function ResponsiveNavbar() {
         setApiKey(e.target.value)
     }
 
+
+
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+    const modalRef = useRef(null);
+    const handleLogoutModal = () => {
+        setIsLogoutModalOpen(true); // First, update state
+    };
+    const [isSettingModalOpen, setIsSettingModalOpen] = useState(false)
+    const settingRef = useRef(null);
+    const handleSettingModal = () => {
+        setIsSettingModalOpen(true)
+    }
+    // Use useEffect to open modal after state updates
+    useEffect(() => {
+        if (isLogoutModalOpen && modalRef.current) {
+            modalRef.current.showModal();
+        }
+    }, [isLogoutModalOpen]);
+    useEffect(() => {
+        if (isSettingModalOpen && settingRef.current) {
+            settingRef.current.showModal();
+        }
+    }, [isSettingModalOpen]);
+
+    const navigation = useMemo(() => [
+        { name: 'Overview', href: '/' },
+        { name: 'Playground', href: '/playground' },
+        { name: 'Document', href: '/docs/allApps' },
+    ], []);
+
     const handleSaveLM = async () => {
         setIsUpdating(true)
         try {
@@ -151,6 +186,7 @@ export default function ResponsiveNavbar() {
                 temperature: temperatureData,
                 max_token: maxTokenData,
             }
+            console.log("request", request);
             await updateModelsAction(request)
 
         } catch (err) {
@@ -158,25 +194,9 @@ export default function ResponsiveNavbar() {
         } finally {
             setIsUpdating(false)
             setApiKey('')
-            setIsModalOpen(false);
+            setIsSettingModalOpen(false)
         }
     }
-
-    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-    const handleLogoutModal = () => {
-        setIsLogoutModalOpen(true)
-        document.getElementById("logout_modal")?.showModal()
-    }
-    const [isSettingModalOpen, setIsSettingModalOpen] = useState(false)
-    const handleSettingModal = () => {
-        setIsSettingModalOpen(true)
-        document.getElementById("model_setting")?.showModal()
-    }
-    const navigation = useMemo(() => [
-        { name: 'Overview', href: '/' },
-        { name: 'Playground', href: '/playground' },
-        { name: 'Document', href: '/docs/allApps' },
-    ], []);
 
     return (
         <Disclosure as="nav" className="bg-white dark:bg-none">
@@ -283,14 +303,14 @@ export default function ResponsiveNavbar() {
                                         </div>
                                     </div>
                                 </MenuItem>
-                                <MenuItem>
+                                {/* <MenuItem>
                                     <div className="flex mx-5 text-base cursor-pointer data-[focus]:bg-gray-100 data-[focus]:outline-none p-2 rounded-lg">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M13 1v3h-2V1zm7.485 3.928L18.364 7.05L16.95 5.636l2.121-2.122zM4.93 3.514l2.12 2.122L5.636 7.05L3.515 4.929zM12 8a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-6 4a6 6 0 1 1 12 0a6 6 0 0 1-12 0m-5-1h3v2H1zm19 0h3v2h-3zM7.05 18.363l-2.12 2.123l-1.415-1.416l2.121-2.122zm11.314-1.414l2.121 2.122l-1.414 1.414l-2.121-2.121zM13 20v3h-2v-3z" /></svg>
                                         <span className="ml-3" onClick={toggleTheme}>
                                             {darkMode ? "Dark Mode" : "Light Mode"}
                                         </span>
                                     </div>
-                                </MenuItem>
+                                </MenuItem> */}
                                 <MenuItem>
 
                                     <button onClick={(e) => {
@@ -308,13 +328,12 @@ export default function ResponsiveNavbar() {
             </div>
             {
                 isSettingModalOpen && (
-
-                    <dialog id="model_setting" className="modal">
+                    <dialog ref={settingRef} id="model_setting" className="modal">
                         <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                             {/* Close Button */}
                             <form method="dialog">
                                 <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
-                                // onClick={setIsModalOpen(false)}
+                                onClick={()=>setIsSettingModalOpen(false)}
                                 >
                                     <Image
                                         src={"/asset/images/cross.png"}
@@ -350,7 +369,7 @@ export default function ResponsiveNavbar() {
                                     </div>
                                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                         Access tokens authenticate your identity to the
-                                        Hugging Face Hub and allow applications to
+                                        TexSpace and allow applications to
                                         perform actions based on token permissions.
                                     </p>
 
@@ -449,7 +468,7 @@ export default function ResponsiveNavbar() {
             }
             {
                 isLogoutModalOpen && (
-                    <dialog id="logout_modal" className="modal flex justify-center items-center">
+                    <dialog ref={modalRef} id="logout_modal" className="modal flex justify-center items-center">
                         <div className="">
                             <div className="modal-box w-[400px] p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                                 <div className="text-lg mb-8 text-primary font-medium">Do you want to logout ?</div>

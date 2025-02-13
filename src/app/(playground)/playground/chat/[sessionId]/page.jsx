@@ -174,6 +174,7 @@ export default function Page({ params }) {
     const fetchLM = async () => {
         try {
             const data = await getLM();
+            console.log("data lm : ", data?.payload);
             setLmData(data?.payload);
         } catch (error) {
             console.error("Error fetching LM data:", error);

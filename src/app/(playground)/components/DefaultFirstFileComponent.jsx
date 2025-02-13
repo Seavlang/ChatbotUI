@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { DefaultPlaceHolderComponent } from "@/app/components/DefaultPlaceHolderComponent";
 import { useSessions } from "./SessionProvider";
 import Loading from "../playground/loading";
+import { getLM } from "@/actions/modelAction";
 // import { useSessions } from "./SessionProvider";
 
 const mainVariant = {
@@ -102,6 +103,25 @@ export default function DefaultFirstFileComponent() {
         },
     });
 
+    const [lmData, setLmData] = useState(null);
+    const [isfetchingLmData, setIsfetchingLmData] = useState(false);
+    const fetchLM = async () => {
+        setIsfetchingLmData(true);
+        try {
+            const data = await getLM();
+            console.log("data lm : ", data?.payload);
+            setLmData(data?.payload);
+        } catch (error) {
+            console.error("Error fetching LM data:", error);
+        }
+        finally{
+            setIsfetchingLmData(false);
+        }
+    };
+    useEffect(() => {
+        fetchLM();
+    }, []);
+
     return (
         <>
             {
@@ -113,8 +133,15 @@ export default function DefaultFirstFileComponent() {
                     <div className="">
                         <div className='flex'>
                             <div className="ml-5 inline-flex items-center border border-gray-300 rounded-md px-3 py-2 text-md">
-                                <span className="font-bold text-primary mr-2">DEFAULT</span>
-                                <span className="font-normal text-black dark:text-white">LLAMA3.1</span>
+                                {
+                                    isfetchingLmData ? <Loading /> : (
+                                        <div>
+                                            <span className="font-bold text-primary mr-2">{
+                                                lmData?.provider_info?.provider_name?.toUpperCase() || ''}</span>
+                                            <span className="font-normal text-black dark:text-white">{lmData?.provider_info?.model_name?.toUpperCase() || ''}</span>
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
 
@@ -131,7 +158,7 @@ export default function DefaultFirstFileComponent() {
                                                         onClick={handleClick}
                                                         whileHover="animate"
                                                         className="p-10 group/file border-none block rounded-lg cursor-pointer relative overflow-hidden"
-                                                        style={{ height: '220px'}}
+                                                        style={{ height: '220px' }}
                                                     >
                                                         <input
                                                             ref={fileInputRef}

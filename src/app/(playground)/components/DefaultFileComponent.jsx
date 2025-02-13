@@ -164,8 +164,8 @@ export default function DefaultFileComponent({
     <div className="">
       <div className="  ">
         <div className="ml-40 inline-block md:ml-20 w-1/2 md:w-fit  items-center border border-primary rounded-md px-3 py-2 text-sm md:text-md ">
-          <span className="font-bold text-primary mr-2">{
-            lmData?.provider_info?.provider_name?.toUpperCase() || ''}
+          <span className="font-bold text-primary mr-2">
+            {lmData?.provider_info?.provider_name?.toUpperCase() || ''}
           </span>
           <span className="font-normal text-black">{lmData?.provider_info?.model_name?.toUpperCase() || ''}</span>
         </div>

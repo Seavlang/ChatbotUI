@@ -66,7 +66,7 @@ export default function NavbarComponent() {
       setApiKey(data?.payload?.provider_api_key || '')
       setSelectedTemperature(data?.payload?.temperature)
       setSelectedToken(data?.payload?.max_token)
-      setSelectedModel(data?.payload?.model_id)
+      setSelectedModel(data?.payload?.model_id ? data?.payload?.model_id : 1)
     } catch (error) {
       console.error("Error fetching LM data:", error);
     }
@@ -99,6 +99,24 @@ export default function NavbarComponent() {
         "provider_id": 2,
         "provider_name": "openai"
       }
+    },
+    {
+      "id": 3,
+      "provider_id": 2,
+      "model_name": "gpt-4o-mini",
+      "provider_info": {
+        "provider_id": 2,
+        "provider_name": "openai"
+      }
+    },
+    {
+      "id": 4,
+      "provider_id": 3,
+      "model_name": "mixtral:8x22b",
+      "provider_info": {
+        "provider_id": 3,
+        "provider_name": "mistral ai"
+      }
     }
   ]
   const providers = [
@@ -109,6 +127,10 @@ export default function NavbarComponent() {
     {
       "id": 2,
       "provider_name": "openai"
+    },
+    {
+      "id": 3,
+      "provider_name": "mistral ai"
     }
   ]
   const [isUpdating, setIsUpdating] = useState(false)
