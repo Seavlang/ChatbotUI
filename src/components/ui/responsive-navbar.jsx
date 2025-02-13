@@ -168,6 +168,20 @@ export default function ResponsiveNavbar() {
         }
     }, [isSettingModalOpen]);
 
+    const handleOutsideClick = (event) => {
+        if (settingRef.current && event.target === settingRef.current) {
+            setIsSettingModalOpen(false);
+            settingRef.current.close();
+        }
+    };
+
+    const handleLogoutOutsideClick = (event) => {
+        if (modalRef.current && event.target === modalRef.current) {
+            setIsLogoutModalOpen(false);
+            modalRef.current.close();
+        }
+    }
+
     const navigation = useMemo(() => [
         { name: 'Overview', href: '/' },
         { name: 'Playground', href: '/playground' },
@@ -328,7 +342,7 @@ export default function ResponsiveNavbar() {
             </div>
             {
                 isSettingModalOpen && (
-                    <dialog ref={settingRef} id="model_setting" className="modal">
+                    <dialog ref={settingRef} id="model_setting" className="modal" onClick={handleOutsideClick} >
                         <div className="modal-box w-full max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                             {/* Close Button */}
                             <form method="dialog">
@@ -468,7 +482,7 @@ export default function ResponsiveNavbar() {
             }
             {
                 isLogoutModalOpen && (
-                    <dialog ref={modalRef} id="logout_modal" className="modal flex justify-center items-center">
+                    <dialog ref={modalRef} id="logout_modal" className="modal flex justify-center items-center" onClick={handleLogoutOutsideClick}>
                         <div className="">
                             <div className="modal-box w-[400px] p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                                 <div className="text-lg mb-8 text-primary font-medium">Do you want to logout ?</div>
